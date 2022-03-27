@@ -18,9 +18,13 @@ class UserAnswer
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'user_answer')]
     private $users;
 
+    #[ORM\ManyToMany(targetEntity: Answer::class, mappedBy: 'user_answer')]
+    private $answers;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,6 +54,33 @@ class UserAnswer
     {
         if ($this->users->removeElement($user)) {
             $user->removeUserAnswer($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(Answer $answer): self
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers[] = $answer;
+            $answer->addUserAnswer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswer(Answer $answer): self
+    {
+        if ($this->answers->removeElement($answer)) {
+            $answer->removeUserAnswer($this);
         }
 
         return $this;

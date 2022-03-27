@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AnswerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
@@ -21,6 +23,14 @@ class Answer
 
     #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answer')]
     private $question;
+
+    #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'answers')]
+    private $user_answer;
+
+    public function __construct()
+    {
+        $this->user_answer = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +69,30 @@ class Answer
     public function setQuestion(?Question $question): self
     {
         $this->question = $question;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAnswer>
+     */
+    public function getUserAnswer(): Collection
+    {
+        return $this->user_answer;
+    }
+
+    public function addUserAnswer(UserAnswer $userAnswer): self
+    {
+        if (!$this->user_answer->contains($userAnswer)) {
+            $this->user_answer[] = $userAnswer;
+        }
+
+        return $this;
+    }
+
+    public function removeUserAnswer(UserAnswer $userAnswer): self
+    {
+        $this->user_answer->removeElement($userAnswer);
 
         return $this;
     }
