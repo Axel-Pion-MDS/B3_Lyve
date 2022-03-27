@@ -24,6 +24,9 @@ class Badge
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'badge')]
     private $users;
 
+    #[ORM\ManyToOne(targetEntity: Module::class, inversedBy: 'badges')]
+    private $module;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -81,6 +84,18 @@ class Badge
         if ($this->users->removeElement($user)) {
             $user->removeBadge($this);
         }
+
+        return $this;
+    }
+
+    public function getModule(): ?Module
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Module $module): self
+    {
+        $this->module = $module;
 
         return $this;
     }

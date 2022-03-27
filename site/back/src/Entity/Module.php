@@ -21,9 +21,13 @@ class Module
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'module')]
     private $users;
 
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Badge::class)]
+    private $badges;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->badges = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -65,6 +69,36 @@ class Module
     {
         if ($this->users->removeElement($user)) {
             $user->removeModule($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Badge>
+     */
+    public function getBadges(): Collection
+    {
+        return $this->badges;
+    }
+
+    public function addBadge(Badge $badge): self
+    {
+        if (!$this->badges->contains($badge)) {
+            $this->badges[] = $badge;
+            $badge->setModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBadge(Badge $badge): self
+    {
+        if ($this->badges->removeElement($badge)) {
+            // set the owning side to null (unless already changed)
+            if ($badge->getModule() === $this) {
+                $badge->setModule(null);
+            }
         }
 
         return $this;
