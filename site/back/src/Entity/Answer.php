@@ -19,6 +19,9 @@ class Answer
     #[ORM\Column(type: 'boolean')]
     private $isCorrect;
 
+    #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answer')]
+    private $question;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class Answer
     public function setIsCorrect(bool $isCorrect): self
     {
         $this->isCorrect = $isCorrect;
+
+        return $this;
+    }
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?Question $question): self
+    {
+        $this->question = $question;
 
         return $this;
     }
