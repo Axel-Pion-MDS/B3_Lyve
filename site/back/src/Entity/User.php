@@ -45,11 +45,15 @@ class User
     #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'users')]
     private $user_answer;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class)]
+    private $message;
+
     public function __construct()
     {
         $this->badge = new ArrayCollection();
         $this->module = new ArrayCollection();
         $this->user_answer = new ArrayCollection();
+        $this->message = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -209,6 +213,36 @@ class User
     public function removeUserAnswer(UserAnswer $userAnswer): self
     {
         $this->user_answer->removeElement($userAnswer);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessage(): Collection
+    {
+        return $this->message;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->message->contains($message)) {
+            $this->message[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->message->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
+            }
+        }
 
         return $this;
     }
