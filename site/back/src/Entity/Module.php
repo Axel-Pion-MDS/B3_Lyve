@@ -24,10 +24,14 @@ class Module
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Badge::class)]
     private $badges;
 
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Chapter::class)]
+    private $chapter;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->badges = new ArrayCollection();
+        $this->chapter = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +102,36 @@ class Module
             // set the owning side to null (unless already changed)
             if ($badge->getModule() === $this) {
                 $badge->setModule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Chapter>
+     */
+    public function getChapter(): Collection
+    {
+        return $this->chapter;
+    }
+
+    public function addChapter(Chapter $chapter): self
+    {
+        if (!$this->chapter->contains($chapter)) {
+            $this->chapter[] = $chapter;
+            $chapter->setModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChapter(Chapter $chapter): self
+    {
+        if ($this->chapter->removeElement($chapter)) {
+            // set the owning side to null (unless already changed)
+            if ($chapter->getModule() === $this) {
+                $chapter->setModule(null);
             }
         }
 
