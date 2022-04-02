@@ -1,20 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AnswerController!{% endblock %}
+{% block title %}Answer index{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Answer index</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Answer</th>
+                <th>IsCorrect</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for answer in answers %}
+            <tr>
+                <td>{{ answer.id }}</td>
+                <td>{{ answer.answer }}</td>
+                <td>{{ answer.isCorrect ? 'Yes' : 'No' }}</td>
+                <td>{{ answer.createdAt ? answer.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ answer.updatedAt ? answer.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_answer_show', {'id': answer.id}) }}">show</a>
+                    <a href="{{ path('app_answer_edit', {'id': answer.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/axel.pion/MDS/lyve/site/back/src/Controller/AnswerController.php'|file_link(0) }}">src/Controller/AnswerController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/axel.pion/MDS/lyve/site/back/templates/answer/index.html.twig'|file_link(0) }}">templates/answer/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <a href="{{ path('app_answer_new') }}">Create new</a>
 {% endblock %}
