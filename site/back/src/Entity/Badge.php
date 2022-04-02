@@ -27,6 +27,12 @@ class Badge
     #[ORM\ManyToOne(targetEntity: Module::class, inversedBy: 'badges')]
     private $module;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $created_at;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $update_at;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -96,6 +102,30 @@ class Badge
     public function setModule(?Module $module): self
     {
         $this->module = $module;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdateAt(): ?\DateTimeImmutable
+    {
+        return $this->update_at;
+    }
+
+    public function setUpdateAt(\DateTimeImmutable $update_at): self
+    {
+        $this->update_at = $update_at;
 
         return $this;
     }

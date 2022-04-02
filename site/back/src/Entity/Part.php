@@ -2,27 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\QuestionRepository;
+use App\Repository\PartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: QuestionRepository::class)]
-class Question
+#[ORM\Entity(repositoryClass: PartRepository::class)]
+class Part
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text')]
+    private $content;
+
+    #[ORM\OneToMany(mappedBy: 'part', targetEntity: Question::class)]
     private $question;
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class)]
-    private $answer;
-
-    #[ORM\ManyToOne(targetEntity: Part::class, inversedBy: 'question')]
-    private $part;
+    #[ORM\Column(type: 'string', length: 255)]
+    private $title;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $created_at;
@@ -32,7 +32,7 @@ class Question
 
     public function __construct()
     {
-        $this->answer = new ArrayCollection();
+        $this->question = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -40,56 +40,56 @@ class Question
         return $this->id;
     }
 
-    public function getQuestion(): ?string
+    public function getContent(): ?string
     {
-        return $this->question;
+        return $this->content;
     }
 
-    public function setQuestion(string $question): self
+    public function setContent(string $content): self
     {
-        $this->question = $question;
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Answer>
+     * @return Collection<int, Question>
      */
-    public function getAnswer(): Collection
+    public function getQuestion(): Collection
     {
-        return $this->answer;
+        return $this->question;
     }
 
-    public function addAnswer(Answer $answer): self
+    public function addQuestion(Question $question): self
     {
-        if (!$this->answer->contains($answer)) {
-            $this->answer[] = $answer;
-            $answer->setQuestion($this);
+        if (!$this->question->contains($question)) {
+            $this->question[] = $question;
+            $question->setPart($this);
         }
 
         return $this;
     }
 
-    public function removeAnswer(Answer $answer): self
+    public function removeQuestion(Question $question): self
     {
-        if ($this->answer->removeElement($answer)) {
+        if ($this->question->removeElement($question)) {
             // set the owning side to null (unless already changed)
-            if ($answer->getQuestion() === $this) {
-                $answer->setQuestion(null);
+            if ($question->getPart() === $this) {
+                $question->setPart(null);
             }
         }
 
         return $this;
     }
 
-    public function getPart(): ?Part
+    public function getTitle(): ?string
     {
-        return $this->part;
+        return $this->title;
     }
 
-    public function setPart(?Part $part): self
+    public function setTitle(string $title): self
     {
-        $this->part = $part;
+        $this->title = $title;
 
         return $this;
     }
