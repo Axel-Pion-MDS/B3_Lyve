@@ -27,6 +27,15 @@ class Module
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Chapter::class)]
     private $chapter;
 
+    #[ORM\Column(type: 'text')]
+    private $content;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $created_at;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $updated_at;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -134,6 +143,42 @@ class Module
                 $chapter->setModule(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }

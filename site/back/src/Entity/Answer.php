@@ -27,6 +27,12 @@ class Answer
     #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'answers')]
     private $user_answer;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $created_at;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $updated_at;
+
     public function __construct()
     {
         $this->user_answer = new ArrayCollection();
@@ -93,6 +99,30 @@ class Answer
     public function removeUserAnswer(UserAnswer $userAnswer): self
     {
         $this->user_answer->removeElement($userAnswer);
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
