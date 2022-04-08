@@ -6,8 +6,15 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource(
+    collectionOperations: ['get'],
+    itemOperations: ['get', 'put', 'patch', 'delete'],
+    order: ['lastname' => 'DESC', 'firstname' => 'ASC'],
+    paginationEnabled: false,
+)]
 class User
 {
     #[ORM\Id]
@@ -273,6 +280,13 @@ class User
     public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
 
         return $this;
     }

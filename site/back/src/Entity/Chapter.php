@@ -2,12 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ChapterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
+#[ApiResource(
+    collectionOperations: ['get'],
+    itemOperations: ['get', 'put', 'patch', 'delete'],
+    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
+    paginationEnabled: false,
+)]
 class Chapter
 {
     #[ORM\Id]
