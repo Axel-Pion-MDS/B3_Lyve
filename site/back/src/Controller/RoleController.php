@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Role;
 use App\Form\RoleType;
 use App\Repository\RoleRepository;
@@ -11,6 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/role')]
+#[ApiResource(
+    collectionOperations: ['get'],
+    itemOperations: ['get', 'put', 'patch', 'delete'],
+    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
+    paginationEnabled: false,
+)]
 class RoleController extends AbstractController
 {
     #[Route('/', name: 'app_role_index', methods: ['GET'])]

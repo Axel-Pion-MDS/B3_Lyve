@@ -2,12 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ModuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
+#[ApiResource(
+    collectionOperations: ['get'],
+    itemOperations: ['get', 'put', 'patch', 'delete'],
+    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
+    paginationEnabled: false,
+)]
 class Module
 {
     #[ORM\Id]
