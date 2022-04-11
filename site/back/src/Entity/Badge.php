@@ -38,7 +38,7 @@ class Badge
     private $created_at;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private $update_at;
+    private $updated_at;
 
     public function __construct()
     {
@@ -127,12 +127,12 @@ class Badge
 
     public function getUpdateAt(): ?\DateTimeImmutable
     {
-        return $this->update_at;
+        return $this->updated_at;
     }
 
-    public function setUpdateAt(\DateTimeImmutable $update_at): self
+    public function setUpdateAt(\DateTimeImmutable $updated_at): self
     {
-        $this->update_at = $update_at;
+        $this->updated_at = $updated_at;
 
         return $this;
     }

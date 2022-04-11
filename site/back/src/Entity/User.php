@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,6 +20,7 @@ class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[ApiProperty(identifier: false)]
     #[ORM\Column(type: 'integer')]
     private $id;
 
@@ -29,6 +31,7 @@ class User
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[ApiProperty(identifier: true)]
     private $email;
 
     #[ORM\Column(type: 'date')]
@@ -161,12 +164,12 @@ class User
     /**
      * @return Collection<int, Badge>
      */
-    public function getBadge(): Collection
+    public function getBadge(): ?Collection
     {
         return $this->badge;
     }
 
-    public function addBadge(Badge $badge): self
+    public function addBadge(?Badge $badge): self
     {
         if (!$this->badge->contains($badge)) {
             $this->badge[] = $badge;
@@ -185,12 +188,12 @@ class User
     /**
      * @return Collection<int, Module>
      */
-    public function getModule(): Collection
+    public function getModule():? Collection
     {
         return $this->module;
     }
 
-    public function addModule(Module $module): self
+    public function addModule(?Module $module): self
     {
         if (!$this->module->contains($module)) {
             $this->module[] = $module;
