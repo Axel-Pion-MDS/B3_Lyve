@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,21 +17,44 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $manager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, User::class);
+        $this->manager = $manager;
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(User $entity, bool $flush = true): void
+    public function add(array $user): void
     {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
+        $newUser = new User();
+        foreach ($user as $value) {
+            $newUser
+                ->setFirstname($value['firstname'])
+                ->setLastname($value['lastname'])
+                ->setEmail($value['email'])
+                ->setBirthdate($value['birthdate'])
+                ->setNumber($value['number'])
+                ->setRole($value['role'])
+                ->setOffer($value['offer'])
+                ->setCreatedAt($value['created_at'])
+                ->setUpdatedAt($value['updated_at']);
+
+            if (array_key_exists('badge', $value)) {
+                $newUser->addBadge($value['badges']);
+            };
+
+            if (array_key_exists('modules', $value)) {
+                $newUser->addMessage($value['modules']);
+            };
         }
+
+        $this->manager->persist($newUser);
+        $this->manager->flush();
     }
 
     /**
