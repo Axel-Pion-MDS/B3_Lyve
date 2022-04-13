@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Badge;
 use App\Entity\User;
-use App\Form\UserType;
+use App\Normalizer\UserNormalizer;
 use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,35 +15,57 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/user')]
+#[Route('/user', name: 'user')]
 class UserController extends AbstractController
 {
     private $userRepository;
+    private $status = ['result' => 'success', 'msg' => ''];
 
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/list', name: '_list', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        $users = $this->userRepository->findAll();
-        $data = [];
-        foreach ($users as $user) {
-            $data[] = [
-                'id' => $user->getId(),
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
-                'email' => $user->getEmail(),
-            ];
-        };
+        try {
+            $users = $this->userRepository->findAll();
+            $normalizer = UserNormalizer::listNormalizer($users);
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], $normalizer];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception levée : "%s"', $e->getMessage())];
+        }
 
-        return new JsonResponse($data, Response::HTTP_OK);
+        return new JsonResponse($response, Response::HTTP_OK);
     }
 
-    #[Route('/add', name: 'app_add_user', methods: ['POST'])]
-    public function addUser(Request $request): JsonResponse
+    #[Route('/show', name: '_show', methods: ['GET'], requirements: ["id" => "^[1-9]\d*$"])]
+    public function show(Request $request, ManagerRegistry $doctrine): JsonResponse
+    {
+        try {
+            $id = $request->get('id');
+            $em = $doctrine->getManager();
+            $user = $em->getRepository(User::class)->find($id);
+
+            if (empty($user)) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "L'utilisateur demandé n'a pas été trouvé";
+            } else {
+                $data = UserNormalizer::showNormalizer($user);
+            }
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $data];
+        } catch (\Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception levée : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response, Response::HTTP_FOUND);
+    }
+
+    #[Route('/add', name: '_add', methods: ['POST'])]
+    public function add(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $newUser = new User();
