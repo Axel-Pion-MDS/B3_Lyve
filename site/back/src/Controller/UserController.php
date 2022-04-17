@@ -13,6 +13,7 @@ use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -102,7 +103,34 @@ class UserController extends AbstractController
                 $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
             }
 
-            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], []];
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    #[Route('/delete', name: '_delete', methods: ['DELETE'], requirements: ["id" => "^[1-9]\d*$"])]
+    public function delete(Request $request): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $id = $request->get('id');
+            $user = $em->getRepository(User::class)->find($id);
+
+            if (empty($user)) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Request user not found.";
+            } else {
+                $em->remove($user);
+                $em->flush();
+
+                $this->status['msg'] = "User deleted.";
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
         } catch (Exception $e) {
             $this->status['result'] = "error";
             $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
