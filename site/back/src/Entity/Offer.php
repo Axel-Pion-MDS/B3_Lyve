@@ -37,9 +37,13 @@ class Offer
     #[ORM\Column(type: 'datetime_immutable')]
     private $updated_at;
 
+    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'offers')]
+    private $modules;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->modules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -121,6 +125,30 @@ class Offer
     public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getModules(): Collection
+    {
+        return $this->modules;
+    }
+
+    public function addModule(Module $module): self
+    {
+        if (!$this->modules->contains($module)) {
+            $this->modules[] = $module;
+        }
+
+        return $this;
+    }
+
+    public function removeModule(Module $module): self
+    {
+        $this->modules->removeElement($module);
 
         return $this;
     }

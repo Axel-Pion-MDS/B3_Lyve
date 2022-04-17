@@ -14,6 +14,7 @@ class OfferType extends AbstractType
         $builder
             ->add('title')
             ->add('price')
+            ->add('modules')
             ->add('created_at')
             ->add('updated_at')
         ;

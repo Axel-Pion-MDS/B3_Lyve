@@ -25,9 +25,6 @@ class Module
     #[ORM\Column(type: 'string', length: 100)]
     private $title;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'module')]
-    private $users;
-
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Badge::class)]
     private $badges;
 
@@ -43,11 +40,15 @@ class Module
     #[ORM\Column(type: 'datetime_immutable')]
     private $updated_at;
 
+    #[ORM\ManyToMany(targetEntity: Offer::class, mappedBy: 'modules')]
+    private $offers;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->badges = new ArrayCollection();
         $this->chapter = new ArrayCollection();
+        $this->offers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,33 +64,6 @@ class Module
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addModule($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeModule($this);
-        }
 
         return $this;
     }
@@ -186,6 +160,33 @@ class Module
     public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): self
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers[] = $offer;
+            $offer->addModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): self
+    {
+        if ($this->offers->removeElement($offer)) {
+            $offer->removeModule($this);
+        }
 
         return $this;
     }

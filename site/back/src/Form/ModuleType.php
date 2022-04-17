@@ -16,7 +16,7 @@ class ModuleType extends AbstractType
             ->add('content')
             ->add('created_at')
             ->add('updated_at')
-            ->add('users')
+            ->add('offers')
         ;
     }
 

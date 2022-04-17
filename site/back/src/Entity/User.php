@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Monolog\DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -48,9 +49,6 @@ class User
 
     #[ORM\ManyToMany(targetEntity: Badge::class, inversedBy: 'users')]
     private $badge;
-
-    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'users')]
-    private $module;
 
     #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'users')]
     private $user_answer;
@@ -186,30 +184,6 @@ class User
     }
 
     /**
-     * @return Collection<int, Module>
-     */
-    public function getModule():? Collection
-    {
-        return $this->module;
-    }
-
-    public function addModule(?Module $module): self
-    {
-        if (!$this->module->contains($module)) {
-            $this->module[] = $module;
-        }
-
-        return $this;
-    }
-
-    public function removeModule(Module $module): self
-    {
-        $this->module->removeElement($module);
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, UserAnswer>
      */
     public function getUserAnswer(): Collection
@@ -268,9 +242,10 @@ class User
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(?\DateTimeImmutable $created_at): self
     {
-        $this->created_at = $created_at;
+        $tmp = $this->created_at;
+        $this->created_at = $created_at ?? $tmp;
 
         return $this;
     }
@@ -280,9 +255,9 @@ class User
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = $updated_at ?? new DateTimeImmutable(false);
 
         return $this;
     }
