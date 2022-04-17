@@ -50,7 +50,6 @@ class UserController extends AbstractController
     {
         try {
             $id = $request->get('id');
-            $em = $this->doctrine->getManager();
             $user = $this->userRepository->find($id);
 
             if (empty($user)) {
