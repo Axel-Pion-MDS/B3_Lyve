@@ -118,7 +118,7 @@ class UserController extends AbstractController
                 $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
             }
 
-            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'userId' => $user->getId()];
         } catch (Exception $e) {
             $this->status['result'] = "error";
             $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];

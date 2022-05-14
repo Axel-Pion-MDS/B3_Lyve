@@ -68,7 +68,7 @@ class RoleController extends AbstractController
     }
 
     #[Route('/add', name: '_add', methods: ['POST'])]
-    public function new(Request $request): JsonResponse
+    public function add(Request $request): JsonResponse
     {
         try {
             $em = $this->doctrine->getManager();
@@ -90,7 +90,7 @@ class RoleController extends AbstractController
                 $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
             }
 
-            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'roleId' => $role->getId()];
         } catch (Exception $e) {
             $this->status['result'] = "error";
             $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
