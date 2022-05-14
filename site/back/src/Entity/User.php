@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Monolog\DateTimeImmutable;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -17,7 +18,7 @@ use Monolog\DateTimeImmutable;
     order: ['lastname' => 'DESC', 'firstname' => 'ASC'],
     paginationEnabled: false,
 )]
-class User
+class User implements UserInterface, \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,7 +39,7 @@ class User
     #[ORM\Column(type: 'date')]
     private $birthdate;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: '0')]
+    #[ORM\Column(type: 'string', length: 12)]
     private $number;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
@@ -61,6 +62,9 @@ class User
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $updated_at;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $password;
 
     public function __construct()
     {
@@ -267,5 +271,32 @@ class User
         $this->id = $id;
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
     }
 }

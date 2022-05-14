@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d60a7b162300c099a87ff7db5fb9b5e6",
+    "content-hash": "ede7f7cb877b592994018dc451e53671",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5037,16 +5037,16 @@
         },
         {
             "name": "symfony/password-hasher",
-            "version": "v6.0.3",
+            "version": "v6.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/password-hasher.git",
-                "reference": "4d04edcbcee4a97f39c72d1cf6149681d634e63f"
+                "reference": "b51d2155aafd5b03af0391e9e602538f6dc44f15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/password-hasher/zipball/4d04edcbcee4a97f39c72d1cf6149681d634e63f",
-                "reference": "4d04edcbcee4a97f39c72d1cf6149681d634e63f",
+                "url": "https://api.github.com/repos/symfony/password-hasher/zipball/b51d2155aafd5b03af0391e9e602538f6dc44f15",
+                "reference": "b51d2155aafd5b03af0391e9e602538f6dc44f15",
                 "shasum": ""
             },
             "require": {
@@ -5056,7 +5056,7 @@
                 "symfony/security-core": "<5.4"
             },
             "require-dev": {
-                "symfony/console": "^5",
+                "symfony/console": "^5.4|^6.0",
                 "symfony/security-core": "^5.4|^6.0"
             },
             "type": "library",
@@ -5089,7 +5089,7 @@
                 "password"
             ],
             "support": {
-                "source": "https://github.com/symfony/password-hasher/tree/v6.0.3"
+                "source": "https://github.com/symfony/password-hasher/tree/v6.0.8"
             },
             "funding": [
                 {
@@ -5105,7 +5105,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:55:41+00:00"
+            "time": "2022-04-15T14:20:13+00:00"
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
@@ -8245,5 +8245,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

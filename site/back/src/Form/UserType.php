@@ -10,6 +10,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,6 +24,7 @@ class UserType extends AbstractType
             ->add('firstname', TextType::class, ['invalid_message' => 'The firstname value is invalid'])
             ->add('lastname', TextType::class, ['invalid_message' => 'The lastname value is invalid'])
             ->add('email', EmailType::class, ['invalid_message' => 'The email value is invalid'])
+            ->add('password', PasswordType::class, ['invalid_message' => 'The password value is invalid'])
             ->add('birthdate', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -41,7 +44,9 @@ class UserType extends AbstractType
             ->add('badge', EntityType::class, [
                 'class' => Badge::class,
                 'multiple' => true,
-                'invalid_message' => 'the badge value is invalid'])
+                'expanded' => true,
+                'invalid_message' => 'the badge value is invalid'
+            ])
             ->add('offer', EntityType::class, ['class' => Offer::class, 'invalid_message' => 'the offer value is invalid'])
             ->add('role', EntityType::class, ['class' => Role::class, 'invalid_message' => 'the role value is invalid'])
         ;

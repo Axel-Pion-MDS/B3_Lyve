@@ -21,15 +21,30 @@ class UserNormalizer {
 
     public static function showNormalizer(object $data): array
     {
+        $badges = [];
+        foreach ($data->getBadge() as $badge) {
+            $badges[] = [
+                'id' => $badge->getId(),
+                'label' => $badge->getTitle(),
+            ];
+        }
+
         $user[] = [
             'id' => $data->getId(),
             'firstname' => $data->getFirstname(),
             'lastname' => $data->getLastname(),
             'email' => $data->getEmail(),
-            'birthdate' => $data->getBirthdate(),
+            'birthdate' => $data->getBirthdate()->format('Y-m-d'),
             'number' => $data->getNumber(),
-            'role' => $data->getRole() ? $data->getRole()->getTitle() : null,
-            'offer' => $data->getOffer() ? $data->getOffer()->getTitle() : null,
+            'role' => $data->getRole() ? [
+                'id' => $data->getRole()->getId(),
+                'label' => $data->getRole()->getTitle()
+            ] : null,
+            'offer' => $data->getOffer() ? [
+                'id' => $data->getOffer()->getId(),
+                'label' => $data->getOffer()->getTitle()
+            ] : null,
+            'badge' => $badges,
         ];
 
         return $user;

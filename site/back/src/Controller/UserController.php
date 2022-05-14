@@ -15,6 +15,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/user', name: 'user')]
@@ -36,7 +37,7 @@ class UserController extends AbstractController
         try {
             $users = $this->userRepository->findAll();
             $normalizer = UserNormalizer::listNormalizer($users);
-            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], $normalizer];
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer];
         } catch (Exception $e) {
             $this->status['result'] = "error";
             $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage())];
@@ -69,21 +70,39 @@ class UserController extends AbstractController
     }
 
     #[Route('/add', name: '_add', methods: ['POST'])]
-    public function add(Request $request): JsonResponse
+    public function add(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         try {
-            $content = json_decode($request->getContent(), true);
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $em = $this->doctrine->getManager();
 
             $user = new User();
             $form = $this->createForm(UserType::class, $user);
 
-            $role = (array_key_exists('role', $content) || !empty($content['role'])) ? $this->setUserRole($content['role']) : $this->setUserRole(1);
-            if (array_key_exists('offer', $content) || !empty($content['offer'])) $offer = $this->setUserOffer($content['offer']);
-            if (array_key_exists('badge', $content) || !empty($content['badge'])) $badge = $this->setUserBadge($content['badge']);
+            $badges = [];
+            if (!empty($content['password'])) {
+                $hashPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $content['password']
+                );
+            } else {
+                $hashPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $random = random_int(1, 10)
+                );
+            }
+            if (!empty($content['badge'])) {
+                foreach ($content['badge'] as $item) {
+                    $badge = $this->findBadge($item);
+                    $badges[] = $badge->getId();
+                }
+            }
+            if (!empty($badges)) $content['badge'] = $badges;
 
+            $content['password'] = $hashPassword;
+            $role = (!empty($content['role'])) ? $this->findRole($content['role']) : $this->findRole(1);
+            if (!empty($content['offer'])) $offer = $this->findOffer($content['offer']);
             $content['role'] = $role->getId();
-            if (isset($badge)) $content['badge'] = $badge->getId();
             if (isset($offer)) $content['offer'] = $offer->getId();
 
             $request->request->add($content);
@@ -141,23 +160,30 @@ class UserController extends AbstractController
     {
         try {
             $em = $this->doctrine->getManager();
-            $content = json_decode($request->getContent(), true);
-            $id = $request->query->get('id');
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $id = $content['id'];
             $user = $this->userRepository->find($id);
 
-            if (empty($user)) {
+            if ($user === null) {
                 $this->status['result'] = "error";
                 $this->status['msg'] = "Requested user not found.";
             } else {
                 $form = $this->createForm(UserType::class, $user);
 
-                $role = (array_key_exists('role', $content) || !empty($content['role'])) ? $this->setUserRole($content['role']) : $this->setUserRole(1);
-                if (array_key_exists('offer', $content) || !empty($content['offer'])) $offer = $this->setUserOffer($content['offer']);
-                if (array_key_exists('badge', $content) || !empty($content['badge'])) $badge = $this->setUserBadge($content['badge']);
+                $role = (!empty($content['role'])) ? $this->findRole($content['role']) : $this->findRole(1);
+                if (!empty($content['offer'])) $offer = $this->findOffer($content['offer']);
+
+                $badges = [];
+                if (!empty($content['badge'])) {
+                    foreach ($content['badge'] as $badge) {
+                        $badges[] = $this->findBadge($badge)->getId();
+                    }
+                }
 
                 $content['role'] = $role->getId();
-                if (isset($badge)) $content['badge'] = $badge->getId();
+                if (isset($badge)) $content['badge'] = $badges;
                 if (isset($offer)) $content['offer'] = $offer->getId();
+                $content['password'] = $user->getPassword();
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);
@@ -172,9 +198,9 @@ class UserController extends AbstractController
                     $this->status['result'] = "error";
                     $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
                 }
-
-                $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
             }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
         } catch (Exception $e) {
             $this->status['result'] = "error";
             $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
@@ -183,21 +209,18 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
-    public function setUserRole(int $data): Role
+    public function findRole(int $data): Role
     {
-        $roleRepository = $this->doctrine->getRepository(Role::class);
-        return $roleRepository->find($data);
+        return $this->doctrine->getRepository(Role::class)->find($data);
     }
 
-    public function setUserOffer(int $data): Offer
+    public function findOffer(int $data): Offer
     {
-        $offerRepository = $this->doctrine->getRepository(Offer::class);
-        return $offerRepository->find($data);
+        return $this->doctrine->getRepository(Offer::class)->find($data);
     }
 
-    public function setUserBadge(int $data): Badge
+    public function findBadge(int $data): Badge
     {
-        $badgeRepository = $this->doctrine->getRepository(Badge::class);
-        return $badgeRepository->find($data);
+        return $this->doctrine->getRepository(Badge::class)->find($data);
     }
 }

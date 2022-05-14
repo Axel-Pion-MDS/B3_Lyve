@@ -34,6 +34,8 @@ class RoleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Role::class,
+            'csrf_protection' => false,
+            'allow_extra_fields' => true,
         ]);
     }
 }

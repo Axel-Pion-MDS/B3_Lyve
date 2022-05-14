@@ -1,21 +1,22 @@
 import './User.css'
 
 import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 import axios from "axios";
 
 const Users = () => {
   const [persons, setPersons] = useState([]);
 
-  useEffect(() =>  {
-    axios.get(`http://lyve.local/api/users`)
+  useEffect(() => {
+    axios.get(`http://lyve.local/user/list`)
       .then(res => {
-        setPersons(res.data['hydra:member']);
+        setPersons(res.data.data);
       })
   }, [])
 
   return (
     <div>
-      <a className={"button"} href={"user/add"}>Ajouter</a>
+      <Link to={"user/add"}>Add</Link>
       <table>
         <thead>
         <tr>
@@ -35,9 +36,9 @@ const Users = () => {
               <td key={`person_lastname_${person.id}`}>{person.lastname}</td>
               <td key={`person_email_${person.id}`}>{person.email}</td>
               <td key={`action_btn_${person.id}`}>
-                <a className={"button"} href={`/api/user/${person.email}`}>Voir</a>
-                <a className={"button"} href={`/api/user/update/${person.email}`}>Modifier</a>
-                <a className={"button"} href={`/api/user/delete/${person.email}`}>Supprimer</a>
+                  <Link to={`/api/user/${person.id}`}>See</Link>
+                  <Link to={`/api/user/update/${person.id}`}>Edit</Link>
+                  <Link to={`/api/user/delete/${person.id}`}>Delete</Link>
               </td>
             </tr>
           ))

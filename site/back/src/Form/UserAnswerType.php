@@ -42,6 +42,8 @@ class UserAnswerType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserAnswer::class,
+            'csrf_protection' => false,
+            'allow_extra_fields' => true,
         ]);
     }
 }
