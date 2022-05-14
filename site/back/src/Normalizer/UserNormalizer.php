@@ -6,7 +6,6 @@ class UserNormalizer {
     public static function listNormalizer(array $data): array
     {
         $list = [];
-
         foreach ($data as $user) {
             $list[] = [
                 'id' => $user->getId(),

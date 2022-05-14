@@ -21,9 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/user', name: 'user')]
 class UserController extends AbstractController
 {
-    private $userRepository;
-    private $doctrine;
-    private $status = ['result' => 'success', 'msg' => ''];
+    private UserRepository $userRepository;
+    private ManagerRegistry $doctrine;
+    private array $status = ['result' => 'success', 'msg' => ''];
 
     public function __construct(UserRepository $userRepository, ManagerRegistry $doctrine)
     {
@@ -32,7 +32,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/list', name: '_list', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function list(): JsonResponse
     {
         try {
             $users = $this->userRepository->findAll();
@@ -46,21 +46,21 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
-    #[Route('/show', name: '_show', methods: ['GET'], requirements: ["id" => "^[1-9]\d*$"])]
+    #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
     public function show(Request $request): JsonResponse
     {
         try {
             $id = $request->get('id');
             $user = $this->userRepository->find($id);
 
-            if (empty($user)) {
+            if ($user === null) {
                 $this->status['result'] = "error";
                 $this->status['msg'] = "Requested user not found.";
             } else {
-                $data = UserNormalizer::showNormalizer($user);
+                $normalizer = UserNormalizer::showNormalizer($user);
             }
 
-            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $data];
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer ?? []];
         } catch (Exception $e) {
             $this->status['result'] = "error";
             $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
@@ -109,7 +109,6 @@ class UserController extends AbstractController
             $form->submit($request->request->all(), true);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $user->setCreatedAt(new DateTimeImmutable());
                 $em->persist($user);
                 $em->flush();
 
@@ -128,7 +127,7 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
-    #[Route('/delete', name: '_delete', methods: ['DELETE'], requirements: ["id" => "^[1-9]\d*$"])]
+    #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
         try {
@@ -136,7 +135,7 @@ class UserController extends AbstractController
             $id = $request->get('id');
             $user = $this->userRepository->find($id);
 
-            if (empty($user)) {
+            if ($user === null) {
                 $this->status['result'] = "error";
                 $this->status['msg'] = "Requested user not found.";
             } else {
@@ -155,7 +154,7 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
-    #[Route('/edit', name: '_edit', methods: ['POST'], requirements: ["id" => "^[1-9]\d*$"])]
+    #[Route('/edit', name: '_edit', methods: ['PATCH'])]
     public function edit(Request $request): JsonResponse
     {
         try {
@@ -189,7 +188,6 @@ class UserController extends AbstractController
                 $form->submit($request->request->all(), true);
 
                 if ($form->isSubmitted() && $form->isValid()) {
-                    $user->setCreatedAt(new DateTimeImmutable());
                     $em->persist($user);
                     $em->flush();
 

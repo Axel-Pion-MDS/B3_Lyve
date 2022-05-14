@@ -9,16 +9,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Monolog\DateTimeImmutable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['lastname' => 'DESC', 'firstname' => 'ASC'],
-    paginationEnabled: false,
-)]
-class User implements UserInterface, \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
+#[ORM\HasLifecycleCallbacks]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -57,10 +53,10 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class)]
     private $message;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable:true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable:true)]
     private $updated_at;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -241,27 +237,26 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
-        $tmp = $this->created_at;
-        $this->created_at = $created_at ?? $tmp;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt($updated_at): self
     {
-        $this->updated_at = $updated_at ?? new DateTimeImmutable(false);
+        $this->updated_at = $updated_at;
 
         return $this;
     }
@@ -299,4 +294,17 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     {
         // TODO: Implement getUserIdentifier() method.
     }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
+    }
+
 }
