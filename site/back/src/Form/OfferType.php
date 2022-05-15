@@ -23,16 +23,11 @@ class OfferType extends AbstractType
                 'scale' => 2,
                 'invalid_message' => 'the price value is invalid'
             ])
-            ->add('modules', EntityType::class, ['class' => Module::class, 'invalid_message' => 'The module value is invalid'] )
-            ->add('created_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
-            ])
-            ->add('updated_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
+            ->add('modules', EntityType::class, [
+                'class' => Module::class,
+                'multiple' => true,
+                'expanded' => true,
+                'invalid_message' => 'The module value is invalid'
             ])
         ;
     }

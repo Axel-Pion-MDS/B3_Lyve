@@ -30,7 +30,7 @@ class UserType extends AbstractType
                 'html5' => false,
             ])
             ->add('number', TextType::class, ['invalid_message' => 'The number value is invalid'])
-            ->add('badge', EntityType::class, [
+            ->add('badges', EntityType::class, [
                 'class' => Badge::class,
                 'multiple' => true,
                 'expanded' => true,

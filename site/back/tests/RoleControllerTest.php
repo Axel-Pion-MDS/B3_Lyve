@@ -19,10 +19,9 @@ class RoleControllerTest extends KernelTestCase
     {
         $role = [
             'title' => 'UnitTest',
-
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('http://127.0.0.1:8000/role/add', [
+        $request = $client->post('http://lyve.local/role/add', [
             RequestOptions::JSON => $role
         ]);
 
@@ -40,7 +39,7 @@ class RoleControllerTest extends KernelTestCase
     public function testList(): void
     {
         $client = new Client(['verify' => false]);
-        $request = $client->get('http://127.0.0.1:8000/role/list');
+        $request = $client->get('http://lyve.local/role/list');
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -57,7 +56,7 @@ class RoleControllerTest extends KernelTestCase
     {
         $id = RoleControllerTestData::$roleId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("http://127.0.0.1:8000/role/show?id=$id");
+        $request = $client->get("http://lyve.local/role/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -77,7 +76,7 @@ class RoleControllerTest extends KernelTestCase
             'id' => $id,
             'title' => 'UnitTestEdit',
         ];
-        $request = $client->patch('http://127.0.0.1:8000/role/edit', [
+        $request = $client->patch('http://lyve.local/role/edit', [
             RequestOptions::JSON => $user
         ]);
 
@@ -92,7 +91,7 @@ class RoleControllerTest extends KernelTestCase
     {
         $id = RoleControllerTestData::$roleId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("http://127.0.0.1:8000/role/delete?id=$id");
+        $request = $client->delete("http://lyve.local/role/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

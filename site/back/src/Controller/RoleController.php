@@ -30,7 +30,7 @@ class RoleController extends AbstractController
     }
 
     #[Route('/list', name: '_list', methods: ['GET'])]
-    public function list(RoleRepository $roleRepository): JsonResponse
+    public function list(): JsonResponse
     {
         try {
             $roles = $this->roleRepository->findAll();
@@ -53,7 +53,7 @@ class RoleController extends AbstractController
 
             if ($role === null) {
                 $this->status['result'] = "error";
-                $this->status['msg'] = "Requested user not found.";
+                $this->status['msg'] = "Requested role not found.";
             } else {
                 $normalizer = RoleNormalizer::showNormalizer($role);
             }
@@ -152,7 +152,7 @@ class RoleController extends AbstractController
                 $em->remove($role);
                 $em->flush();
 
-                $this->status['msg'] = "User deleted.";
+                $this->status['msg'] = "Role deleted.";
             }
 
             $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];

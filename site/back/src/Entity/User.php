@@ -45,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $offer;
 
     #[ORM\ManyToMany(targetEntity: Badge::class, inversedBy: 'users')]
-    private $badge;
+    private $badges;
 
     #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'users')]
     private $user_answer;
@@ -64,7 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->badge = new ArrayCollection();
+        $this->badges = new ArrayCollection();
         $this->module = new ArrayCollection();
         $this->user_answer = new ArrayCollection();
         $this->message = new ArrayCollection();
@@ -162,23 +162,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Badge>
      */
-    public function getBadge(): ?Collection
+    public function getBadges(): ?Collection
     {
-        return $this->badge;
+        return $this->badges;
     }
 
-    public function addBadge(?Badge $badge): self
+    public function addBadges(?Badge $badges): self
     {
-        if (!$this->badge->contains($badge)) {
-            $this->badge[] = $badge;
+        if (!$this->badges->contains($badges)) {
+            $this->badges[] = $badges;
         }
 
         return $this;
     }
 
-    public function removeBadge(Badge $badge): self
+    public function removeBadges(Badge $badges): self
     {
-        $this->badge->removeElement($badge);
+        $this->badges->removeElement($badges);
 
         return $this;
     }

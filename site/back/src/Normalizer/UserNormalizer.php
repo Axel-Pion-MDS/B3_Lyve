@@ -21,7 +21,7 @@ class UserNormalizer {
     public static function showNormalizer(object $data): array
     {
         $badges = [];
-        foreach ($data->getBadge() as $badge) {
+        foreach ($data->getBadges() as $badge) {
             $badges[] = [
                 'id' => $badge->getId(),
                 'label' => $badge->getTitle(),
@@ -43,7 +43,7 @@ class UserNormalizer {
                 'id' => $data->getOffer()->getId(),
                 'label' => $data->getOffer()->getTitle()
             ] : null,
-            'badge' => $badges,
+            'badges' => $badges,
         ];
 
         return $user;

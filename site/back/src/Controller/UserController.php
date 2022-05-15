@@ -91,13 +91,13 @@ class UserController extends AbstractController
                     $random = random_int(1, 10)
                 );
             }
-            if (!empty($content['badge'])) {
-                foreach ($content['badge'] as $item) {
+            if (!empty($content['badges'])) {
+                foreach ($content['badges'] as $item) {
                     $badge = $this->findBadge($item);
                     $badges[] = $badge->getId();
                 }
             }
-            if (!empty($badges)) $content['badge'] = $badges;
+            if (!empty($badges)) $content['badges'] = $badges;
 
             $content['password'] = $hashPassword;
             $role = (!empty($content['role'])) ? $this->findRole($content['role']) : $this->findRole(1);
@@ -173,14 +173,14 @@ class UserController extends AbstractController
                 if (!empty($content['offer'])) $offer = $this->findOffer($content['offer']);
 
                 $badges = [];
-                if (!empty($content['badge'])) {
-                    foreach ($content['badge'] as $badge) {
+                if (!empty($content['badges'])) {
+                    foreach ($content['badges'] as $badge) {
                         $badges[] = $this->findBadge($badge)->getId();
                     }
                 }
 
                 $content['role'] = $role->getId();
-                if (isset($badge)) $content['badge'] = $badges;
+                if (isset($badge)) $content['badges'] = $badges;
                 if (isset($offer)) $content['offer'] = $offer->getId();
                 $content['password'] = $user->getPassword();
 
