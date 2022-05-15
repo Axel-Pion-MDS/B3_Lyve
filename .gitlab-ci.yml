@@ -1,0 +1,65 @@
+variables:
+  # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: test_coreit
+  HOST: mysql
+  MYSQL_USER: root
+  MYSQL_ALLOW_EMPTY_PASSWORD: 1
+
+default:
+  image: php:8.0.8
+  services:
+    - mysql:5.7
+  before_script:
+    - apt-get -qq update -y
+    - apt-get -qq install -y git libmcrypt-dev libpq-dev libcurl4-gnutls-dev libicu-dev libonig-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev libzip-dev
+    - php -m
+    - docker-php-ext-install zip pdo_mysql intl gd bz2 opcache ldap
+
+stages:
+  - build # First stage, used to install all dependencies & create cache.
+  - security-checker
+  - test # Second stage, used to run all tests.
+
+# Cache is used to keep dependencies between each stage. Created a the end of the build stage, and loaded before each other.
+cache:
+  key: dependencies
+  paths:
+    - site/back/vendor/
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    # Install all dependencies for cache
+    - ls -l
+    - cd site/back/
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php');"
+    - php composer.phar install
+
+
+security-checker:
+  stage: security-checker
+  script:
+    - cd site/back/
+    - curl -sS https://get.symfony.com/cli/installer | bash
+    - sleep 5
+    - /root/.symfony/bin/symfony check:requirements
+  allow_failure: false
+
+# If a test fails, pipeline fails and next jobs will not run
+test:
+  stage: test
+  tags:
+    - docker
+  script:
+    # Specific config is used for env & phpunit considering different DB access
+    - cd site/back/
+    - cp .env.gitlab .env.test -f
+    - curl -sS https://get.symfony.com/cli/installer | bash
+    - /root/.symfony/bin/symfony server:start &
+    - sleep 8
+    - php vendor/bin/phpunit --configuration phpunit.xml.dist --testdox
+
