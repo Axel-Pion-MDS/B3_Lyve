@@ -5,11 +5,6 @@ variables:
   MYSQL_USER: root
   MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
-.macos_saas_runners:
-  tags:
-    - shared-macos-amd64
-  image: macos-11-xcode-12
-
 default:
   image: php:8.0.8
   services:
@@ -33,8 +28,6 @@ cache:
     - site/back/vendor/
 
 build:
-  extends:
-    - .macos_saas_runners
   stage: build
   tags:
     - docker
@@ -49,8 +42,6 @@ build:
 
 
 security-checker:
-  extends:
-    - .macos_saas_runners
   stage: security-checker
   script:
     - cd site/back/
@@ -61,8 +52,6 @@ security-checker:
 
 # If a test fails, pipeline fails and next jobs will not run
 test:
-  extends:
-    - .macos_saas_runners
   stage: test
   tags:
     - docker
