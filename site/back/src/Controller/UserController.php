@@ -9,7 +9,6 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Normalizer\UserNormalizer;
 use App\Repository\UserRepository;
-use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

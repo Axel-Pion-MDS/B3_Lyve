@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OfferRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -146,6 +145,11 @@ class Offer
         $this->modules->removeElement($module);
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
     }
 
     #[ORM\PrePersist]

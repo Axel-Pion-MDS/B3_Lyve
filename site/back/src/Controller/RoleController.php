@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Role;
 use App\Form\RoleType;
 use App\Normalizer\RoleNormalizer;
@@ -12,7 +11,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/role', name: 'role')]

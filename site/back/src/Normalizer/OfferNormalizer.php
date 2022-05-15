@@ -27,6 +27,7 @@ class OfferNormalizer
                 'label' => $module->getTitle(),
             ];
         }
+
         $offer[] = [
             'id' => $data->getId(),
             'title' => $data->getTitle(),
