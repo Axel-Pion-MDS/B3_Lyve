@@ -19,18 +19,19 @@ class BadgeType extends AbstractType
         $builder
             ->add('title', TextType::class, ['invalid_message' => 'The title value is invalid'])
             ->add('picture', TextType::class, ['invalid_message' => 'The picture value is invalid'])
-            ->add('created_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
+            ->add('users', EntityType::class, [
+                'class' => User::class,
+                'multiple' => true,
+                'expanded' => true,
+                'by_reference' => false,
+                'invalid_message' => 'The title value is invalid'
             ])
-            ->add('update_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
+            ->add('modules', EntityType::class, [
+                'class' => Module::class,
+                'multiple' => true,
+                'expanded' => true,
+                'invalid_message' => 'The module value is invalid'
             ])
-            ->add('users', EntityType::class, ['class' => User::class, 'invalid_message' => 'The title value is invalid'])
-            ->add('module', EntityType::class, ['class' => Module::class, 'invalid_message' => 'The title value is invalid'])
         ;
     }
 

@@ -295,6 +295,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // TODO: Implement getUserIdentifier() method.
     }
 
+    public function __toString(): string
+    {
+        return $this->email;
+    }
+
     #[ORM\PrePersist]
     public function beforePersist(): void
     {
@@ -306,5 +311,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->updated_at = new \DateTime();
     }
-
 }

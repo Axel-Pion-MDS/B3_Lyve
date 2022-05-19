@@ -19,7 +19,7 @@ class Module
     #[ORM\Column(type: 'string', length: 100)]
     private $title;
 
-    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Badge::class)]
+    #[ORM\ManyToMany(targetEntity: Badge::class, mappedBy: 'modules')]
     private $badges;
 
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Chapter::class)]
@@ -74,7 +74,7 @@ class Module
     {
         if (!$this->badges->contains($badge)) {
             $this->badges[] = $badge;
-            $badge->setModule($this);
+            $badge->addModule($this);
         }
 
         return $this;
@@ -84,8 +84,8 @@ class Module
     {
         if ($this->badges->removeElement($badge)) {
             // set the owning side to null (unless already changed)
-            if ($badge->getModule() === $this) {
-                $badge->setModule(null);
+            if ($badge->getModules() === $this) {
+                $badge->addModule(null);
             }
         }
 

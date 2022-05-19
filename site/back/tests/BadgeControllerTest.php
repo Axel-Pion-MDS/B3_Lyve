@@ -2,14 +2,14 @@
 
 namespace App\Tests;
 
-use App\Tests\Data\ModuleControllerTestData;
+use App\Tests\Data\BadgeControllerTestData;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ModuleControllerTest extends KernelTestCase
+class BadgeControllerTest extends KernelTestCase
 {
     /**
      * @throws JsonException
@@ -17,22 +17,22 @@ class ModuleControllerTest extends KernelTestCase
      */
     public function testAdd(): void
     {
-        $module = [
+        $badge = [
             'title' => 'UnitTest',
-            'content' => 'UnitTest',
-            'offers' => [],
-            'badges' => [],
+            'picture' => 'UnitTestPicture',
+            'modules' => [],
+            'users' => [],
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('http://lyve.local/module/add', [
-            RequestOptions::JSON => $module
+        $request = $client->post('http://lyve.local/badge/add', [
+            RequestOptions::JSON => $badge
         ]);
 
         $this->assertJson(json_encode($request, JSON_THROW_ON_ERROR));
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(200, $request->getStatusCode());
         $this->assertEquals('success', $data['result']);
-        ModuleControllerTestData::$moduleId = $data['moduleId'];
+        BadgeControllerTestData::$badgeId = $data['badgeId'];
     }
 
     /**
@@ -42,13 +42,13 @@ class ModuleControllerTest extends KernelTestCase
     public function testList(): void
     {
         $client = new Client(['verify' => false]);
-        $request = $client->get('http://lyve.local/module/list');
+        $request = $client->get('http://lyve.local/badge/list');
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('id', $data['data'][0]);
         $this->assertArrayHasKey('title', $data['data'][0]);
-        $this->assertArrayHasKey('content', $data['data'][0]);
+        $this->assertArrayHasKey('picture', $data['data'][0]);
     }
 
     /**
@@ -57,17 +57,17 @@ class ModuleControllerTest extends KernelTestCase
      */
     public function testShow(): void
     {
-        $id = ModuleControllerTestData::$moduleId;
+        $id = BadgeControllerTestData::$badgeId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("http://lyve.local/module/show?id=$id");
+        $request = $client->get("http://lyve.local/badge/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('id', $data['data'][0]);
         $this->assertArrayHasKey('title', $data['data'][0]);
-        $this->assertArrayHasKey('content', $data['data'][0]);
-        $this->assertArrayHasKey('offers', $data['data'][0]);
-        $this->assertArrayHasKey('badges', $data['data'][0]);
+        $this->assertArrayHasKey('picture', $data['data'][0]);
+        $this->assertArrayHasKey('modules', $data['data'][0]);
+        $this->assertArrayHasKey('users', $data['data'][0]);
     }
 
     /**
@@ -76,16 +76,16 @@ class ModuleControllerTest extends KernelTestCase
      */
     public function testEdit(): void
     {
-        $id = ModuleControllerTestData::$moduleId;
+        $id = BadgeControllerTestData::$badgeId;
         $client = new Client(['verify' => false]);
         $user = [
             'id' => $id,
             'title' => 'UnitTestEdit',
-            'content' => 'UnitTestEdit',
-            'offers' => [],
-            'badges' => [],
+            'picture' => 'UnitTestEditPicture',
+            'modules' => [],
+            'users' => [],
         ];
-        $request = $client->patch('http://lyve.local/module/edit', [
+        $request = $client->patch('http://lyve.local/badge/edit', [
             RequestOptions::JSON => $user
         ]);
 
@@ -98,9 +98,9 @@ class ModuleControllerTest extends KernelTestCase
      */
     public function testDelete(): void
     {
-        $id = ModuleControllerTestData::$moduleId;
+        $id = BadgeControllerTestData::$badgeId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("http://lyve.local/module/delete?id=$id");
+        $request = $client->delete("http://lyve.local/badge/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

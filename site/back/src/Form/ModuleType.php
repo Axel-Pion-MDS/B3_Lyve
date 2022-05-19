@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Badge;
 use App\Entity\Module;
 use App\Entity\Offer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -23,6 +24,13 @@ class ModuleType extends AbstractType
                 'expanded' => true,
                 'by_reference' => false,
                 'invalid_message' => 'The offer value is invalid'
+            ])
+            ->add('badges', EntityType::class, [
+                'class' => Badge::class,
+                'multiple' => true,
+                'expanded' => true,
+                'by_reference' => false,
+                'invalid_message' => 'The badge value is invalid'
             ])
         ;
     }

@@ -28,11 +28,20 @@ class ModuleNormalizer
             ];
         }
 
+        $badges = [];
+        foreach ($data->getBadges() as $badge) {
+            $badges[] = [
+                'id' => $badge->getId(),
+                'label' => $badge->getTitle(),
+            ];
+        }
+
         $module[] = [
             'id' => $data->getId(),
             'title' => $data->getTitle(),
             'content' => $data->getContent(),
             'offers' => $offers,
+            'badges' => $badges
         ];
 
         return $module;

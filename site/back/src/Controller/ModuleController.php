@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Badge;
 use App\Entity\Module;
 use App\Entity\Offer;
 use App\Form\ModuleType;
@@ -82,7 +83,14 @@ class ModuleController extends AbstractController
                 }
             }
 
+            if (!empty($content['badges'])) {
+                foreach ($content['badges'] as $badge) {
+                    $badges[] = $this->findBadge($badge)->getId();
+                }
+            }
+
             if (isset($offers)) $content['offers'] = $offers;
+            if (isset($badges)) $content['badges'] = $badges;
 
             $request->request->add($content);
             $form->submit($request->request->all(), true);
@@ -127,7 +135,14 @@ class ModuleController extends AbstractController
                     }
                 }
 
+                if (!empty($content['badges'])) {
+                    foreach ($content['badges'] as $badge) {
+                        $badges[] = $this->findBadge($badge)->getId();
+                    }
+                }
+
                 if (isset($offers)) $content['offers'] = $offers;
+                if (isset($badges)) $content['badges'] = $badges;
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);
@@ -136,7 +151,7 @@ class ModuleController extends AbstractController
                     $em->persist($module);
                     $em->flush();
 
-                    $this->status['msg'] = "Offer edited.";
+                    $this->status['msg'] = "Module edited.";
                 } else if ($form->isSubmitted() && !$form->isValid()) {
                     $this->status['result'] = "error";
                     $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
@@ -162,12 +177,12 @@ class ModuleController extends AbstractController
 
             if ($module === null) {
                 $this->status['result'] = "error";
-                $this->status['msg'] = "Requested role not found.";
+                $this->status['msg'] = "Requested module not found.";
             } else {
                 $em->remove($module);
                 $em->flush();
 
-                $this->status['msg'] = "Offer deleted.";
+                $this->status['msg'] = "Module deleted.";
             }
 
             $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
@@ -182,5 +197,10 @@ class ModuleController extends AbstractController
     public function findOffer(int $data): Offer
     {
         return $this->doctrine->getRepository(Offer::class)->find($data);
+    }
+
+    public function findBadge(int $data): Badge
+    {
+        return $this->doctrine->getRepository(Badge::class)->find($data);
     }
 }
