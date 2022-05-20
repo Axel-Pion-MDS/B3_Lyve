@@ -23,7 +23,7 @@ class BadgeController extends AbstractController
     private array $status = ['result' => 'success', 'msg' => ''];
 
 
-    public function __construct(badgeRepository $badgeRepository, ManagerRegistry $doctrine)
+    public function __construct(BadgeRepository $badgeRepository, ManagerRegistry $doctrine)
     {
         $this->badgeRepository = $badgeRepository;
         $this->doctrine = $doctrine;

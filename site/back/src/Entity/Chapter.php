@@ -9,12 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
-    paginationEnabled: false,
-)]
+#[ORM\HasLifecycleCallbacks]
 class Chapter
 {
     #[ORM\Id]
@@ -34,10 +29,10 @@ class Chapter
     #[ORM\Column(type: 'text')]
     private $content;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updated_at;
 
     public function __construct()
@@ -116,27 +111,39 @@ class Chapter
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt($updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
     }
 }

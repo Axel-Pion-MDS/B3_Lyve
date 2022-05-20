@@ -18,16 +18,6 @@ class ChapterType extends AbstractType
         $builder
             ->add('title', TextType::class, ['invalid_message' => 'The title value is invalid'])
             ->add('content', TextType::class, ['invalid_message' => 'The content value is invalid'])
-            ->add('created_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
-            ])
-            ->add('updated_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
-            ])
             ->add('module', EntityType::class, ['class' => Module::class, 'invalid_message' => 'The module value is invalid'])
         ;
     }
