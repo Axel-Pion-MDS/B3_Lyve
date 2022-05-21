@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ChapterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,6 +28,9 @@ class Chapter
     #[ORM\Column(type: 'text')]
     private $content;
 
+    #[ORM\OneToMany(mappedBy: 'chapter', targetEntity: Part::class)]
+    private $parts;
+
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $created_at;
 
@@ -38,6 +40,7 @@ class Chapter
     public function __construct()
     {
         $this->question = new ArrayCollection();
+        $this->parts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,5 +148,35 @@ class Chapter
     public function beforeUpdate(): void
     {
         $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @return Collection<int, Part>
+     */
+    public function getParts(): Collection
+    {
+        return $this->parts;
+    }
+
+    public function addPart(Part $part): self
+    {
+        if (!$this->parts->contains($part)) {
+            $this->parts[] = $part;
+            $part->setChapter($this);
+        }
+
+        return $this;
+    }
+
+    public function removePart(Part $part): self
+    {
+        if ($this->parts->removeElement($part)) {
+            // set the owning side to null (unless already changed)
+            if ($part->getChapter() === $this) {
+                $part->setChapter(null);
+            }
+        }
+
+        return $this;
     }
 }

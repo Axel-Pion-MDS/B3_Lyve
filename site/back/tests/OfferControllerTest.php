@@ -23,7 +23,7 @@ class OfferControllerTest extends KernelTestCase
             'modules' => [],
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('http://lyve.local/offer/add', [
+        $request = $client->post('https://lyve.local/offer/add', [
             RequestOptions::JSON => $offer
         ]);
 
@@ -41,7 +41,7 @@ class OfferControllerTest extends KernelTestCase
     public function testList(): void
     {
         $client = new Client(['verify' => false]);
-        $request = $client->get('http://lyve.local/offer/list');
+        $request = $client->get('https://lyve.local/offer/list');
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -58,7 +58,7 @@ class OfferControllerTest extends KernelTestCase
     {
         $id = OfferControllerTestData::$offerId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("http://lyve.local/offer/show?id=$id");
+        $request = $client->get("https://lyve.local/offer/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -82,7 +82,7 @@ class OfferControllerTest extends KernelTestCase
             'price' => 999,
             'modules' => [],
         ];
-        $request = $client->patch('http://lyve.local/offer/edit', [
+        $request = $client->patch('https://lyve.local/offer/edit', [
             RequestOptions::JSON => $user
         ]);
 
@@ -97,7 +97,7 @@ class OfferControllerTest extends KernelTestCase
     {
         $id = OfferControllerTestData::$offerId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("http://lyve.local/offer/delete?id=$id");
+        $request = $client->delete("https://lyve.local/offer/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

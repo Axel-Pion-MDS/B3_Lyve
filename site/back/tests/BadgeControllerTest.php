@@ -24,7 +24,7 @@ class BadgeControllerTest extends KernelTestCase
             'users' => [],
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('http://lyve.local/badge/add', [
+        $request = $client->post('https://lyve.local/badge/add', [
             RequestOptions::JSON => $badge
         ]);
 
@@ -42,7 +42,7 @@ class BadgeControllerTest extends KernelTestCase
     public function testList(): void
     {
         $client = new Client(['verify' => false]);
-        $request = $client->get('http://lyve.local/badge/list');
+        $request = $client->get('https://lyve.local/badge/list');
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -59,7 +59,7 @@ class BadgeControllerTest extends KernelTestCase
     {
         $id = BadgeControllerTestData::$badgeId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("http://lyve.local/badge/show?id=$id");
+        $request = $client->get("https://lyve.local/badge/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -85,7 +85,7 @@ class BadgeControllerTest extends KernelTestCase
             'modules' => [],
             'users' => [],
         ];
-        $request = $client->patch('http://lyve.local/badge/edit', [
+        $request = $client->patch('https://lyve.local/badge/edit', [
             RequestOptions::JSON => $user
         ]);
 
@@ -100,7 +100,7 @@ class BadgeControllerTest extends KernelTestCase
     {
         $id = BadgeControllerTestData::$badgeId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("http://lyve.local/badge/delete?id=$id");
+        $request = $client->delete("https://lyve.local/badge/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

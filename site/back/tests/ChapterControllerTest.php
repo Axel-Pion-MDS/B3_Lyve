@@ -21,9 +21,10 @@ class ChapterControllerTest extends KernelTestCase
             'title' => 'UnitTest',
             'content' => 'UnitTest',
             'module' => 1,
+            'parts' => [1],
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('http://lyve.local/chapter/add', [
+        $request = $client->post('https://lyve.local/chapter/add', [
             RequestOptions::JSON => $module
         ]);
 
@@ -41,7 +42,7 @@ class ChapterControllerTest extends KernelTestCase
     public function testList(): void
     {
         $client = new Client(['verify' => false]);
-        $request = $client->get('http://lyve.local/chapter/list');
+        $request = $client->get('https://lyve.local/chapter/list');
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -58,7 +59,7 @@ class ChapterControllerTest extends KernelTestCase
     {
         $id = ChapterControllerTestData::$chapterId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("http://lyve.local/chapter/show?id=$id");
+        $request = $client->get("https://lyve.local/chapter/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -66,6 +67,7 @@ class ChapterControllerTest extends KernelTestCase
         $this->assertArrayHasKey('title', $data['data'][0]);
         $this->assertArrayHasKey('content', $data['data'][0]);
         $this->assertArrayHasKey('module', $data['data'][0]);
+        $this->assertArrayHasKey('parts', $data['data'][0]);
     }
 
     /**
@@ -81,8 +83,9 @@ class ChapterControllerTest extends KernelTestCase
             'title' => 'UnitTestEdit',
             'content' => 'UnitTestEdit',
             'module' => 1,
+            'parts' => [1],
         ];
-        $request = $client->patch('http://lyve.local/chapter/edit', [
+        $request = $client->patch('https://lyve.local/chapter/edit', [
             RequestOptions::JSON => $chapter
         ]);
 
@@ -97,7 +100,7 @@ class ChapterControllerTest extends KernelTestCase
     {
         $id = ChapterControllerTestData::$chapterId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("http://lyve.local/chapter/delete?id=$id");
+        $request = $client->delete("https://lyve.local/chapter/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

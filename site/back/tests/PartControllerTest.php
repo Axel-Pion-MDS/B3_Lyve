@@ -2,14 +2,14 @@
 
 namespace App\Tests;
 
-use App\Tests\Data\ModuleControllerTestData;
+use App\Tests\Data\PartControllerTestData;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ModuleControllerTest extends KernelTestCase
+class PartControllerTest extends KernelTestCase
 {
     /**
      * @throws JsonException
@@ -20,11 +20,10 @@ class ModuleControllerTest extends KernelTestCase
         $module = [
             'title' => 'UnitTest',
             'content' => 'UnitTest',
-            'offers' => [],
-            'badges' => [],
+            'chapter' => 1,
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('https://lyve.local/module/add', [
+        $request = $client->post('https://lyve.local/part/add', [
             RequestOptions::JSON => $module
         ]);
 
@@ -32,7 +31,7 @@ class ModuleControllerTest extends KernelTestCase
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(200, $request->getStatusCode());
         $this->assertEquals('success', $data['result']);
-        ModuleControllerTestData::$moduleId = $data['moduleId'];
+        PartControllerTestData::$partId = $data['partId'];
     }
 
     /**
@@ -42,7 +41,7 @@ class ModuleControllerTest extends KernelTestCase
     public function testList(): void
     {
         $client = new Client(['verify' => false]);
-        $request = $client->get('https://lyve.local/module/list');
+        $request = $client->get('https://lyve.local/part/list');
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -57,17 +56,16 @@ class ModuleControllerTest extends KernelTestCase
      */
     public function testShow(): void
     {
-        $id = ModuleControllerTestData::$moduleId;
+        $id = PartControllerTestData::$partId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("https://lyve.local/module/show?id=$id");
+        $request = $client->get("https://lyve.local/part/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('id', $data['data'][0]);
         $this->assertArrayHasKey('title', $data['data'][0]);
         $this->assertArrayHasKey('content', $data['data'][0]);
-        $this->assertArrayHasKey('offers', $data['data'][0]);
-        $this->assertArrayHasKey('badges', $data['data'][0]);
+        $this->assertArrayHasKey('chapter', $data['data'][0]);
     }
 
     /**
@@ -76,20 +74,19 @@ class ModuleControllerTest extends KernelTestCase
      */
     public function testEdit(): void
     {
-        $id = ModuleControllerTestData::$moduleId;
+        $id = PartControllerTestData::$partId;
         $client = new Client(['verify' => false]);
-        $user = [
+        $part = [
             'id' => $id,
             'title' => 'UnitTestEdit',
             'content' => 'UnitTestEdit',
-            'offers' => [],
-            'badges' => [],
+            'chapter' => 1,
         ];
-        $request = $client->patch('https://lyve.local/module/edit', [
-            RequestOptions::JSON => $user
+        $request = $client->patch('https://lyve.local/part/edit', [
+            RequestOptions::JSON => $part
         ]);
 
-        $this->assertJson(json_encode($user, JSON_THROW_ON_ERROR));
+        $this->assertJson(json_encode($part, JSON_THROW_ON_ERROR));
         $this->assertEquals(200, $request->getStatusCode());
     }
 
@@ -98,9 +95,9 @@ class ModuleControllerTest extends KernelTestCase
      */
     public function testDelete(): void
     {
-        $id = ModuleControllerTestData::$moduleId;
+        $id = PartControllerTestData::$partId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("https://lyve.local/module/delete?id=$id");
+        $request = $client->delete("https://lyve.local/part/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

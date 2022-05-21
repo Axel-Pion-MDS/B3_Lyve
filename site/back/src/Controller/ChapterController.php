@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Chapter;
 use App\Entity\Module;
+use App\Entity\Part;
 use App\Form\ChapterType;
 use App\Normalizer\ChapterNormalizer;
 use App\Repository\ChapterRepository;
@@ -12,10 +13,9 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/chapter')]
+#[Route('/chapter', name: 'chapter')]
 class ChapterController extends AbstractController
 {
     private ChapterRepository $chapterRepository;
@@ -76,7 +76,15 @@ class ChapterController extends AbstractController
             $chapter = new Chapter();
             $form = $this->createForm(ChapterType::class, $chapter);
 
+            $parts = [];
+            if (isset($content['parts'])) {
+                foreach ($content['parts'] as $part) {
+                    $parts[] = $this->findPart($part)->getId();
+                }
+            }
+
             if (isset($content['module'])) $content['module'] = $this->findModule($content['module'])->getId();
+            if (isset($parts)) $content['parts'] = $parts;
 
             $request->request->add($content);
             $form->submit($request->request->all(), true);
@@ -111,11 +119,19 @@ class ChapterController extends AbstractController
 
             if ($chapter === null) {
                 $this->status['result'] = "error";
-                $this->status['msg'] = "Requested badge not found.";
+                $this->status['msg'] = "Requested chapter not found.";
             } else {
                 $form = $this->createForm(ChapterType::class, $chapter);
 
+                $parts = [];
+                if (isset($content['parts'])) {
+                    foreach ($content['parts'] as $part) {
+                        $parts[] = $this->findPart($part)->getId();
+                    }
+                }
+
                 if (isset($content['module'])) $content['module'] = $this->findModule($content['module'])->getId();
+                if (isset($parts)) $content['parts'] = $parts;
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);
@@ -150,7 +166,7 @@ class ChapterController extends AbstractController
 
             if ($chapter === null) {
                 $this->status['result'] = "error";
-                $this->status['msg'] = "Requested badge not found.";
+                $this->status['msg'] = "Requested chapter not found.";
             } else {
                 $em->remove($chapter);
                 $em->flush();
@@ -170,5 +186,10 @@ class ChapterController extends AbstractController
     public function findModule(int $data): Module
     {
         return $this->doctrine->getRepository(Module::class)->find($data);
+    }
+
+    public function findPart(int $data): Part
+    {
+        return $this->doctrine->getRepository(Part::class)->find($data);
     }
 }

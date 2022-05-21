@@ -29,7 +29,7 @@ class UserControllerTest extends KernelTestCase
         ];
 
         $client = new Client(['verify' => false]);
-        $request = $client->post('http://lyve.local/user/add', [
+        $request = $client->post('https://lyve.local/user/add', [
             RequestOptions::JSON => $user
         ]);
 
@@ -47,7 +47,7 @@ class UserControllerTest extends KernelTestCase
     public function testList(): void
     {
         $client = new Client(['verify' => false]);
-        $request = $client->get('http://lyve.local/user/list');
+        $request = $client->get('https://lyve.local/user/list');
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -65,7 +65,7 @@ class UserControllerTest extends KernelTestCase
     {
         $id = UserControllerTestData::$userId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("http://lyve.local/user/show?id=$id");
+        $request = $client->get("https://lyve.local/user/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -99,7 +99,7 @@ class UserControllerTest extends KernelTestCase
             'offer' => '',
             'badges' => [1],
         ];
-        $request = $client->patch('http://lyve.local/user/edit', [
+        $request = $client->patch('https://lyve.local/user/edit', [
             RequestOptions::JSON => $user
         ]);
 
@@ -114,7 +114,7 @@ class UserControllerTest extends KernelTestCase
     {
         $id = UserControllerTestData::$userId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("http://lyve.local/user/delete?id=$id");
+        $request = $client->delete("https://lyve.local/user/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

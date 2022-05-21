@@ -20,6 +20,14 @@ class ChapterNormalizer
 
     public static function showNormalizer(object $data): array
     {
+        $parts = [];
+        foreach ($data->getParts() as $part) {
+            $parts[] = [
+                'id' => $part->getId(),
+                'label' => $part->getTitle(),
+            ];
+        }
+
         $chapter[] = [
             'id' => $data->getId(),
             'title' => $data->getTitle(),
@@ -28,6 +36,7 @@ class ChapterNormalizer
                 'id' => $data->getModule()->getId(),
                 'label' => $data->getModule()->getTitle(),
             ],
+            'parts' => $parts,
         ];
 
         return $chapter;

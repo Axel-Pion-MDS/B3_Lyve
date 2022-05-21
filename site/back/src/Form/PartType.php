@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Chapter;
 use App\Entity\Part;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,16 +18,7 @@ class PartType extends AbstractType
         $builder
             ->add('content', TextType::class, ['invalid_message' => 'The content value is invalid'])
             ->add('title', TextType::class, ['invalid_message' => 'The title value is invalid'])
-            ->add('created_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
-            ])
-            ->add('updated_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
-            ])
+            ->add('chapter', EntityType::class, ['class' => Chapter::class, 'invalid_message' => 'the chapter value is invalid'])
         ;
     }
 
