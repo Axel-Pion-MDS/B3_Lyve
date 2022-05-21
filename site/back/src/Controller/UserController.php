@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Answer;
 use App\Entity\Badge;
 use App\Entity\Offer;
 use App\Entity\Role;
@@ -74,30 +75,38 @@ class UserController extends AbstractController
         try {
             $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $em = $this->doctrine->getManager();
-
             $user = new User();
             $form = $this->createForm(UserType::class, $user);
 
-            $badges = [];
             if (!empty($content['password'])) {
                 $hashPassword = $passwordHasher->hashPassword(
                     $user,
                     $content['password']
                 );
             } else {
+                $random = random_int(1, 10);
                 $hashPassword = $passwordHasher->hashPassword(
                     $user,
-                    $random = random_int(1, 10)
+                    $random
                 );
             }
+
+            $badges = [];
             if (!empty($content['badges'])) {
                 foreach ($content['badges'] as $item) {
-                    $badge = $this->findBadge($item);
-                    $badges[] = $badge->getId();
+                    $badges[] = $this->findBadge($item)->getId();
                 }
             }
-            if (!empty($badges)) $content['badges'] = $badges;
 
+            $answers = [];
+            if (!empty($content['answers'])) {
+                foreach ($content['answers'] as $item) {
+                    $answers[] = $this->findAnswer($item)->getId();
+                }
+            }
+
+            $content['badges'] = $badges;
+            $content['answers'] = $answers;
             $content['password'] = $hashPassword;
             $role = (!empty($content['role'])) ? $this->findRole($content['role']) : $this->findRole(1);
             if (!empty($content['offer'])) $offer = $this->findOffer($content['offer']);
@@ -173,13 +182,21 @@ class UserController extends AbstractController
 
                 $badges = [];
                 if (!empty($content['badges'])) {
-                    foreach ($content['badges'] as $badge) {
-                        $badges[] = $this->findBadge($badge)->getId();
+                    foreach ($content['badges'] as $item) {
+                        $badges[] = $this->findBadge($item)->getId();
                     }
                 }
 
+                $answers = [];
+                if (!empty($content['answers'])) {
+                    foreach ($content['answers'] as $item) {
+                        $answers[] = $this->findAnswer($item)->getId();
+                    }
+                }
+
+                $content['badges'] = $badges;
+                $content['answers'] = $answers;
                 $content['role'] = $role->getId();
-                if (isset($badge)) $content['badges'] = $badges;
                 if (isset($offer)) $content['offer'] = $offer->getId();
                 $content['password'] = $user->getPassword();
 
@@ -219,5 +236,10 @@ class UserController extends AbstractController
     public function findBadge(int $data): Badge
     {
         return $this->doctrine->getRepository(Badge::class)->find($data);
+    }
+
+    public function findAnswer(int $data): Answer
+    {
+        return $this->doctrine->getRepository(Answer::class)->find($data);
     }
 }

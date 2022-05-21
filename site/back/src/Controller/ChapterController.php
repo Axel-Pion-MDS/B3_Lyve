@@ -83,8 +83,8 @@ class ChapterController extends AbstractController
                 }
             }
 
-            if (isset($content['module'])) $content['module'] = $this->findModule($content['module'])->getId();
-            if (isset($parts)) $content['parts'] = $parts;
+            $content['module'] = isset($content['module']) ? $this->findModule($content['module'])->getId() : [];
+            $content['parts'] = $parts;
 
             $request->request->add($content);
             $form->submit($request->request->all(), true);
@@ -130,8 +130,8 @@ class ChapterController extends AbstractController
                     }
                 }
 
-                if (isset($content['module'])) $content['module'] = $this->findModule($content['module'])->getId();
-                if (isset($parts)) $content['parts'] = $parts;
+                $content['module'] = isset($content['module']) ? $this->findModule($content['module'])->getId() : [];
+                $content['parts'] = $parts;
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);

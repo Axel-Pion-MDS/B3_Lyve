@@ -76,13 +76,14 @@ class OfferController extends AbstractController
             $offer = new Offer();
             $form = $this->createForm(OfferType::class, $offer);
 
+            $modules = [];
             if (!empty($content['modules'])) {
                 foreach ($content['modules'] as $module) {
                     $modules[] = $this->findModule($module)->getId();
                 }
             }
 
-            if (isset($modules)) $content['modules'] = $modules;
+            $content['modules'] = $modules;
 
             $request->request->add($content);
             $form->submit($request->request->all(), true);
@@ -121,13 +122,14 @@ class OfferController extends AbstractController
             } else {
                 $form = $this->createForm(OfferType::class, $offer);
 
+                $modules = [];
                 if (!empty($content['modules'])) {
                     foreach ($content['modules'] as $module) {
                         $modules[] = $this->findModule($module)->getId();
                     }
                 }
 
-                if (isset($modules)) $content['modules'] = $modules;
+                $content['modules'] = $modules;
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);

@@ -76,20 +76,22 @@ class BadgeController extends AbstractController
             $badge = new Badge();
             $form = $this->createForm(BadgeType::class, $badge);
 
+            $modules = [];
             if (!empty($content['modules'])) {
                 foreach ($content['modules'] as $module) {
                     $modules[] = $this->findModule($module)->getId();
                 }
             }
 
+            $users = [];
             if (!empty($content['users'])) {
                 foreach ($content['users'] as $user) {
                     $users[] = $this->findUser($user)->getId();
                 }
             }
 
-            if (isset($modules)) $content['modules'] = $modules;
-            if (isset($users)) $content['users'] = $users;
+            $content['modules'] = $modules;
+            $content['users'] = $users;
 
             $request->request->add($content);
             $form->submit($request->request->all(), true);
@@ -128,20 +130,22 @@ class BadgeController extends AbstractController
             } else {
                 $form = $this->createForm(BadgeType::class, $badge);
 
+                $modules = [];
                 if (!empty($content['modules'])) {
                     foreach ($content['modules'] as $module) {
                         $modules[] = $this->findModule($module)->getId();
                     }
                 }
 
+                $users = [];
                 if (!empty($content['users'])) {
                     foreach ($content['users'] as $user) {
                         $users[] = $this->findUser($user)->getId();
                     }
                 }
 
-                if (isset($modules)) $content['modules'] = $modules;
-                if (isset($users)) $content['users'] = $users;
+                $content['modules'] = $modules;
+                $content['users'] = $users;
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);

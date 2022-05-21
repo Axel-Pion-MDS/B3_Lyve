@@ -77,20 +77,22 @@ class ModuleController extends AbstractController
             $module = new Module();
             $form = $this->createForm(ModuleType::class, $module);
 
+            $offers = [];
             if (!empty($content['offers'])) {
                 foreach ($content['offers'] as $offer) {
                     $offers[] = $this->findOffer($offer)->getId();
                 }
             }
 
+            $badges = [];
             if (!empty($content['badges'])) {
                 foreach ($content['badges'] as $badge) {
                     $badges[] = $this->findBadge($badge)->getId();
                 }
             }
 
-            if (isset($offers)) $content['offers'] = $offers;
-            if (isset($badges)) $content['badges'] = $badges;
+            $content['offers'] = $offers;
+            $content['badges'] = $badges;
 
             $request->request->add($content);
             $form->submit($request->request->all(), true);
@@ -129,20 +131,22 @@ class ModuleController extends AbstractController
             } else {
                 $form = $this->createForm(ModuleType::class, $module);
 
+                $offers = [];
                 if (!empty($content['offers'])) {
                     foreach ($content['offers'] as $offer) {
                         $offers[] = $this->findOffer($offer)->getId();
                     }
                 }
 
+                $badges = [];
                 if (!empty($content['badges'])) {
                     foreach ($content['badges'] as $badge) {
                         $badges[] = $this->findBadge($badge)->getId();
                     }
                 }
 
-                if (isset($offers)) $content['offers'] = $offers;
-                if (isset($badges)) $content['badges'] = $badges;
+                $content['offers'] = $offers;
+                $content['badges'] = $badges;
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);

@@ -21,19 +21,23 @@ class ModuleNormalizer
     public static function showNormalizer(object $data): array
     {
         $offers = [];
-        foreach ($data->getOffers() as $offer) {
-            $offers[] = [
-                'id' => $offer->getId(),
-                'label' => $offer->getTitle(),
-            ];
+        if ($data->getOffers()) {
+            foreach ($data->getOffers() as $offer) {
+                $offers[] = [
+                    'id' => $offer->getId(),
+                    'label' => $offer->getTitle(),
+                ];
+            }
         }
 
         $badges = [];
-        foreach ($data->getBadges() as $badge) {
-            $badges[] = [
-                'id' => $badge->getId(),
-                'label' => $badge->getTitle(),
-            ];
+        if ($data->getBadges()) {
+            foreach ($data->getBadges() as $badge) {
+                $badges[] = [
+                    'id' => $badge->getId(),
+                    'label' => $badge->getTitle(),
+                ];
+            }
         }
 
         $module[] = [

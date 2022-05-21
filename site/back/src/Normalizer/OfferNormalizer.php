@@ -21,11 +21,13 @@ class OfferNormalizer
     public static function showNormalizer(object $data): array
     {
         $modules = [];
-        foreach ($data->getModules() as $module) {
-            $modules[] = [
-                'id' => $module->getId(),
-                'label' => $module->getTitle(),
-            ];
+        if ($data->getModules()) {
+            foreach ($data->getModules() as $module) {
+                $modules[] = [
+                    'id' => $module->getId(),
+                    'label' => $module->getTitle(),
+                ];
+            }
         }
 
         $offer[] = [

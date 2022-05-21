@@ -75,7 +75,7 @@ class PartController extends AbstractController
             $part = new Part();
             $form = $this->createForm(PartType::class, $part);
 
-            if (isset($content['question'])) $content['question'] = $this->findQuestion($content['question'])->getId();
+            $content['question'] = isset($content['question']) ? $this->findQuestion($content['question'])->getId() : [];
 
             $request->request->add($content);
             $form->submit($request->request->all(), true);
@@ -114,7 +114,7 @@ class PartController extends AbstractController
             } else {
                 $form = $this->createForm(PartType::class, $part);
 
-                if (isset($content['question'])) $content['question'] = $this->findQuestion($content['question'])->getId();
+                $content['question'] = isset($content['question']) ? $this->findQuestion($content['question'])->getId() : [];
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);

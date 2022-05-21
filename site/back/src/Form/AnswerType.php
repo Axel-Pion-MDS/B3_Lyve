@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Answer;
 use App\Entity\Question;
+use App\Entity\User;
 use App\Entity\UserAnswer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -28,18 +29,13 @@ class AnswerType extends AbstractType
                 'multiple' => false,
                 'invalid_message' => 'The isCorrect value is invalid'
             ])
-            ->add('created_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
-            ])
-            ->add('updated_at', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:i',
-                'html5' => false,
-            ])
             ->add('question', EntityType::class, ['class' => Question::class, 'invalid_message' => 'The question value is invalid'])
-            ->add('user_answer', EntityType::class, ['class' => UserAnswer::class, 'invalid_message' => 'The user_answer value is invalid'])
+            ->add('users', EntityType::class, [
+                'class' => User::class,
+                'multiple' => true,
+                'expanded' => true,
+                'invalid_message' => 'the badge value is invalid'
+            ])
         ;
     }
 

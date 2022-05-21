@@ -47,8 +47,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Badge::class, inversedBy: 'users')]
     private $badges;
 
-    #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'users')]
-    private $user_answer;
+    #[ORM\ManyToMany(targetEntity: Answer::class, inversedBy: 'users')]
+    private $answers;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class)]
     private $message;
@@ -66,8 +66,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->badges = new ArrayCollection();
         $this->module = new ArrayCollection();
-        $this->user_answer = new ArrayCollection();
         $this->message = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -184,30 +184,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, UserAnswer>
-     */
-    public function getUserAnswer(): Collection
-    {
-        return $this->user_answer;
-    }
-
-    public function addUserAnswer(UserAnswer $userAnswer): self
-    {
-        if (!$this->user_answer->contains($userAnswer)) {
-            $this->user_answer[] = $userAnswer;
-        }
-
-        return $this;
-    }
-
-    public function removeUserAnswer(UserAnswer $userAnswer): self
-    {
-        $this->user_answer->removeElement($userAnswer);
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Message>
      */
     public function getMessage(): Collection
@@ -233,6 +209,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $message->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(Answer $answer): self
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers[] = $answer;
+        }
+
+        return $this;
+    }
+
+    public function removeAnswer(Answer $answer): self
+    {
+        $this->answers->removeElement($answer);
 
         return $this;
     }

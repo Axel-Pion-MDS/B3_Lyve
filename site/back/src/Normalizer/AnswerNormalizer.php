@@ -2,16 +2,15 @@
 
 namespace App\Normalizer;
 
-class BadgeNormalizer
+class AnswerNormalizer
 {
     public static function listNormalizer(array $data): array
     {
         $list = [];
-        foreach ($data as $badge) {
+        foreach ($data as $question) {
             $list[] = [
-                'id' => $badge->getId(),
-                'title' => $badge->getTitle(),
-                'picture' => $badge->getPicture(),
+                'id' => $question->getId(),
+                'answer' => $question->getAnswer(),
             ];
         }
 
@@ -32,24 +31,17 @@ class BadgeNormalizer
             }
         }
 
-        $modules = [];
-        if ($data->getModules()) {
-            foreach ($data->getModules() as $module) {
-                $modules[] = [
-                    'id' => $module->getId(),
-                    'label' => $module->getTitle(),
-                ];
-            }
-        }
-
-        $badge[] = [
+        $answer[] = [
             'id' => $data->getId(),
-            'title' => $data->getTitle(),
-            'picture' => $data->getPicture(),
-            'modules' => $modules,
-            'users' => $users
+            'answer' => $data->getAnswer(),
+            'isCorrect' => $data->getIsCorrect(),
+            'question' => [
+                'id' => $data->getQuestion()->getId(),
+                'label' => $data->getQuestion()->getQuestion(),
+            ],
+            'users' => $users,
         ];
 
-        return $badge;
+        return $answer;
     }
 }

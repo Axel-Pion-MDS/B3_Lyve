@@ -21,11 +21,13 @@ class ChapterNormalizer
     public static function showNormalizer(object $data): array
     {
         $parts = [];
-        foreach ($data->getParts() as $part) {
-            $parts[] = [
-                'id' => $part->getId(),
-                'label' => $part->getTitle(),
-            ];
+        if ($data->getParts()) {
+            foreach ($data->getParts() as $part) {
+                $parts[] = [
+                    'id' => $part->getId(),
+                    'label' => $part->getTitle(),
+                ];
+            }
         }
 
         $chapter[] = [

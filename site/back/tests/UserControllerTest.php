@@ -25,7 +25,8 @@ class UserControllerTest extends KernelTestCase
             'number' => '0612345678',
             'role' => 1,
             'offer' => '',
-            'badges' => [1],
+            'badges' => [],
+            'answers' => [],
         ];
 
         $client = new Client(['verify' => false]);
@@ -78,6 +79,7 @@ class UserControllerTest extends KernelTestCase
         $this->assertArrayHasKey('role', $data['data'][0]);
         $this->assertArrayHasKey('offer', $data['data'][0]);
         $this->assertArrayHasKey('badges', $data['data'][0]);
+        $this->assertArrayHasKey('answers', $data['data'][0]);
     }
 
     /**
@@ -97,7 +99,8 @@ class UserControllerTest extends KernelTestCase
             'number' => '0612345678',
             'role' => 1,
             'offer' => '',
-            'badges' => [1],
+            'badges' => [],
+            'users' => [],
         ];
         $request = $client->patch('https://lyve.local/user/edit', [
             RequestOptions::JSON => $user

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Answer;
 use App\Entity\Badge;
 use App\Entity\Offer;
 use App\Entity\Role;
@@ -38,6 +39,12 @@ class UserType extends AbstractType
             ])
             ->add('offer', EntityType::class, ['class' => Offer::class, 'invalid_message' => 'the offer value is invalid'])
             ->add('role', EntityType::class, ['class' => Role::class, 'invalid_message' => 'the role value is invalid'])
+            ->add('answers', EntityType::class, [
+                'class' => Answer::class,
+                'multiple' => true,
+                'expanded' => true,
+                'invalid_message' => 'the badge value is invalid'
+            ])
         ;
     }
 

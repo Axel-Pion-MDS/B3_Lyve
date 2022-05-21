@@ -21,11 +21,24 @@ class UserNormalizer {
     public static function showNormalizer(object $data): array
     {
         $badges = [];
-        foreach ($data->getBadges() as $badge) {
-            $badges[] = [
-                'id' => $badge->getId(),
-                'label' => $badge->getTitle(),
-            ];
+        if ($data->getBadges()) {
+            foreach ($data->getBadges() as $badge) {
+                $badges[] = [
+                    'id' => $badge->getId(),
+                    'label' => $badge->getTitle(),
+                ];
+            }
+        }
+
+        $answers = [];
+        if ($data->getAnswers()) {
+            foreach ($data->getAnswers() as $answer) {
+                $answers[] = [
+                    'id' => $answer->getId(),
+                    'answer' => $answer->getAnswer(),
+                    'isCorrect' => $answer->getIsCorrect(),
+                ];
+            }
         }
 
         $user[] = [
@@ -44,6 +57,7 @@ class UserNormalizer {
                 'label' => $data->getOffer()->getTitle()
             ] : null,
             'badges' => $badges,
+            'answers' => $answers
         ];
 
         return $user;
