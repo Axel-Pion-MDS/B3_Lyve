@@ -20,7 +20,7 @@ class PartNormalizer
 
     public static function showNormalizer(object $data): array
     {
-        $chapter[] = [
+        $part[] = [
             'id' => $data->getId(),
             'title' => $data->getTitle(),
             'content' => $data->getContent(),
@@ -30,6 +30,6 @@ class PartNormalizer
             ],
         ];
 
-        return $chapter;
+        return $part;
     }
 }
