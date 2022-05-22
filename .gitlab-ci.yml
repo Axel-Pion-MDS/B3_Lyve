@@ -1,14 +1,15 @@
 variables:
   # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
-  MYSQL_DATABASE: test_lyve
+  MYSQL_DATABASE: $MYSQL_DATABASE
+  MYSQL_USER: $MYSQL_USER
+  MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
   HOST: mysql
-  MYSQL_USER: root
-  MYSQL_ALLOW_EMPTY_PASSWORD: 1
+#  MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
 default:
   image: php:8.0.8
   services:
-    - mysql:5.7
+    - mysql:latest
   before_script:
     - echo "started by ${GITLAB_USER_NAME}"
     - apt-get -qq update -y
