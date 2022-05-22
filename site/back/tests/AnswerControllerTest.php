@@ -17,6 +17,7 @@ class AnswerControllerTest extends KernelTestCase
      */
     public function testAdd(): void
     {
+        $url = $_ENV['APP_URL'];
         $module = [
             'answer' => 'UnitTest',
             'isCorrect' => 1,
@@ -24,7 +25,7 @@ class AnswerControllerTest extends KernelTestCase
             'users' => []
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('https://lyve.local/answer/add', [
+        $request = $client->post("$url/answer/add", [
             RequestOptions::JSON => $module
         ]);
 
@@ -41,8 +42,9 @@ class AnswerControllerTest extends KernelTestCase
      */
     public function testList(): void
     {
+        $url = $_ENV['APP_URL'];
         $client = new Client(['verify' => false]);
-        $request = $client->get('https://lyve.local/answer/list');
+        $request = $client->get("$url/answer/list");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -56,9 +58,10 @@ class AnswerControllerTest extends KernelTestCase
      */
     public function testShow(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = AnswerControllerTestData::$answerId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("https://lyve.local/answer/show?id=$id");
+        $request = $client->get("$url/answer/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -75,6 +78,7 @@ class AnswerControllerTest extends KernelTestCase
      */
     public function testEdit(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = AnswerControllerTestData::$answerId;
         $client = new Client(['verify' => false]);
         $answer = [
@@ -84,7 +88,7 @@ class AnswerControllerTest extends KernelTestCase
             'question' => 2,
             'users' => [],
         ];
-        $request = $client->patch('https://lyve.local/answer/edit', [
+        $request = $client->patch("$url/answer/edit", [
             RequestOptions::JSON => $answer
         ]);
 
@@ -97,9 +101,10 @@ class AnswerControllerTest extends KernelTestCase
      */
     public function testDelete(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = AnswerControllerTestData::$answerId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("https://lyve.local/answer/delete?id=$id");
+        $request = $client->delete("$url/answer/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

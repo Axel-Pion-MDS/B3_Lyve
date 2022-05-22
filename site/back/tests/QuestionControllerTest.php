@@ -17,12 +17,13 @@ class QuestionControllerTest extends KernelTestCase
      */
     public function testAdd(): void
     {
+        $url = $_ENV['APP_URL'];
         $module = [
             'question' => 'UnitTest ?',
             'part' => 1,
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('https://lyve.local/question/add', [
+        $request = $client->post("$url/question/add", [
             RequestOptions::JSON => $module
         ]);
 
@@ -39,8 +40,9 @@ class QuestionControllerTest extends KernelTestCase
      */
     public function testList(): void
     {
+        $url = $_ENV['APP_URL'];
         $client = new Client(['verify' => false]);
-        $request = $client->get('https://lyve.local/question/list');
+        $request = $client->get("$url/question/list");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -54,9 +56,10 @@ class QuestionControllerTest extends KernelTestCase
      */
     public function testShow(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = QuestionControllerTestData::$questionId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("https://lyve.local/question/show?id=$id");
+        $request = $client->get("$url/question/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -71,6 +74,7 @@ class QuestionControllerTest extends KernelTestCase
      */
     public function testEdit(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = QuestionControllerTestData::$questionId;
         $client = new Client(['verify' => false]);
         $question = [
@@ -78,7 +82,7 @@ class QuestionControllerTest extends KernelTestCase
             'question' => 'UnitTestEdit ?',
             'part' => 1,
         ];
-        $request = $client->patch('https://lyve.local/question/edit', [
+        $request = $client->patch("$url/question/edit", [
             RequestOptions::JSON => $question
         ]);
 
@@ -91,9 +95,10 @@ class QuestionControllerTest extends KernelTestCase
      */
     public function testDelete(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = QuestionControllerTestData::$questionId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("https://lyve.local/question/delete?id=$id");
+        $request = $client->delete("$url/question/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }

@@ -17,11 +17,12 @@ class RoleControllerTest extends KernelTestCase
      */
     public function testAdd(): void
     {
+        $url = $_ENV['APP_URL'];
         $role = [
             'title' => 'UnitTest',
         ];
         $client = new Client(['verify' => false]);
-        $request = $client->post('https://lyve.local/role/add', [
+        $request = $client->post("$url/role/add", [
             RequestOptions::JSON => $role
         ]);
 
@@ -38,8 +39,9 @@ class RoleControllerTest extends KernelTestCase
      */
     public function testList(): void
     {
+        $url = $_ENV['APP_URL'];
         $client = new Client(['verify' => false]);
-        $request = $client->get('https://lyve.local/role/list');
+        $request = $client->get("$url/role/list");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -54,9 +56,10 @@ class RoleControllerTest extends KernelTestCase
      */
     public function testShow(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = RoleControllerTestData::$roleId;
         $client = new Client(['verify' => false]);
-        $request = $client->get("https://lyve.local/role/show?id=$id");
+        $request = $client->get("$url/role/show?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
         $data = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -70,13 +73,14 @@ class RoleControllerTest extends KernelTestCase
      */
     public function testEdit(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = RoleControllerTestData::$roleId;
         $client = new Client(['verify' => false]);
         $user = [
             'id' => $id,
             'title' => 'UnitTestEdit',
         ];
-        $request = $client->patch('https://lyve.local/role/edit', [
+        $request = $client->patch("$url/role/edit", [
             RequestOptions::JSON => $user
         ]);
 
@@ -89,9 +93,10 @@ class RoleControllerTest extends KernelTestCase
      */
     public function testDelete(): void
     {
+        $url = $_ENV['APP_URL'];
         $id = RoleControllerTestData::$roleId;
         $client = new Client(['verify' => false]);
-        $request = $client->delete("https://lyve.local/role/delete?id=$id");
+        $request = $client->delete("$url/role/delete?id=$id");
 
         $this->assertEquals(200, $request->getStatusCode());
     }
