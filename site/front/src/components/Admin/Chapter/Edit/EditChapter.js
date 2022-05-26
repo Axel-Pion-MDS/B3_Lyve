@@ -1,9 +1,9 @@
-import "./DeleteChapter.css";
+import "./EditChapter.css";
 
-export const DeleteChapter = () => {
+export const EditChapter = () => {
   return (
     <div>
-      <h2>DeleteChapter</h2>
+      <h2>EditChapter</h2>
     </div>
   )
 }

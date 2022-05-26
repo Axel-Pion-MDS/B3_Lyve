@@ -1,4 +1,4 @@
-import "Courses.css";
+import "./Courses.css";
 
 export const Courses = () => {
   return (

@@ -1,4 +1,4 @@
-import "PasswordRecovery.css";
+import "./PasswordRecovery.css";
 
 export const PasswordRecovery = () => {
   return (

@@ -1,4 +1,4 @@
-import "Statistics.css";
+import "./Statistics.css";
 
 export const Statistics = () => {
   return (

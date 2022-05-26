@@ -2,7 +2,7 @@ import "./DeleteUser.css";
 import axios from "axios";
 import {Navigate, useParams} from "react-router-dom";
 
-const DeleteUser = () => {
+export const DeleteUser = () => {
   let {id} = useParams();
 
   axios.delete(`http://lyve.local/user/delete?id=${id}`)
@@ -12,5 +12,3 @@ const DeleteUser = () => {
 
   return <Navigate to={"/api/users"}/>;
 }
-
-export default DeleteUser;

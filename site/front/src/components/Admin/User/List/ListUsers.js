@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
-const ListUsers = () => {
+export const ListUsers = () => {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
@@ -48,5 +48,3 @@ const ListUsers = () => {
     </div>
   )
 }
-
-export default ListUsers;

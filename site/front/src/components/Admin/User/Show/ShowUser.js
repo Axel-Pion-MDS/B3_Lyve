@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 
-const ShowUser = () => {
+export const ShowUser = () => {
   let { id } = useParams();
   const [datas, setDatas] = useState([]);
 
@@ -46,4 +46,3 @@ const ShowUser = () => {
   )
 }
 
-export default ShowUser;

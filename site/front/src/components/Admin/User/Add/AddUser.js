@@ -2,7 +2,7 @@ import "./AddUser.css";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-const AddUser = () => {
+export const AddUser = () => {
   const [fname, setFname] = useState('')
   const [lname, setLname] = useState('')
   const [email, setEmail] = useState('')
@@ -182,5 +182,3 @@ const AddUser = () => {
     </div>
   );
 }
-
-export default AddUser;

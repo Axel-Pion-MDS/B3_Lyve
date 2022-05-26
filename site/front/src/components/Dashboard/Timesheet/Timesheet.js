@@ -1,4 +1,4 @@
-import "Timesheet.css";
+import "./Timesheet.css";
 
 export const Timesheet = () => {
   return (

@@ -1,9 +1,9 @@
 import "./errors.css";
 
-export const Err404 = () => {
+export const Err500 = () => {
   return (
     <div>
-      <h1>Error 404</h1>
+      <h1>Error 500</h1>
     </div>
   )
 }

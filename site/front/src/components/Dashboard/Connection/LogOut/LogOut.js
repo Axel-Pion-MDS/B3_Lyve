@@ -1,4 +1,4 @@
-import "LogOut.css";
+import "./LogOut.css";
 
 export const LogOut = () => {
   return (
