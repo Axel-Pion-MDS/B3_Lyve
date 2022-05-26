@@ -4,7 +4,7 @@ My Digital School - 2022 My Digital Project : Lyve
 
 ## Endpoints
 
-* [User](#user)
+* [ShowUser](#user)
     1. [user/list](#1-userlist)
     2. [user/show](#2-usershow)
     3. [user/add](#3-useradd)
@@ -61,9 +61,9 @@ My Digital School - 2022 My Digital Project : Lyve
 
 --------
 
-## User
+## ShowUser
 
-Routes for User
+Routes for ShowUser
 
 ### 1. user/list
 
@@ -947,7 +947,7 @@ URL: https://lyve.local/answer/delete
 | id | 2 |
 
 ---
-[Back to top](#mdp-lyve---2022)
+[Back to top](#lyve)
 
 ## Integrate with your tools
 
