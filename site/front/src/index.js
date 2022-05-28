@@ -4,12 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
-import {Navbar} from "./components/Navbar/Navbar";
+import {Navbar} from "./components/Navbar/Left/Navbar";
+import {Menu} from "./components/Navbar/Top/Menu";
 
 ReactDOM.render(
   <BrowserRouter>
     <Navbar />
-    <App />
+    <div className={"menu-app"}>
+      <Menu />
+      <App />
+    </div>
   </BrowserRouter>,
   document.getElementById('root')
 );
