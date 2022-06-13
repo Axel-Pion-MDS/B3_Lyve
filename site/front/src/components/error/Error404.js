@@ -1,11 +1,11 @@
-const User = class {
+const Error404 = class {
   constructor() {
     this.el = document.querySelector('#body');
   }
 
-  render = () => ('<h2>User</h2>');
+  render = () => ('<h2>Error404</h2>');
 
   run = () => { this.el.innerHTML = this.render(); };
 };
 
-export default User;
+export default Error404;
