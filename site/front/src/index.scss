@@ -71,12 +71,17 @@ a:focus, a:active {
 
 #menu-body {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     margin-left: 15%;
     display: flex;
     flex-direction: column;
     background: linear-gradient(rgba(242, 172, 68, 0.3) 0%, rgba(255, 255, 255, 0) 30px);
     overflow-x: hidden;
+}
+
+#body {
+    height: 100%;
+    padding: 0 50px;
 }
 
 .show {

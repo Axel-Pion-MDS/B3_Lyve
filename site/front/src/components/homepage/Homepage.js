@@ -301,16 +301,28 @@ const Homepage = class {
 
   renderCalendar = () => {
     const calendarEl = document.querySelector('#calendar');
+    const today = new Date();
+    const eventStart = today.setHours(12, 0, 0);
+    const eventEnd = today.setHours(12, 30, 0);
     const calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
-      initialView: 'timeGridDay',
+      initialView: 'listWeek',
       headerToolbar: {
         left: 'prev',
         center: 'title',
         right: 'next'
       },
       height: 300,
-      contentHeight: 300
+      contentHeight: 300,
+      events: [
+        {
+          id: '1',
+          title: 'EventTest',
+          start: eventStart,
+          end: eventEnd,
+          description: 'Petit test'
+        }
+      ]
     });
 
     calendar.setOption('locale', 'fr');
