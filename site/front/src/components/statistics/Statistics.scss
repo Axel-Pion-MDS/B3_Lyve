@@ -1,0 +1,16 @@
+.mixed-chart {
+  display: flex;
+  flex-direction: column;
+  width: 84%;
+}
+
+#instagram,
+#instagram-viewers-stats,
+#facebook,
+#facebook-viewers-stats,
+#twitch,
+#twitch-viewers-stats,
+#tiktok,
+#tiktok-viewers-stats {
+  width: 100px;
+}
