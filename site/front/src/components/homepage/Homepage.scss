@@ -13,12 +13,12 @@
 }
 
 .charts {
-  display: flex;
-  flex-direction: column;
+  padding-left: 9%;
+  padding-right: 9%;
 }
 
 .charts h4 {
-  margin-left: 9%;
+  margin-bottom: 30px;
 }
 
 .timesheets {
@@ -35,7 +35,6 @@
 
 #calendar {
   width: 350px;
-  height: 300px;
 }
 
 .fc-button, .fc-button-primary {
@@ -52,31 +51,27 @@
   border-radius: 0px 20px 0 20px;
 }
 
-.circle-charts {
+#home-statistics-buttons {
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-bottom: 5%;
 }
 
-.circle-chart {
-  width: 200px;
-  height: 200px;
+#home-statistics-buttons .pressed {
+  background: #D11800;
+  color: white;
+}
+
+.home-mixed-chart {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: 0;
 }
 
 .circle-chart h5 {
   text-align: center;
-}
-
-.bar-charts {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.bar-chart {
-  width: 390px;
 }
 
 .badge-list {

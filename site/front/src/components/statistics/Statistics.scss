@@ -14,3 +14,37 @@
 #tiktok-viewers-stats {
   width: 100px;
 }
+
+#statistics-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 84%;
+}
+
+#stat-insta-button,
+#stat-facebook-button,
+#stat-twitch-button,
+#stat-tiktok-button {
+  background: none;
+  border: 1px solid #D11800;
+  color: #D11800;
+  width: 83px;
+  height: 30px;
+  border-radius: 3px;
+  margin: 0 10px;
+}
+
+#stat-insta-button:hover,
+#stat-facebook-button:hover,
+#stat-twitch-button:hover,
+#stat-tiktok-button:hover {
+  border: none;
+  background: #D11800;
+  color: white;
+}
+
+#statistics-buttons .pressed {
+  background: #D11800;
+  color: white;
+}

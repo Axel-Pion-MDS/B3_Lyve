@@ -59,8 +59,43 @@ const Statistics = class {
     this.el = document.querySelector('#body');
   }
 
+  destroyChart = () => {
+    switch (true) {
+      case Chart.getChart('instagram') !== undefined:
+        Chart.getChart('instagram').destroy();
+        break;
+      case Chart.getChart('facebook') !== undefined:
+        Chart.getChart('facebook').destroy();
+        break;
+      case Chart.getChart('twitch') !== undefined:
+        Chart.getChart('twitch').destroy();
+        break;
+      case Chart.getChart('tiktok') !== undefined:
+        Chart.getChart('tiktok').destroy();
+        break;
+      default:
+    }
+  };
+
   renderInstaCharts = () => {
     const insta = document.querySelector('#instagram');
+    const facebook = document.querySelector('#facebook');
+    const twitch = document.querySelector('#twitch');
+    const tiktok = document.querySelector('#tiktok');
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    insta.style.display = 'block';
+    facebook.style.display = 'none';
+    twitch.style.display = 'none';
+    tiktok.style.display = 'none';
+
+    instaBtn.className = 'pressed';
+    facebookBtn.className = '';
+    twitchBtn.className = '';
+    tiktokBtn.className = '';
 
     const instaData = {
       borderColor: '#FEFEFE',
@@ -149,6 +184,13 @@ const Statistics = class {
         backgroundColor: [
           '#A47E1B'
         ]
+      }, {
+        type: 'bar',
+        label: 'Achats',
+        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        backgroundColor: [
+          '#9B2226'
+        ]
       }],
       labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
     };
@@ -176,7 +218,24 @@ const Statistics = class {
   };
 
   renderFacebookCharts = () => {
+    const insta = document.querySelector('#instagram');
     const facebook = document.querySelector('#facebook');
+    const twitch = document.querySelector('#twitch');
+    const tiktok = document.querySelector('#tiktok');
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    insta.style.display = 'none';
+    facebook.style.display = 'block';
+    twitch.style.display = 'none';
+    tiktok.style.display = 'none';
+
+    instaBtn.className = '';
+    facebookBtn.className = 'pressed';
+    twitchBtn.className = '';
+    tiktokBtn.className = '';
 
     const facebookData = {
       borderColor: '#FEFEFE',
@@ -265,6 +324,13 @@ const Statistics = class {
         backgroundColor: [
           '#A47E1B'
         ]
+      }, {
+        type: 'bar',
+        label: 'Achats',
+        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        backgroundColor: [
+          '#9B2226'
+        ]
       }],
       labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
     };
@@ -292,7 +358,24 @@ const Statistics = class {
   };
 
   renderTwitchCharts = () => {
+    const insta = document.querySelector('#instagram');
+    const facebook = document.querySelector('#facebook');
     const twitch = document.querySelector('#twitch');
+    const tiktok = document.querySelector('#tiktok');
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    insta.style.display = 'none';
+    facebook.style.display = 'none';
+    twitch.style.display = 'block';
+    tiktok.style.display = 'none';
+
+    instaBtn.className = '';
+    facebookBtn.className = '';
+    twitchBtn.className = 'pressed';
+    tiktokBtn.className = '';
 
     const twitchData = {
       borderColor: '#FEFEFE',
@@ -381,6 +464,13 @@ const Statistics = class {
         backgroundColor: [
           '#A47E1B'
         ]
+      }, {
+        type: 'bar',
+        label: 'Achats',
+        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        backgroundColor: [
+          '#9B2226'
+        ]
       }],
       labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
     };
@@ -408,7 +498,24 @@ const Statistics = class {
   };
 
   renderTiktokCharts = () => {
+    const insta = document.querySelector('#instagram');
+    const facebook = document.querySelector('#facebook');
+    const twitch = document.querySelector('#twitch');
     const tiktok = document.querySelector('#tiktok');
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    insta.style.display = 'none';
+    facebook.style.display = 'none';
+    twitch.style.display = 'none';
+    tiktok.style.display = 'block';
+
+    instaBtn.className = '';
+    facebookBtn.className = '';
+    twitchBtn.className = '';
+    tiktokBtn.className = 'pressed';
 
     const tiktokData = {
       borderColor: '#FEFEFE',
@@ -497,6 +604,13 @@ const Statistics = class {
         backgroundColor: [
           '#A47E1B'
         ]
+      }, {
+        type: 'bar',
+        label: 'Achats',
+        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        backgroundColor: [
+          '#9B2226'
+        ]
       }],
       labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
     };
@@ -527,23 +641,24 @@ const Statistics = class {
     `
       <div id="statistics">
         <div id="view-follower-charts">
-        <div class="mixed-chart">
-          <h5>Instagram</h5>
-          <canvas id="instagram"></canvas>
-        </div>
-        <div class="mixed-chart">
-          <h5>Facebook</h5>
-          <canvas id="facebook"></canvas>
-        </div>
-        <div class="mixed-chart">
-          <h5>Twitch</h5>
-          <canvas id="twitch"></canvas>
-        </div>
-        <div class="mixed-chart">
-          <h5>Tiktok</h5>
-          <canvas id="tiktok"></canvas>
-        </div>
-      </div>
+          <div id="statistics-buttons">
+            <button type="button" id="stat-insta-button">Instagram</button>
+            <button type="button" id="stat-facebook-button">Facebook</button>
+            <button type="button" id="stat-twitch-button">Twitch</button>
+            <button type="button" id="stat-tiktok-button">Tiktok</button>
+          </div>
+          <div class="mixed-chart">
+            <canvas id="instagram"></canvas>
+          </div>
+          <div class="mixed-chart">
+            <canvas id="facebook"></canvas>
+          </div>
+          <div class="mixed-chart">
+            <canvas id="twitch"></canvas>
+          </div>
+          <div class="mixed-chart">
+            <canvas id="tiktok"></canvas>
+          </div>
         </div>
       </div>
     `
@@ -552,9 +667,28 @@ const Statistics = class {
   run = () => {
     this.el.innerHTML = this.render();
     this.renderInstaCharts();
-    this.renderFacebookCharts();
-    this.renderTwitchCharts();
-    this.renderTiktokCharts();
+
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    instaBtn.addEventListener('click', () => {
+      this.destroyChart();
+      this.renderInstaCharts();
+    });
+    facebookBtn.addEventListener('click', () => {
+      this.destroyChart();
+      this.renderFacebookCharts();
+    });
+    twitchBtn.addEventListener('click', () => {
+      this.destroyChart();
+      this.renderTwitchCharts();
+    });
+    tiktokBtn.addEventListener('click', () => {
+      this.destroyChart();
+      this.renderTiktokCharts();
+    });
   };
 };
 
