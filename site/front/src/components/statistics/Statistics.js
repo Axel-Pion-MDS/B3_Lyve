@@ -26,6 +26,7 @@ import {
   Tooltip,
   SubTitle
 } from 'chart.js';
+import moment from 'moment';
 
 Chart.register(
   ArcElement,
@@ -57,7 +58,87 @@ Chart.register(
 const Statistics = class {
   constructor() {
     this.el = document.querySelector('#body');
+    this.result = [];
+    this.daysInMonth().forEach((day) => { this.result.push(day.format('DD/MM')); });
+    this.tmpRandomViews = this.tmpViewsRandomizer();
+    this.tmpRandomFollowers = this.tmpFollowersRandomizer();
+    this.tmpRandomTopViews = this.tmpTopViewsRandomizer();
+    this.tmpRandomSell = this.tmpSellRandomizer();
+    this.tmpRandomConversion = this.tmpConversionRandomizer();
   }
+
+  daysInMonth = () => {
+    const days = moment().daysInMonth();
+    const listOfDays = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 1; i < days + 1; i++) {
+      const currentDay = moment().date(i);
+      listOfDays.push(currentDay);
+    }
+
+    return listOfDays;
+  };
+
+  tmpViewsRandomizer = () => {
+    const days = moment().daysInMonth();
+    const randomNumbers = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < days; i++) {
+      randomNumbers[i] = Math.round(Math.floor(Math.random() * (1000 - 1 + 1)) + 1);
+    }
+
+    return randomNumbers;
+  };
+
+  tmpFollowersRandomizer = () => {
+    const days = moment().daysInMonth();
+    const randomNumbers = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < days; i++) {
+      randomNumbers[i] = Math.round(Math.floor(Math.random() * (500 - 1 + 1)) + 1);
+    }
+
+    return randomNumbers;
+  };
+
+  tmpTopViewsRandomizer = () => {
+    const days = moment().daysInMonth();
+    const randomNumbers = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < days; i++) {
+      randomNumbers[i] = Math.round(Math.floor(Math.random() * (1000 - 1 + 1)) + 1);
+    }
+
+    return randomNumbers;
+  };
+
+  tmpSellRandomizer = () => {
+    const days = moment().daysInMonth();
+    const randomNumbers = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < days; i++) {
+      randomNumbers[i] = Math.round(Math.floor(Math.random() * (500 - 1 + 1)) + 1);
+    }
+
+    return randomNumbers;
+  };
+
+  tmpConversionRandomizer = () => {
+    const days = moment().daysInMonth();
+    const randomNumbers = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < days; i++) {
+      randomNumbers[i] = Math.round(Math.floor(Math.random() * (20 - 1 + 1)) + 1);
+    }
+
+    return randomNumbers;
+  };
 
   destroyChart = () => {
     switch (true) {
@@ -101,98 +182,37 @@ const Statistics = class {
       borderColor: '#FEFEFE',
       datasets: [{
         type: 'line',
+        label: 'Pic du vues',
+        data: this.tmpRandomTopViews,
+        backgroundColor: '#f9c4ae',
+        borderColor: '#fa5e1f'
+      }, {
+        type: 'line',
+        label: '% taux de conversion',
+        data: this.tmpRandomConversion,
+        backgroundColor: '#b78680',
+        borderColor: '#b81702'
+      }, {
+        type: 'bar',
         label: 'Total Abonnés',
-        data: [2, 10, 55, 12, 70, 20, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#D11800'
-        ],
-        backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 18 - 24 ans',
-        data: [1, 3, 12, 5, 47, 10, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F08080'
-        ],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 25 - 34 ans',
-        data: [1, 4, 35, 4, 14, 6, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F4978E'
-        ],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 35 - 44 ans',
-        data: [0, 2, 5, 1, 6, 1, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F8AD9D'
-        ],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 45 - 54 ans',
-        data: [0, 0, 3, 2, 3, 3, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#FBC4AB'
-        ],
-        backgroundColor: [
-          '#A47E1B'
-        ]
+        data: this.tmpRandomFollowers,
+        backgroundColor: '#ffb950'
       }, {
         type: 'bar',
         label: 'Total Vues',
-        data: [10, 50, 200, 150, 300, 70, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomViews,
         backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 18 - 24 ans',
-        data: [6, 29, 57, 47, 139, 33, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 25 - 34 ans',
-        data: [3, 12, 83, 100, 101, 27, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 35 - 44 ans',
-        data: [1, 7, 21, 2, 63, 8, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 45 - 54 ans',
-        data: [0, 2, 39, 11, 37, 2, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#A47E1B'
+          '#ff931f'
         ]
       }, {
         type: 'bar',
         label: 'Achats',
-        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomSell,
         backgroundColor: [
-          '#9B2226'
+          '#7a0103'
         ]
       }],
-      labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
+      labels: this.result
     };
 
     const instaConfig = {
@@ -241,98 +261,37 @@ const Statistics = class {
       borderColor: '#FEFEFE',
       datasets: [{
         type: 'line',
+        label: 'Pic du vues',
+        data: this.tmpRandomTopViews,
+        backgroundColor: '#f9c4ae',
+        borderColor: '#fa5e1f'
+      }, {
+        type: 'line',
+        label: '% taux de conversion',
+        data: this.tmpRandomConversion,
+        backgroundColor: '#b78680',
+        borderColor: '#b81702'
+      }, {
+        type: 'bar',
         label: 'Total Abonnés',
-        data: [2, 10, 55, 12, 70, 20, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#D11800'
-        ],
-        backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 18 - 24 ans',
-        data: [1, 3, 12, 5, 47, 10, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F08080'
-        ],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 25 - 34 ans',
-        data: [1, 4, 35, 4, 14, 6, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F4978E'
-        ],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 35 - 44 ans',
-        data: [0, 2, 5, 1, 6, 1, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F8AD9D'
-        ],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 45 - 54 ans',
-        data: [0, 0, 3, 2, 3, 3, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#FBC4AB'
-        ],
-        backgroundColor: [
-          '#A47E1B'
-        ]
+        data: this.tmpRandomFollowers,
+        backgroundColor: '#ffb950'
       }, {
         type: 'bar',
         label: 'Total Vues',
-        data: [10, 50, 200, 150, 300, 70, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomViews,
         backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 18 - 24 ans',
-        data: [6, 29, 57, 47, 139, 33, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 25 - 34 ans',
-        data: [3, 12, 83, 100, 101, 27, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 35 - 44 ans',
-        data: [1, 7, 21, 2, 63, 8, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 45 - 54 ans',
-        data: [0, 2, 39, 11, 37, 2, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#A47E1B'
+          '#ff931f'
         ]
       }, {
         type: 'bar',
         label: 'Achats',
-        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomSell,
         backgroundColor: [
-          '#9B2226'
+          '#7a0103'
         ]
       }],
-      labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
+      labels: this.result
     };
 
     const facebookConfig = {
@@ -381,98 +340,37 @@ const Statistics = class {
       borderColor: '#FEFEFE',
       datasets: [{
         type: 'line',
+        label: 'Pic du vues',
+        data: this.tmpRandomTopViews,
+        backgroundColor: '#f9c4ae',
+        borderColor: '#fa5e1f'
+      }, {
+        type: 'line',
+        label: '% taux de conversion',
+        data: this.tmpRandomConversion,
+        backgroundColor: '#b78680',
+        borderColor: '#b81702'
+      }, {
+        type: 'bar',
         label: 'Total Abonnés',
-        data: [2, 10, 55, 12, 70, 20, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#D11800'
-        ],
-        backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 18 - 24 ans',
-        data: [1, 3, 12, 5, 47, 10, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F08080'
-        ],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 25 - 34 ans',
-        data: [1, 4, 35, 4, 14, 6, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F4978E'
-        ],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 35 - 44 ans',
-        data: [0, 2, 5, 1, 6, 1, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F8AD9D'
-        ],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 45 - 54 ans',
-        data: [0, 0, 3, 2, 3, 3, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#FBC4AB'
-        ],
-        backgroundColor: [
-          '#A47E1B'
-        ]
+        data: this.tmpRandomFollowers,
+        backgroundColor: '#ffb950'
       }, {
         type: 'bar',
         label: 'Total Vues',
-        data: [10, 50, 200, 150, 300, 70, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomViews,
         backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 18 - 24 ans',
-        data: [6, 29, 57, 47, 139, 33, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 25 - 34 ans',
-        data: [3, 12, 83, 100, 101, 27, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 35 - 44 ans',
-        data: [1, 7, 21, 2, 63, 8, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 45 - 54 ans',
-        data: [0, 2, 39, 11, 37, 2, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#A47E1B'
+          '#ff931f'
         ]
       }, {
         type: 'bar',
         label: 'Achats',
-        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomSell,
         backgroundColor: [
-          '#9B2226'
+          '#7a0103'
         ]
       }],
-      labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
+      labels: this.result
     };
 
     const twitchConfig = {
@@ -521,98 +419,37 @@ const Statistics = class {
       borderColor: '#FEFEFE',
       datasets: [{
         type: 'line',
+        label: 'Pic du vues',
+        data: this.tmpRandomTopViews,
+        backgroundColor: '#f9c4ae',
+        borderColor: '#fa5e1f'
+      }, {
+        type: 'line',
+        label: '% taux de conversion',
+        data: this.tmpRandomConversion,
+        backgroundColor: '#b78680',
+        borderColor: '#b81702'
+      }, {
+        type: 'bar',
         label: 'Total Abonnés',
-        data: [2, 10, 55, 12, 70, 20, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#D11800'
-        ],
-        backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 18 - 24 ans',
-        data: [1, 3, 12, 5, 47, 10, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F08080'
-        ],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 25 - 34 ans',
-        data: [1, 4, 35, 4, 14, 6, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F4978E'
-        ],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 35 - 44 ans',
-        data: [0, 2, 5, 1, 6, 1, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#F8AD9D'
-        ],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'line',
-        label: 'Abonnés 45 - 54 ans',
-        data: [0, 0, 3, 2, 3, 3, 0, 0, 0, 0, 0, 0],
-        borderColor: [
-          '#FBC4AB'
-        ],
-        backgroundColor: [
-          '#A47E1B'
-        ]
+        data: this.tmpRandomFollowers,
+        backgroundColor: '#ffb950'
       }, {
         type: 'bar',
         label: 'Total Vues',
-        data: [10, 50, 200, 150, 300, 70, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomViews,
         backgroundColor: [
-          '#F2AC44'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 18 - 24 ans',
-        data: [6, 29, 57, 47, 139, 33, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#FFE169'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 25 - 34 ans',
-        data: [3, 12, 83, 100, 101, 27, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#EDC531'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 35 - 44 ans',
-        data: [1, 7, 21, 2, 63, 8, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#C9A227'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Vues 45 - 54 ans',
-        data: [0, 2, 39, 11, 37, 2, 0, 0, 0, 0, 0, 0],
-        backgroundColor: [
-          '#A47E1B'
+          '#ff931f'
         ]
       }, {
         type: 'bar',
         label: 'Achats',
-        data: [123, 97, 154, 332, 546, 125, 0, 0, 0, 0, 0, 0],
+        data: this.tmpRandomSell,
         backgroundColor: [
-          '#9B2226'
+          '#7a0103'
         ]
       }],
-      labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
+      labels: this.result
     };
 
     const tiktokConfig = {
@@ -635,6 +472,17 @@ const Statistics = class {
     return (
       tiktokChart
     );
+  };
+
+  renderSelectedLink = () => {
+    const home = document.querySelector('#home-link');
+    const timesheet = document.querySelector('#timesheet-link');
+    const statistics = document.querySelector('#statistics-link');
+    const courses = document.querySelector('#courses-link');
+    home.className = '';
+    timesheet.className = '';
+    statistics.className = 'selected';
+    courses.className = '';
   };
 
   render = () => (
@@ -666,6 +514,7 @@ const Statistics = class {
 
   run = () => {
     this.el.innerHTML = this.render();
+    this.renderSelectedLink();
     this.renderInstaCharts();
 
     const instaBtn = document.querySelector('#stat-insta-button');

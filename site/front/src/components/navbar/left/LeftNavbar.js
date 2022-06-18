@@ -1,5 +1,5 @@
 import './LeftNavbar.scss';
-import logo from '../../../public/images/Logo-Lyve.svg';
+import logo from '../../../../public/img/Logo-Lyve.svg';
 
 const LeftNavbar = class {
   constructor() {
@@ -20,26 +20,26 @@ const LeftNavbar = class {
         <div id="navbar-links">
           <ul>
             <li>
-              <i class="fa fa-house"></i>
-              <a href="/">
+              <a href="/" id="home-link">
+                <i class="fa fa-house"></i>
                 Accueil
               </a>
             </li>
             <li>
-              <i class="fa fa-calendar"></i>
-              <a href="timesheet">
+              <a href="timesheet" id="timesheet-link">
+                <i class="fa fa-calendar"></i>
                 Agenda
               </a>
             </li>
             <li>
-              <i class="fa fa-chart-simple"></i>
-              <a href="statistics">
+              <a href="statistics" id="statistics-link">
+                <i class="fa fa-chart-simple"></i>
                 Statistiques
               </a>
             </li>
             <li>
-              <i class="fa fa-graduation-cap"></i>
-              <a href="courses">
+              <a href="courses" id="courses-link">
+                <i class="fa fa-graduation-cap"></i>
                 Formations
               </a>
             </li>
@@ -52,7 +52,9 @@ const LeftNavbar = class {
   `
   );
 
-  run = () => { this.el.innerHTML = this.render(); };
+  run = () => {
+    this.el.innerHTML = this.render();
+  };
 };
 
 export default LeftNavbar;

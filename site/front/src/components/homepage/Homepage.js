@@ -30,6 +30,11 @@ import {
   Tooltip,
   SubTitle
 } from 'chart.js';
+import ProgressBar from 'progressbar.js';
+import img1 from '../../../public/img/cc7cc34a22ed5621635d443d0a87a1cb.png';
+import img2 from '../../../public/img/1dace212e092ea819120fbea6b8c2417.png';
+import img4 from '../../../public/img/e83c5c6372b33278248e0355c67e6eaa.png';
+import img3 from '../../../public/img/66bb01e815194f1329512143ef3cc9c6.png';
 
 Chart.register(
   ArcElement,
@@ -81,6 +86,43 @@ const Homepage = class {
     }
   };
 
+  renderProgressBar = (percent) => {
+    const progressBar = document.querySelector('#progress-bar');
+    const bar = new ProgressBar.Line(progressBar, {
+      strokeWidth: 4,
+      easing: 'easeInOut',
+      duration: 1400,
+      color: '#D11800',
+      trailColor: '#FFF',
+      trailWidth: 1,
+      svgStyle: {
+        width: '310px',
+        height: '22px',
+        border: '1px solid #D11800',
+        borderRadius: '10px'
+      },
+      text: {
+        style: {
+          // Text color.
+          // Default: same as stroke color (options.color)
+          color: '#999',
+          position: 'relative',
+          left: '330px',
+          top: '-25px',
+          padding: 0,
+          margin: 0,
+          transform: null
+        },
+        autoStyleContainer: false
+      },
+      step: (state, progress) => {
+        progress.setText(`${Math.round(progress.value() * 100)} %`);
+      }
+    });
+
+    bar.animate(percent); // Number from 0.0 to 1.0
+  };
+
   renderInstaCharts = () => {
     const insta = document.querySelector('#chart-insta');
     const facebook = document.querySelector('#chart-facebook');
@@ -102,31 +144,36 @@ const Homepage = class {
     tiktokBtn.className = '';
 
     const instaData = {
-      labels: ['Total Abonnés', 'Abonnés 18-24 ans', 'Abonnés 25-34 ans', 'Abonnés 35-44 ans', 'Abonnés 45-54 ans', 'Total vues', 'Vues 18-24 ans', 'Vues 25-34 ans', 'Vues 35-44 ans', 'Vues 45-54 ans', 'Achats'],
+      labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
       datasets: [{
-        type: 'bar',
-        label: 'Juin 2022',
-        data: [20, 10, 6, 1, 3, 70, 33, 27, 8, 2, 345],
+        data: [250, 700, 436, 10.7, 159],
+        fill: true,
         backgroundColor: [
-          '#F2AC44',
-          '#FFE169',
-          '#EDC531',
-          '#C9A227',
-          '#A47E1B',
-          '#FFE169',
-          '#C9A227',
-          '#A47E1B'
+          '#ffb950',
+          '#ff931f',
+          '#fa5e1f',
+          '#b81702',
+          '#7a0103'
         ]
       }]
     };
 
     const instaConfig = {
-      type: 'scatter',
+      type: 'doughnut',
       data: instaData,
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 3
+          }
+        },
+        plugins: {
+          legend: true,
+          title: {
+            text: 'Juin 2022',
+            display: true
           }
         }
       }
@@ -163,31 +210,36 @@ const Homepage = class {
     tiktokBtn.className = '';
 
     const facebookData = {
-      labels: ['Total Abonnés', 'Abonnés 18-24 ans', 'Abonnés 25-34 ans', 'Abonnés 35-44 ans', 'Abonnés 45-54 ans', 'Total vues', 'Vues 18-24 ans', 'Vues 25-34 ans', 'Vues 35-44 ans', 'Vues 45-54 ans', 'Achats'],
+      labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
       datasets: [{
-        type: 'bar',
-        label: 'Juin 2022',
-        data: [20, 10, 6, 1, 3, 70, 33, 27, 8, 2, 345],
+        data: [250, 700, 436, 10.7, 159],
+        fill: true,
         backgroundColor: [
-          '#F2AC44',
-          '#FFE169',
-          '#EDC531',
-          '#C9A227',
-          '#A47E1B',
-          '#FFE169',
-          '#C9A227',
-          '#A47E1B'
+          '#ffb950',
+          '#ff931f',
+          '#fa5e1f',
+          '#b81702',
+          '#7a0103'
         ]
       }]
     };
 
     const facebookConfig = {
-      type: 'scatter',
+      type: 'doughnut',
       data: facebookData,
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 3
+          }
+        },
+        plugins: {
+          legend: true,
+          title: {
+            text: 'Juin 2022',
+            display: true
           }
         }
       }
@@ -224,31 +276,36 @@ const Homepage = class {
     tiktokBtn.className = '';
 
     const twitchData = {
-      labels: ['Total Abonnés', 'Abonnés 18-24 ans', 'Abonnés 25-34 ans', 'Abonnés 35-44 ans', 'Abonnés 45-54 ans', 'Total vues', 'Vues 18-24 ans', 'Vues 25-34 ans', 'Vues 35-44 ans', 'Vues 45-54 ans', 'Achats'],
+      labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
       datasets: [{
-        type: 'bar',
-        label: 'Juin 2022',
-        data: [20, 10, 6, 1, 3, 70, 33, 27, 8, 2, 345],
+        data: [250, 700, 436, 10.7, 159],
+        fill: true,
         backgroundColor: [
-          '#F2AC44',
-          '#FFE169',
-          '#EDC531',
-          '#C9A227',
-          '#A47E1B',
-          '#FFE169',
-          '#C9A227',
-          '#A47E1B'
+          '#ffb950',
+          '#ff931f',
+          '#fa5e1f',
+          '#b81702',
+          '#7a0103'
         ]
       }]
     };
 
     const twitchConfig = {
-      type: 'scatter',
+      type: 'doughnut',
       data: twitchData,
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 3
+          }
+        },
+        plugins: {
+          legend: true,
+          title: {
+            text: 'Juin 2022',
+            display: true
           }
         }
       }
@@ -285,31 +342,37 @@ const Homepage = class {
     tiktokBtn.className = 'pressed';
 
     const tiktokData = {
-      labels: ['Total Abonnés', 'Abonnés 18-24 ans', 'Abonnés 25-34 ans', 'Abonnés 35-44 ans', 'Abonnés 45-54 ans', 'Total vues', 'Vues 18-24 ans', 'Vues 25-34 ans', 'Vues 35-44 ans', 'Vues 45-54 ans', 'Achats'],
+      labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
       datasets: [{
-        type: 'bar',
-        label: 'Juin 2022',
-        data: [20, 10, 6, 1, 3, 70, 33, 27, 8, 2, 345],
+        data: [250, 700, 436, 10.7, 159],
+        fill: true,
         backgroundColor: [
-          '#F2AC44',
-          '#FFE169',
-          '#EDC531',
-          '#C9A227',
-          '#A47E1B',
-          '#FFE169',
-          '#C9A227',
-          '#A47E1B'
+          '#ffb950',
+          '#ff931f',
+          '#fa5e1f',
+          '#b81702',
+          '#7a0103'
         ]
       }]
     };
 
     const tiktokConfig = {
-      type: 'scatter',
+      type: 'doughnut',
       data: tiktokData,
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 3
+          }
+        },
+        plugins: {
+          legend: true,
+          maintainAspectRatio: false,
+          title: {
+            text: 'Juin 2022',
+            display: true
           }
         }
       }
@@ -353,6 +416,17 @@ const Homepage = class {
     calendar.setOption('locale', 'fr');
     calendar.updateSize();
     return `<div>${calendar.render()}</div>`;
+  };
+
+  renderSelectedLink = () => {
+    const home = document.querySelector('#home-link');
+    const timesheet = document.querySelector('#timesheet-link');
+    const statistics = document.querySelector('#statistics-link');
+    const courses = document.querySelector('#courses-link');
+    home.className = 'selected';
+    timesheet.className = '';
+    statistics.className = '';
+    courses.className = '';
   };
 
   render = () => (
@@ -416,9 +490,33 @@ const Homepage = class {
         <div class="badges-courses">
           <div class="badge-list">
             <h4>Badges acquis</h4>
+            <div class="badges">
+              <h6>1</h6>
+              <img src="${img1}" />
+              <p>Les 5 clefs pour réussir en marketing</p>
+            </div>
+            <div class="badges">
+              <h6>2</h6>
+              <img src="${img2}" />
+              <p>Les faux-pas à éviter</p>
+            </div>
+            <div class="badges">
+              <h6>3</h6>
+              <img src="${img3}" />
+              <p>Comment augmenter son nombre de followers</p>
+            </div>
+            <div class="badges">
+              <h6>4</h6>
+              <img src="${img4}" />
+              <p>Avoir plus de visibilité</p>
+            </div>
           </div>
           <div class="course-list">
             <h4>Aperçu formation actuelle</h4>
+            <div class=home-course">
+              <p>Fidéliser les clients</p>
+              <div id="progress-bar"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -427,8 +525,10 @@ const Homepage = class {
 
   run = () => {
     this.el.innerHTML = this.render();
+    this.renderSelectedLink();
     this.renderCalendar();
     this.renderInstaCharts();
+    this.renderProgressBar(0.25);
 
     const instaBtn = document.querySelector('#stat-insta-button');
     const facebookBtn = document.querySelector('#stat-facebook-button');

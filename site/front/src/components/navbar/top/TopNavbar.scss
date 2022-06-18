@@ -18,7 +18,7 @@
   flex-direction: row;
   width: 280px;
   height: 56px;
-  background: rgba(242, 172, 68, 0.20);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 20px 5px 20px 5px;
 }
 
@@ -34,10 +34,9 @@
 }
 
 .search-input::placeholder, .search-input {
-  color: #D11800;
+  color: black;
   opacity: 1;
   padding: 20px;
-  font-weight: bold;
 }
 
 .search-icon {
@@ -46,7 +45,7 @@
   position: relative;
   top: 18px;
   left: 40px;
-  color: #D11800;
+  color: black;
 }
 
 .notifications, .profile {
@@ -58,11 +57,11 @@
 }
 
 .notifications {
-  background: rgba(242, 172, 68, 0.20);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .fa-bell {
-  color: #D11800;
+  color: black;
   width: 20px;
   height: 20px;
   position: relative;

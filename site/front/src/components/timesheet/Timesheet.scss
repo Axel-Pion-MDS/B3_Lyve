@@ -1,10 +1,10 @@
 #timesheet {
-  width: 100%;
+  width: 84%;
   height: 100%;
 }
 
 #calendar-full {
-  width: 84%;
+  width: 100%;
   height: 80%;
 }
 
@@ -51,4 +51,151 @@
 
 .fc-col-header-cell-cushion {
   color: #D11800;
+}
+
+.fc-myCustomButton-button[title^='rdv'] {
+  background: none;
+  border: 1px solid black;
+  border-radius: 8px;
+  width: 163px;
+  height: 42px;
+  font-size: 16px;
+}
+
+.fc-myCustomButton-button[title^='rdv']:hover {
+  border: none;
+  background: green;
+  color: white;
+}
+
+#rdv-background {
+  background: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  backdrop-filter: blur(5px);
+
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 100vh;
+  z-index: 1;
+}
+
+#rdv-form {
+  width: 871px;
+  height: 650px;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-45%, -45%);
+  background: white;
+  border-radius: 5px;
+  padding: 50px;
+}
+
+.rdv-form-inputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.rdv-form-start,
+.rdv-form-end,
+.rdv-form-notes {
+  display: flex;
+  flex-direction: column;
+  margin: 25px 0;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: row;
+}
+
+#form-start-date,
+#form-start-time,
+#form-end-date,
+#form-end-time {
+  width: 374px;
+  height: 36px;
+}
+
+#form-start-date,
+#form-end-date {
+  border-radius: 8px 0 0 8px;
+}
+
+#form-start-time,
+#form-end-time {
+  border-radius: 0 8px 8px 0;
+}
+
+#form-note-text {
+  resize: none;
+  width: 748px;
+  height: 170px;
+  border-radius: 8px;
+}
+
+.rdv-form-buttons {
+  width: 400px;
+  position: relative;
+  left: 50.5%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#rdv-form-button-cancel,
+#rdv-form-button-create {
+  border: none;
+  width: 140px;
+  height: 66px;
+  border-radius: 8px;
+  color: white;
+}
+
+#rdv-form-button-cancel {
+  background: #D11800;
+}
+
+#rdv-form-button-create {
+  background: #F2AC44;
+}
+
+#confirm-message {
+  width: 871px;
+  height: 413px;
+  text-align: center;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-45%, -45%);
+  background: white;
+  border-radius: 8px;
+  padding: 50px
+}
+
+#confirm-message #exit-cross {
+  position: relative;
+  left: 51%;
+  top: -6%;
+  margin-bottom: 20px;
+  border: none;
+  background: none;
+}
+
+#confirm-message .separator {
+  width: 743px;
+  height: 1px;
+  background: #C4C4C4;
+  margin: 50px 0;
+}
+
+#confirm-message #confirm-btn {
+  width: 140px;
+  height: 66px;
+  background: #F2AC44;
+  color: white;
+  border: none;
+  border-radius: 8px;
 }

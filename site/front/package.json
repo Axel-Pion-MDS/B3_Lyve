@@ -1,60 +1,124 @@
 {
 
   "name": "@maengdok/mysql-motion-streaming",
+
   "version": "1.0.0",
+
   "description": "MySQL Motion Streaming",
+
   "type": "module",
+
   "main": "index.js",
+
   "scripts": {
+
     "start": "npx webpack-dev-server --mode development",
+
     "dist": "npx webpack --mode production --progress=profile",
+
     "lint": "eslint ."
+
   },
+
   "repository": {
+
     "type": "git",
+
     "url": "git+https://github.com/xzen/chat-bot-io-v2.git"
+
   },
+
   "author": "",
+
   "license": "ISC",
+
   "bugs": {
+
     "url": "https://github.com/xzen/chat-bot-io-v2/issues"
+
   },
+
   "homepage": "https://github.com/xzen/chat-bot-io-v2#readme",
+
   "devDependencies": {
+
     "@babel/core": "^7.16.0",
+
     "@babel/eslint-parser": "^7.5.4",
+
     "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
+
     "@babel/preset-env": "^7.16.0",
+
     "babel-loader": "^8.2.3",
+
     "css-loader": "^6.7.1",
+
     "eslint": "^8.2.0",
+
     "eslint-config-airbnb-base": "^15.0.0",
+
     "eslint-plugin-import": "^2.25.3",
+
     "eslint-webpack-plugin": "^3.1.0",
+
     "file-loader": "^6.2.0",
+
     "html-webpack-plugin": "^5.5.0",
+
     "sass": "^1.43.4",
+
     "sass-loader": "^12.3.0",
+
     "style-loader": "^3.3.1",
+
     "ts-loader": "^9.2.6",
+
     "webpack": "^5.63.0",
+
     "webpack-cli": "^4.9.2",
+
     "webpack-dev-server": "^4.4.0"
+
   },
+
   "dependencies": {
+
     "@fortawesome/fontawesome-free": "^6.1.1",
+
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
+
     "@fullcalendar/core": "^5.11.0",
+
     "@fullcalendar/daygrid": "^5.11.0",
+
     "@fullcalendar/list": "^5.11.0",
+
     "@fullcalendar/timegrid": "^5.11.0",
+
     "axios": "^0.26.1",
+
     "body-parser": "^1.20.0",
+
     "chart.js": "^3.8.0",
+
     "cors": "^2.8.5",
+
     "dotenv": "^16.0.0",
+
     "express": "^4.18.1",
+
     "fullcalendar": "^5.11.0",
-    "mysql": "^2.18.1"
+
+    "moment": "^2.29.3",
+
+    "mysql": "^2.18.1",
+
+    "progressbar.js": "^1.1.0",
+
+    "tippy.js": "^6.3.7"
+
   }
+
 }
+
