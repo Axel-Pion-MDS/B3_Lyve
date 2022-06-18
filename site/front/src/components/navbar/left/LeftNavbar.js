@@ -32,15 +32,15 @@ const LeftNavbar = class {
               </a>
             </li>
             <li>
-              <a href="statistics" id="statistics-link">
-                <i class="fa fa-chart-simple"></i>
-                Statistiques
-              </a>
-            </li>
-            <li>
               <a href="courses" id="courses-link">
                 <i class="fa fa-graduation-cap"></i>
                 Formations
+              </a>
+            </li>
+            <li>
+              <a href="statistics" id="statistics-link">
+                <i class="fa fa-chart-simple"></i>
+                Statistiques
               </a>
             </li>
           </ul>

@@ -1,0 +1,115 @@
+.course-informations-block {
+  display: flex;
+  flex-direction: row;
+  width: 85%;
+}
+
+.progression-modules {
+  display: flex;
+  flex-direction: column;
+  width: 55%;
+}
+
+.informations-badges {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+}
+
+.course-informations-block .separator {
+  width: 1px;
+  height: 552px;
+  background: #C4C4C4;
+  margin: 50px 20px 0 20px;
+}
+
+#modules-list {
+  display: flex;
+  flex-direction: column;
+  height: 550px;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll; 
+}
+
+#modules-list button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: none;
+  border: 1px solid black;
+  width: 600px;
+  height: 100px;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+#modules-list .locked {
+  background: rgba(217, 217, 217, 0.2);
+}
+
+#modules-list button .unlocked {
+  display: none;
+}
+
+#informations {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.modules-number,
+.modules-time,
+.modules-level {
+  width: 230px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+
+}
+
+.unclickable-button {
+  width: 183px;
+  height: 85px;
+  background: #F2AC44;
+  border: none;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  border-radius: 20px 5px 20px 5px;
+}
+
+.unclickable-button p {
+  font-size: 38px;
+}
+
+.course-progression-bar h4,
+.course-modules-list h4,
+.course-informations h4,
+.course-badges h4 {
+  margin: 20px 0;
+}
+
+#badges {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.unclickable-badge-button {
+  width: 125px;
+  height: 100px;
+  border: 1px solid black;
+  border-radius: 20px 5px 20px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 10px;
+}
+
+.unclickable-badge-button .badge-img {
+  width: 80px;
+  height: 80px;
+}

@@ -27,8 +27,8 @@
 #stat-twitch-button,
 #stat-tiktok-button {
   background: none;
-  border: 1px solid #D11800;
-  color: #D11800;
+  border: 1px solid black;
+  color: black;
   width: 83px;
   height: 30px;
   border-radius: 3px;
@@ -40,11 +40,12 @@
 #stat-twitch-button:hover,
 #stat-tiktok-button:hover {
   border: none;
-  background: #D11800;
+  background: #F2AC44;
   color: white;
 }
 
 #statistics-buttons .pressed {
-  background: #D11800;
+  background: #F2AC44;
   color: white;
+  border: none;
 }
