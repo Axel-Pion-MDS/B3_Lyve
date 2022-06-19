@@ -59,10 +59,11 @@ const Courses = class {
   );
 
   renderModules = (number, locked) => {
-    const isLocked = locked === false ? 'locked' : 'unlocked';
+    const isLocked = locked === true ? 'locked' : 'unlocked';
+    const link = locked === true ? '' : 'module';
 
     return `
-      <button type="button" class="module-${number} ${isLocked}">
+      <button type="button" class="module-${number} ${isLocked}" onclick="location.href='${link}';">
         Module ${number} <i class="fa-solid fa-lock ${isLocked}"></i>
       </button>
     `;
@@ -107,13 +108,7 @@ const Courses = class {
   };
 
   renderSelectedLink = () => {
-    const home = document.querySelector('#home-link');
-    const timesheet = document.querySelector('#timesheet-link');
-    const statistics = document.querySelector('#statistics-link');
     const courses = document.querySelector('#courses-link');
-    home.className = '';
-    timesheet.className = '';
-    statistics.className = '';
     courses.className = 'selected';
   };
 
@@ -157,9 +152,10 @@ const Courses = class {
 
     const moduleList = document.querySelector('#modules-list');
 
+    // ! TEMPORARY FOR LOOP, MUST BE REPLACED WITH A GET COURSE FROM BACK
     // eslint-disable-next-line no-plusplus
     for (let i = 1; i < 26 + 1; i++) {
-      const locked = i <= 4;
+      const locked = i > 4;
       moduleList.innerHTML += this.renderModules(i, locked);
     }
 

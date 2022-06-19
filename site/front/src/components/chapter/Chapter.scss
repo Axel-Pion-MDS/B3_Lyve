@@ -1,0 +1,155 @@
+.left-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+  width: 85%;
+}
+
+.left-side {
+  width: 53%;
+}
+
+.right-side {
+  width: 36%;
+  height: 400px;
+}
+
+#chapter-details .picture-description {
+  display: flex;
+  flex-direction: row;
+
+}
+
+#chapter-details img {
+  width: 403px;
+  height: 269px;
+  border-radius: 8px;
+}
+
+#chapter-details .description {
+  width: 403px;
+  height: 269px;
+  border: 1px solid black;
+  border-radius: 8px;
+  margin-left: 10px;
+  padding: 15px;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+}
+
+#chapter-details .description::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
+
+#chapter-details .description p {
+  font-size: 22px;
+}
+
+#parts-list {
+  margin-top: 50px;
+  // width: 815px;
+  // width: 81.5%;
+  height: 343px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+}
+
+#parts-list::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
+
+#parts-list .part {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid black;
+  border-radius: 8px;
+  width: 250px;
+  height: 48px;
+  margin: 10px;
+  padding: 0 20px 0 20px;
+  cursor: pointer;
+}
+
+#parts-list .part p {
+  padding-top: 20px;
+}
+
+#parts-list .part .status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#parts-list .part .status i {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+#parts-list .part .status .fa-circle-check,
+#parts-list .part .status .done {
+  color: #0FA958;
+}
+
+#parts-list .part .status .fa-spinner,
+#parts-list .part .status .in-progress {
+  color: #F2AC44;
+}
+
+#parts-list .part .status .fa-power-off,
+#parts-list .part .status .todo {
+  color: #C4C4C4;
+}
+
+#parts-list .status:hover .fa-spinner {
+  animation-name: loading;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.right-side .chapter-informations {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.right-side .chapter-informations .parts,
+.right-side .chapter-informations .timer,
+.right-side .chapter-informations .progress {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100px;
+}
+
+.right-side .chapter-informations .parts i,
+.right-side .chapter-informations .timer i ,
+.right-side .chapter-informations .progress i {
+  font-size: 60px;
+  margin-right: 30px;
+}
+
+.right-side .chapter-informations .parts p,
+.right-side .chapter-informations .timer p {
+  font-size: 34px;
+  padding-top: 20px;
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  } to {
+    transform: rotate(360deg);
+  }
+}

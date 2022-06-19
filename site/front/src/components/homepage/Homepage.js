@@ -420,13 +420,7 @@ const Homepage = class {
 
   renderSelectedLink = () => {
     const home = document.querySelector('#home-link');
-    const timesheet = document.querySelector('#timesheet-link');
-    const statistics = document.querySelector('#statistics-link');
-    const courses = document.querySelector('#courses-link');
     home.className = 'selected';
-    timesheet.className = '';
-    statistics.className = '';
-    courses.className = '';
   };
 
   render = () => (

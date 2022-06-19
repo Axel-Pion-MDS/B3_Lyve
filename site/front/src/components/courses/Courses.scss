@@ -32,6 +32,10 @@
   overflow-y: scroll; 
 }
 
+#modules-list::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
 #modules-list button {
   display: flex;
   flex-direction: row;
