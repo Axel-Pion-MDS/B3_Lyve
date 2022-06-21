@@ -1,0 +1,43 @@
+#part-details {
+  width: 85%;
+  margin-top: 30px;
+}
+
+#part-details .details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center ;
+}
+
+#part-details .details .video-p {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+#part-details .details .button-p {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+#part-details .details .button-p button {
+  width: 286px;
+  height: 46px;
+  border: none;
+  border-radius: 8px;
+  background: #F2AC44;
+  margin: 20px 0;
+}
+
+#part-details .details .button-p p {
+  width: 769px;
+  height: 112px;
+}
+
+#part-details .details .button-p ul {
+  list-style: inside !important;
+  margin-top: -40px;
+}
