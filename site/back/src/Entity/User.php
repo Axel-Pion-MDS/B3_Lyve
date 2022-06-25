@@ -18,7 +18,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ApiProperty(identifier: false)]
     #[ORM\Column(type: 'integer')]
     private $id;
 
@@ -29,7 +28,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 100)]
-    #[ApiProperty(identifier: true)]
     private $email;
 
     #[ORM\Column(type: 'date')]
@@ -49,9 +47,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Answer::class, inversedBy: 'users')]
     private $answers;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class)]
-    private $message;
 
     #[ORM\Column(type: 'datetime', nullable:true)]
     private $created_at;
@@ -179,36 +174,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeBadges(Badge $badges): self
     {
         $this->badges->removeElement($badges);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessage(): Collection
-    {
-        return $this->message;
-    }
-
-    public function addMessage(Message $message): self
-    {
-        if (!$this->message->contains($message)) {
-            $this->message[] = $message;
-            $message->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): self
-    {
-        if ($this->message->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getUser() === $this) {
-                $message->setUser(null);
-            }
-        }
 
         return $this;
     }

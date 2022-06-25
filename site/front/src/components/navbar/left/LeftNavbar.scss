@@ -43,6 +43,7 @@
   display: flex;
   flex-direction: row;
   justify-content: start;
+  width: 80%;
   margin-left: 20px;
   margin-top: 30%;
   color: black;
@@ -55,13 +56,16 @@
 
 #navbar-links a {
   margin-top: -5px;
+  display: flex;
+  flex-direction: row;
 }
 
 #navbar-links a i {
   margin-right: 30px;
-  width: 30px
+  width: 30px;
 }
 
 #navbar-links a p {
-  width: 100px;
+  width: 90px;
+  font-size: 20px;
 }

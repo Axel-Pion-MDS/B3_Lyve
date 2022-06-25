@@ -22,25 +22,25 @@ const LeftNavbar = class {
             <li>
               <a href="/" id="home-link">
                 <i class="fa fa-house"></i>
-                Accueil
+                <p>Accueil</p>
               </a>
             </li>
             <li>
               <a href="timesheet" id="timesheet-link">
                 <i class="fa fa-calendar"></i>
-                Agenda
+                <p>Agenda</p>
               </a>
             </li>
             <li>
               <a href="courses" id="courses-link">
                 <i class="fa fa-graduation-cap"></i>
-                Formations
+                <p>Formations</p>
               </a>
             </li>
             <li>
               <a href="statistics" id="statistics-link">
                 <i class="fa fa-chart-simple"></i>
-                Statistiques
+                <p>Statistiques</p>
               </a>
             </li>
           </ul>

@@ -48,6 +48,15 @@
   color: black;
 }
 
+.notif-profile {
+  display: flex; 
+}
+
+.notif-blocks {
+  display: inherit;
+  position: relative;
+}
+
 .notifications, .profile {
   border: none;
   width: 56px;
@@ -58,6 +67,16 @@
 
 .notifications {
   background: rgba(0, 0, 0, 0.15);
+}
+
+.notif-blocks .show {
+  width: 400px;
+  position:absolute;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  top: 100px;
+  left: -150px;
+  z-index: 1;
 }
 
 .fa-bell {
@@ -86,5 +105,56 @@
 
 .notif-hide {
   background: rgba(209, 24, 0, 0);
-  border: 5px solid rgba(255, 255, 255, 0);
+  position: relative;
+  top: -5px;
+  left: 45px;
+  width: 0;
+}
+
+.notification-box {
+  position: relative;
+}
+
+.notification-box ul {
+  width: 100%;
+  padding: 0;
+}
+
+.notification-box ul li {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  margin: 20px auto;
+}
+
+.notification-box ul li img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.notification-box ul li p {
+  margin: 10px;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+}
+
+.profile-button .profile {
+  z-index: 1;
+  opacity: 0;
+}
+
+.profile-button img {
+  position: relative;
+  left: -76px;
+  width: 56px;
+  height: 56px;
+  border-radius: 20px 5px 20px 5px;
 }
