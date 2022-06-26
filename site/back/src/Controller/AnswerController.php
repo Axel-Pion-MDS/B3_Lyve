@@ -23,12 +23,21 @@ class AnswerController extends AbstractController
     private array $status = ['result' => 'success', 'msg' => ''];
 
 
+    /**
+     * @param AnswerRepository $answerRepository
+     * @param ManagerRegistry $doctrine
+     */
     public function __construct(AnswerRepository $answerRepository, ManagerRegistry $doctrine)
     {
         $this->answerRepository = $answerRepository;
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * List every answer fetched from database
+     *
+     * @return JsonResponse
+     */
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
@@ -44,6 +53,12 @@ class AnswerController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Show answer's details from answer's ID
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
     public function show(Request $request): JsonResponse
     {
@@ -66,6 +81,12 @@ class AnswerController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Add an answer from request
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/add', name: '_add', methods: ['POST'])]
     public function add(Request $request): JsonResponse
     {
@@ -109,6 +130,12 @@ class AnswerController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit an answer from request
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/edit', name: '_edit', methods: ['PATCH'])]
     public function edit(Request $request): JsonResponse
     {
@@ -158,6 +185,12 @@ class AnswerController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Delete an answer from answer's ID
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
@@ -185,11 +218,23 @@ class AnswerController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Fetch question related to the ID
+     *
+     * @param int $data
+     * @return Question
+     */
     public function findQuestion(int $data): Question
     {
         return $this->doctrine->getRepository(Question::class)->find($data);
     }
 
+    /**
+     * Fetch user related to the ID
+     *
+     * @param int $data
+     * @return User
+     */
     public function findUser(int $data): User
     {
         return $this->doctrine->getRepository(User::class)->find($data);

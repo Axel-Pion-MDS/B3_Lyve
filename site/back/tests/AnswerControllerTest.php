@@ -12,6 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class AnswerControllerTest extends KernelTestCase
 {
     /**
+     * Test answer controller's add method
+     *
      * @throws JsonException
      * @throws GuzzleException|JsonException
      */
@@ -37,6 +39,8 @@ class AnswerControllerTest extends KernelTestCase
     }
 
     /**
+     * Test answer controller's list method
+     *
      * @throws GuzzleException
      * @throws JsonException
      */
@@ -53,6 +57,8 @@ class AnswerControllerTest extends KernelTestCase
     }
 
     /**
+     * Test answer controller's show method
+     *
      * @throws GuzzleException
      * @throws JsonException
      */
@@ -73,6 +79,8 @@ class AnswerControllerTest extends KernelTestCase
     }
 
     /**
+     * Test answer controller's edit method
+     *
      * @throws JsonException
      * @throws GuzzleException
      */
@@ -97,6 +105,8 @@ class AnswerControllerTest extends KernelTestCase
     }
 
     /**
+     * Test answer controller's delete method
+     *
      * @throws GuzzleException
      */
     public function testDelete(): void
