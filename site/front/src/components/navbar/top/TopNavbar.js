@@ -64,10 +64,12 @@ const TopNavbar = class {
     const notifBlock = document.querySelector('#notifications');
     notif.addEventListener('click', () => {
       if (notifBlock.className === 'hide') {
+        notif.style = 'background: #F2AC44';
         notifBlock.className = 'show';
         notifBlock.innerHTML = this.renderNotification();
       } else {
         const notifCircle = document.querySelector('.notifications-circle');
+        notif.style = 'background: rgba(0, 0, 0, 0.15)';
         notifBlock.className = 'hide';
         notifCircle.className = 'notif-hide';
       }

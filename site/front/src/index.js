@@ -17,6 +17,7 @@ import Timesheet from './components/timesheet/Timesheet.js';
 import Statistics from './components/statistics/Statistics.js';
 import Courses from './components/courses/Courses.js';
 import Profile from './components/profile/Profile.js';
+import Login from './components/security/login/Login.js';
 
 const Routes = class Routing {
   getPath = () => {
@@ -45,6 +46,7 @@ const Routes = class Routing {
     const statistics = new Statistics();
     const courses = new Courses();
     const profile = new Profile();
+    const login = new Login();
 
     leftNavbar.run();
     topNavbar.run();
@@ -94,6 +96,9 @@ const Routes = class Routing {
         break;
       case 'profile':
         profile.run();
+        break;
+      case 'login':
+        login.run();
         break;
       default:
         error404.run();
