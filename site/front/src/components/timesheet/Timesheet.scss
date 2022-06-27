@@ -11,21 +11,51 @@
 .fc-theme-standard .fc-scrollgrid, .fc-theme-standard td, .fc-theme-standard th {
   border: none;
 }
+.fc table{
+  border-collapse: separate !important;
+  overflow: none !important;
+}
 
-.fc .fc-daygrid-day.fc-day-today {
-  background-color: #f6d1cc;
+// tr[role=row] {
+//   height: 23px;
+//   padding-bottom: 20px !important;
+// }
+
+th[role=columnheader] {
+  position: relative;
+  height: 23px !important;
+  background: none;
+  border: none !important; 
+  margin-bottom: 20px !important;
+}
+
+tr[role=presentation] {
+  height: 50px !important;
+}
+
+.fc-day-mon, .fc-day-tue, .fc-day-wed,  .fc-day-thu, .fc-day-fri, .fc-day-sat {
+  // border-collapse: collapse !important;
+  border-right: 1px solid black !important;
 }
 
 .fc-day-today[role="columnheader"] {
-  background-color: #f6d1cc;
+  height: 23px !important;
+  border-radius: 8px;
+  background-color: #ADB5BD;
 }
 
-.fc-day-mon, .fc-day-wed, .fc-day-fri, .fc-day-sun {
-  background-color: #fdf3f2;
+.fc-day-mon[role=gridcell], .fc-day-wed[role=gridcell], .fc-day-fri[role=gridcell], .fc-day-sun[role=gridcell] {
+  background-color: #ADB5BD !important;
+  margin-top: 20px !important;
+
 }
 
-.fc-day-tue, .fc-day-thu, .fc-day-sat {
-  background-color: #faf8f8;
+.fc-day-tue[role=gridcell], .fc-day-thu[role=gridcell], .fc-day-sat[role=gridcell] {
+  background-color: #DEE2E6 !important;
+}
+
+.fc-scrollgrid-sync-inner {
+  background: none !important;
 }
 
 .fc .fc-button-primary, .fc .fc-button-primary:disabled {
@@ -50,16 +80,18 @@
 }
 
 .fc-col-header-cell-cushion {
-  color: #D11800;
+  color: black;
+  font-size: 18px;
 }
 
 .fc-myCustomButton-button[title^='rdv'] {
   background: none;
   border: 1px solid black;
   border-radius: 8px;
-  width: 163px;
+  width: 160px !important;
   height: 42px;
   font-size: 16px;
+  margin-right: 1px;
 }
 
 .fc-myCustomButton-button[title^='rdv']:hover {

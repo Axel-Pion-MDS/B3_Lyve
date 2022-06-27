@@ -158,6 +158,11 @@ const Statistics = class {
     }
   };
 
+  /**
+   * render Instagram Charts
+   *
+   * @returns {Object}
+   */
   renderInstaCharts = () => {
     const insta = document.querySelector('#instagram');
     const facebook = document.querySelector('#facebook');

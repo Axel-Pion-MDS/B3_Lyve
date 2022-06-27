@@ -34,6 +34,16 @@ const Timesheet = class {
     });
   };
 
+  /**
+   * Add an event to the timesheet
+   *
+   * @param {Object} calendar
+   * @param {Date} startDate
+   * @param {Date} startTime
+   * @param {Date} endDate
+   * @param {Date} endTime
+   * @param {string} notes
+   */
   addEventOnCalendar = (calendar, startDate, startTime, endDate, endTime, notes = null) => {
     const messages = document.querySelector('#messages');
     calendar.addEvent({
@@ -112,6 +122,11 @@ const Timesheet = class {
     `;
   };
 
+  /**
+   * Render the timesheet calendar
+   *
+   * @returns string
+   */
   renderCalendar = () => {
     const calendarEl = document.querySelector('#calendar-full');
     const today = moment();

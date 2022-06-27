@@ -2,8 +2,17 @@ import './Question.scss';
 
 const Question = class {
   constructor() {
+    this.app = document.querySelector('#app');
     this.el = document.querySelector('#body');
   }
+
+  renderResult = () => (
+    `
+      <h2>Bien joué !</h2>
+      <p class="good-result">1/1</p>
+      <button type="button" class="next-button">Suivant</button>
+    `
+  );
 
   renderQuestion = () => (
     `
@@ -65,6 +74,10 @@ const Question = class {
         <div id="question-details">
         </div>
         <button type="button" class="valid-answers">Valider les réponses</button>
+        <div id="rdv-background" class="hide">
+        </div>
+        <div id="question-result" class="hide">
+        </div>
       </div>
     `
   );
@@ -142,6 +155,25 @@ const Question = class {
         } else {
           answerD.removeAttribute('checked');
         }
+      });
+    });
+
+    const validButton = document.querySelector('.valid-answers');
+
+    validButton.addEventListener('click', () => {
+      const result = document.querySelector('#question-result');
+      const background = document.querySelector('#rdv-background');
+      background.className = 'show';
+      result.className = 'show';
+      result.innerHTML = this.renderResult();
+
+      this.waitForElm('.next-button').then(() => {
+        const next = document.querySelector('.next-button');
+
+        next.addEventListener('click', () => {
+          // eslint-disable-next-line no-restricted-globals
+          location.href = 'chapter';
+        });
       });
     });
   };

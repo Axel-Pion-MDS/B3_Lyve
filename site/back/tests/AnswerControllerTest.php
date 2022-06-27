@@ -20,7 +20,7 @@ class AnswerControllerTest extends KernelTestCase
     public function testAdd(): void
     {
         $url = $_ENV['APP_URL'];
-        $module = [
+        $answer = [
             'answer' => 'UnitTest',
             'isCorrect' => 1,
             'question' => 2,
@@ -28,7 +28,7 @@ class AnswerControllerTest extends KernelTestCase
         ];
         $client = new Client(['verify' => false]);
         $request = $client->post("$url/answer/add", [
-            RequestOptions::JSON => $module
+            RequestOptions::JSON => $answer
         ]);
 
         $this->assertJson(json_encode($request, JSON_THROW_ON_ERROR));
@@ -76,6 +76,12 @@ class AnswerControllerTest extends KernelTestCase
         $this->assertArrayHasKey('isCorrect', $data['data'][0]);
         $this->assertArrayHasKey('question', $data['data'][0]);
         $this->assertArrayHasKey('users', $data['data'][0]);
+        $this->assertSame(AnswerControllerTestData::$answerId, $data['data'][0]['id']);
+        $this->assertSame('UnitTest', $data['data'][0]['answer']);
+        $this->assertTrue($data['data'][0]['isCorrect']);
+        $this->assertSame(2, $data['data'][0]['question']['id']);
+        $this->assertSame('Question ?', $data['data'][0]['question']['label']);
+        $this->assertSame([], $data['data'][0]['users']);
     }
 
     /**

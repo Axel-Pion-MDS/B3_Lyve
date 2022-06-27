@@ -114,7 +114,7 @@ const Courses = class {
 
   render = () => (
     `
-      <h2>[Titre Formation]</h2>
+      <h2>Les 5 clès pour réussir en marketing</h2>
       <div class="course-informations-block">
         <div class="progression-modules">
           <div class="course-progression-bar">

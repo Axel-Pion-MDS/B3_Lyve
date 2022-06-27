@@ -18,6 +18,9 @@ import Statistics from './components/statistics/Statistics.js';
 import Courses from './components/courses/Courses.js';
 import Profile from './components/profile/Profile.js';
 import Login from './components/security/login/Login.js';
+import Recover from './components/security/recover/Recover.js';
+import Error403 from './components/error/Error403.js';
+import Error500 from './components/error/Error500.js';
 
 const Routes = class Routing {
   getPath = () => {
@@ -47,6 +50,9 @@ const Routes = class Routing {
     const courses = new Courses();
     const profile = new Profile();
     const login = new Login();
+    const recover = new Recover();
+    const error403 = new Error403();
+    const error500 = new Error500();
 
     leftNavbar.run();
     topNavbar.run();
@@ -99,6 +105,15 @@ const Routes = class Routing {
         break;
       case 'login':
         login.run();
+        break;
+      case 'recover':
+        recover.run();
+        break;
+      case 'forbidden':
+        error403.run();
+        break;
+      case 'notworking':
+        error500.run();
         break;
       default:
         error404.run();

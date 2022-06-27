@@ -117,7 +117,7 @@ const Module = class {
         <button type="button" class="previous-button" onclick="location.href='courses'">
           <i class="fa-solid fa-angle-left"></i>
         </button>
-        <h2>Module 1 (26)</h2>
+        <h2>Module 1 - Comprendre sa cible (26)</h2>
       </div>
       <div id="module-details">
       </div>
