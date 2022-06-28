@@ -135,7 +135,8 @@ const Timesheet = class {
     const calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       themeSystem: 'bootstrap5',
-      initialView: 'dayGridWeek',
+      // initialView: 'dayGridWeek',
+      initialView: 'timeGridWeek',
       eventDidMount: (info) => {
         // eslint-disable-next-line no-new
         new Tippy(info.el, {

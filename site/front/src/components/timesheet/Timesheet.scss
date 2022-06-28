@@ -11,15 +11,16 @@
 .fc-theme-standard .fc-scrollgrid, .fc-theme-standard td, .fc-theme-standard th {
   border: none;
 }
-.fc table{
+.fc table {
   border-collapse: separate !important;
   overflow: none !important;
 }
 
-// tr[role=row] {
-//   height: 23px;
-//   padding-bottom: 20px !important;
-// }
+.fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
+  display: none;
+}
+
+// tr[role=row] td[role=gridcell] 
 
 th[role=columnheader] {
   position: relative;
@@ -29,8 +30,17 @@ th[role=columnheader] {
   margin-bottom: 20px !important;
 }
 
-tr[role=presentation] {
-  height: 50px !important;
+.fc .fc-timegrid-slot-minor {
+  border-style: solid;
+}
+
+.fc .fc-timegrid-slot {
+  border-left: 0;
+  border-right: 0;
+}
+
+.fc-timegrid-divider.fc-cell-shaded {
+  display: none;
 }
 
 .fc-day-mon, .fc-day-tue, .fc-day-wed,  .fc-day-thu, .fc-day-fri, .fc-day-sat {

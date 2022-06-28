@@ -52,9 +52,13 @@
   display: flex; 
 }
 
-.notif-blocks {
+.notif-blocks, .profile-button {
   display: inherit;
   position: relative;
+}
+
+.profile-button {
+  align-items: center;
 }
 
 .notifications, .profile {
@@ -69,14 +73,21 @@
   background: rgba(0, 0, 0, 0.15);
 }
 
-.notif-blocks .show {
+.notif-blocks .show, .profile-button .show {
   width: 400px;
   position:absolute;
+  border: 1px solid black;
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px rgba(0, 0, 0, 0.25);
+  // background: rgba(0, 0, 0, 0.35);
+  background: white;
   top: 100px;
   left: -225px;
-  z-index: 1000;
+}
+
+.profile-button .show {
+  width: 200px;
+  left: -123px;
 }
 
 .fa-bell {
@@ -111,23 +122,27 @@
   width: 0;
 }
 
-.notification-box {
+.notification-box, .profile-box {
   position: relative;
 }
 
-.notification-box ul {
+.notification-box ul, .profile-box ul {
   width: 100%;
   padding: 0;
 }
 
-.notification-box ul li {
+.notification-box ul li, .profile-box ul li {
   width: 80%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: white;
+  border: 1px solid black;
   border-radius: 8px;
   margin: 20px auto;
+}
+
+.profile-box ul li {
+  border: none;
 }
 
 .notification-box ul li img {
@@ -141,10 +156,13 @@
   margin: 10px;
 }
 
-.profile-button {
-  display: flex;
-  align-items: center;
-}
+// .profile-box {
+//   width: 200px;
+//   height: 200px;
+//   border: 1px solid black;
+//   background: white;
+//   border-radius: 8px;
+// }
 
 .profile-button .profile {
   z-index: 1;
@@ -157,4 +175,22 @@
   width: 56px;
   height: 56px;
   border-radius: 20px 5px 20px 5px;
+}
+
+.profile-elem a:hover, #parameters-button:hover {
+  color: #F2AC44;
+}
+
+.profile-elem a[alt="Se déconnecter"] {
+  color: #D11800;
+}
+
+#notifications, #profile-box {
+  z-index: 1000;
+}
+
+#parameters-button {
+  border: none;
+  background: none;
+  margin-left: -5px;
 }

@@ -21,6 +21,7 @@ import Login from './components/security/login/Login.js';
 import Recover from './components/security/recover/Recover.js';
 import Error403 from './components/error/Error403.js';
 import Error500 from './components/error/Error500.js';
+import RGPD from './components/security/rgpd/RGPD.js';
 
 const Routes = class Routing {
   getPath = () => {
@@ -53,6 +54,7 @@ const Routes = class Routing {
     const recover = new Recover();
     const error403 = new Error403();
     const error500 = new Error500();
+    const rgpd = new RGPD();
 
     leftNavbar.run();
     topNavbar.run();
@@ -114,6 +116,9 @@ const Routes = class Routing {
         break;
       case 'notworking':
         error500.run();
+        break;
+      case 'rgpd':
+        rgpd.run();
         break;
       default:
         error404.run();
