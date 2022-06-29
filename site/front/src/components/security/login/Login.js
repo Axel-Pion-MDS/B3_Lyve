@@ -1,3 +1,4 @@
+import axios from 'axios';
 import './Login.scss';
 import logo from '../../../../public/img/Logo-Lyve.svg';
 
@@ -6,9 +7,29 @@ const Login = class {
     this.el = document.querySelector('#app');
   }
 
+  postLogin = (email, password) => {
+    axios.post('https://lyve.local/security/login', {
+      host: 'lyve.local',
+      headers: {
+        Accept: '*/*',
+        'content-type': 'application/json'
+      },
+      body: {
+        email,
+        password
+      }
+    })
+      .then((res) => {
+        window.localStorage.setItem('user', res.data.data.user);
+        window.localStorage.setItem('roles', res.data.data.roles);
+        window.location.href = '/';
+      })
+      .catch((err) => { throw new Error(err); });
+  };
+
   renderLoginForm = () => (
     `
-      <form>
+      <div class="login-form">
         <label for="login-email">Email</label>
         <input type="email" id="login-email" name="email" placeholder="Votre email">
         <label for="login-password">Mot de passe</label>
@@ -20,9 +41,9 @@ const Login = class {
           </div>
           <a href="recover" class="forgot-password">Mot de passe oublié</a>
         </div>
-        <button type="submit">Connexion</button>
+        <button type="button" id="connexion-button">Connexion</button>
         <p>Vous n'avez pas de compte ? <a href="" class="landing-link">Visitez notre site vitrine !</a></p>
-      </form>
+      </div>
     `
   );
 
@@ -42,11 +63,42 @@ const Login = class {
     `
   );
 
+  waitForElm(selector) {
+    return new Promise((resolve) => {
+      if (document.querySelector(selector)) {
+        resolve(document.querySelector(selector));
+      }
+
+      const observer = new MutationObserver(() => {
+        if (document.querySelector(selector)) {
+          resolve(document.querySelector(selector));
+          observer.disconnect();
+        }
+        return 1;
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+
   run = () => {
     this.el.innerHTML = this.render();
 
     const login = document.querySelector('#login-form');
     login.innerHTML = this.renderLoginForm();
+
+    this.waitForElm('#connexion-button').then(() => {
+      const connexion = document.querySelector('#connexion-button');
+
+      connexion.addEventListener('click', () => {
+        const email = document.querySelector('#login-email').value;
+        const password = document.querySelector('#login-password').value;
+        this.postLogin(email, password);
+      });
+    });
   };
 };
 

@@ -31,7 +31,7 @@ const TopNavbar = class {
             <a href="rgpd" alt="RGPD">Mentions légales</a>
           </li>
           <li class="profile-elem">
-            <a href="" alt="Se déconnecter">Se déconnecter</a>
+            <a href="logout" id="disconnection-button" alt="Se déconnecter">Se déconnecter</a>
           </li>
         </ul>
       </div>
@@ -63,7 +63,7 @@ const TopNavbar = class {
     `
       <div id="menu">
         <div class="menu-icons">
-          <div class="search-bar">
+          <div class="search-bar hide">
             <input type="text" class="search-input" placeholder="Rechercher" />
             <div class="search-icon">
               <i class="fa fa-magnifying-glass"></i>

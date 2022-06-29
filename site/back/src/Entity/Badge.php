@@ -35,10 +35,14 @@ class Badge
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $updated_at;
 
+    #[ORM\ManyToMany(targetEntity: Offer::class, mappedBy: 'badges')]
+    private $offers;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->modules = new ArrayCollection();
+        $this->offers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,5 +164,32 @@ class Badge
     public function beforeUpdate(): void
     {
         $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): self
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers[] = $offer;
+            $offer->addBadge($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): self
+    {
+        if ($this->offers->removeElement($offer)) {
+            $offer->removeBadge($this);
+        }
+
+        return $this;
     }
 }

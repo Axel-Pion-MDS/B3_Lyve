@@ -9,6 +9,7 @@ use App\Entity\Role;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -35,15 +36,25 @@ class UserType extends AbstractType
                 'class' => Badge::class,
                 'multiple' => true,
                 'expanded' => true,
-                'invalid_message' => 'the badge value is invalid'
+                'invalid_message' => 'The badge value is invalid'
             ])
-            ->add('offer', EntityType::class, ['class' => Offer::class, 'invalid_message' => 'the offer value is invalid'])
-            ->add('role', EntityType::class, ['class' => Role::class, 'invalid_message' => 'the role value is invalid'])
+            ->add('offer', EntityType::class, ['class' => Offer::class, 'invalid_message' => 'The offer value is invalid'])
+//            ->add('role', EntityType::class, ['class' => Role::class, 'invalid_message' => 'The role value is invalid'])
             ->add('answers', EntityType::class, [
                 'class' => Answer::class,
                 'multiple' => true,
                 'expanded' => true,
-                'invalid_message' => 'the badge value is invalid'
+                'invalid_message' => 'The badge value is invalid'
+            ])
+            ->add('isFirstConnection', CheckboxType::class, [
+                'value' => 1,
+                'required' => false,
+                'invalid_message' => 'The first connection value is invalid'
+            ])
+            ->add('isPasswordChanged', CheckboxType::class, [
+                'value' => 0,
+                'required' => false,
+                'invalid_message' => 'The password change value is invalid'
             ])
         ;
     }

@@ -36,8 +36,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 12)]
     private $number;
 
-    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
-    private $role;
+//    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
+//    private $role;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     #[ORM\ManyToOne(targetEntity: Offer::class, inversedBy: 'users')]
     private $offer;
@@ -57,12 +60,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private $password;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isFirstConnection;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isPasswordChanged;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $picture;
+
+    #[ORM\ManyToMany(targetEntity: Timesheet::class, mappedBy: 'user')]
+    private $timesheets;
+
     public function __construct()
     {
         $this->badges = new ArrayCollection();
         $this->module = new ArrayCollection();
         $this->message = new ArrayCollection();
         $this->answers = new ArrayCollection();
+        $this->timesheets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -130,17 +146,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRole(): ?Role
+    public function getRoles(): array
     {
-        return $this->role;
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setRole(?Role $role): self
+    public function setRoles(array $roles): User
     {
-        $this->role = $role;
+        $this->roles = $roles;
+
+        // allows for chaining
+        return $this;
+    }
+
+    public function addRole(string $role): User
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
 
         return $this;
     }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
+    }
+
+    public function removeRole($role): User
+    {
+        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+            unset($this->roles[$key]);
+            $this->roles = array_values($this->roles);
+        }
+
+        return $this;
+    }
+
+//    public function getRole(): ?Role
+//    {
+//        return $this->role;
+//    }
+//
+//    public function setRole(?Role $role): self
+//    {
+//        $this->role = $role;
+//
+//        return $this;
+//    }
 
     public function getOffer(): ?Offer
     {
@@ -245,11 +301,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRoles(): array
-    {
-        return array('ROLE_USER');
-    }
-
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
@@ -257,7 +308,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        // TODO: Implement getUserIdentifier() method.
+        return (string) $this->email;
     }
 
     public function __toString(): string
@@ -275,5 +326,68 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function beforeUpdate(): void
     {
         $this->updated_at = new \DateTime();
+    }
+
+    public function getIsFirstConnection(): ?bool
+    {
+        return $this->isFirstConnection;
+    }
+
+    public function setIsFirstConnection(bool $isFirstConnection): self
+    {
+        $this->isFirstConnection = $isFirstConnection;
+
+        return $this;
+    }
+
+    public function getIsPasswordChanged(): ?bool
+    {
+        return $this->isPasswordChanged;
+    }
+
+    public function setIsPasswordChanged(bool $isPasswordChanged): self
+    {
+        $this->isPasswordChanged = $isPasswordChanged;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Timesheet>
+     */
+    public function getTimesheets(): Collection
+    {
+        return $this->timesheets;
+    }
+
+    public function addTimesheet(Timesheet $timesheet): self
+    {
+        if (!$this->timesheets->contains($timesheet)) {
+            $this->timesheets[] = $timesheet;
+            $timesheet->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimesheet(Timesheet $timesheet): self
+    {
+        if ($this->timesheets->removeElement($timesheet)) {
+            $timesheet->removeUser($this);
+        }
+
+        return $this;
     }
 }

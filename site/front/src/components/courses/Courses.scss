@@ -89,6 +89,10 @@
   font-size: 38px;
 }
 
+.course-badges {
+  margin-top: 100px;
+}
+
 .course-progression-bar h4,
 .course-modules-list h4,
 .course-informations h4,
@@ -116,4 +120,8 @@
 .unclickable-badge-button .badge-img {
   width: 80px;
   height: 80px;
+}
+
+.modules-level.hide {
+  display: none;
 }

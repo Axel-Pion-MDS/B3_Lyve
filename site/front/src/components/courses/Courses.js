@@ -49,7 +49,7 @@ const Courses = class {
           <p>135h</p>
         </div>
       </div>
-      <div class="modules-level">
+      <div class="modules-level hide">
         <h6>Niveau de formation</h6>
         <div class="unclickable-button">
           <p>Débutant</p>
@@ -114,7 +114,7 @@ const Courses = class {
 
   render = () => (
     `
-      <h2>Les 5 clès pour réussir en marketing</h2>
+      <h2>Pack Streamin'Genius</h2>
       <div class="course-informations-block">
         <div class="progression-modules">
           <div class="course-progression-bar">

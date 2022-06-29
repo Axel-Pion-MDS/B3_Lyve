@@ -48,16 +48,14 @@ class UserNormalizer {
             'email' => $data->getEmail(),
             'birthdate' => $data->getBirthdate()->format('Y-m-d'),
             'number' => $data->getNumber(),
-            'role' => $data->getRole() ? [
-                'id' => $data->getRole()->getId(),
-                'label' => $data->getRole()->getTitle()
-            ] : null,
+            'role' => $data->getRoles(),
             'offer' => $data->getOffer() ? [
                 'id' => $data->getOffer()->getId(),
                 'label' => $data->getOffer()->getTitle()
             ] : null,
             'badges' => $badges,
-            'answers' => $answers
+            'answers' => $answers,
+            'createdAt' => $data->getCreatedAt()->format('Y-m-d')
         ];
 
         return $user;

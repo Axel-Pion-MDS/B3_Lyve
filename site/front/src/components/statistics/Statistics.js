@@ -167,21 +167,21 @@ const Statistics = class {
     const insta = document.querySelector('#instagram');
     const facebook = document.querySelector('#facebook');
     const twitch = document.querySelector('#twitch');
-    const tiktok = document.querySelector('#tiktok');
+    // const tiktok = document.querySelector('#tiktok');
     const instaBtn = document.querySelector('#stat-insta-button');
     const facebookBtn = document.querySelector('#stat-facebook-button');
     const twitchBtn = document.querySelector('#stat-twitch-button');
-    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
 
     insta.style.display = 'block';
     facebook.style.display = 'none';
     twitch.style.display = 'none';
-    tiktok.style.display = 'none';
+    // tiktok.style.display = 'none';
 
     instaBtn.className = 'pressed';
     facebookBtn.className = '';
     twitchBtn.className = '';
-    tiktokBtn.className = '';
+    // tiktokBtn.className = '';
 
     const instaData = {
       borderColor: '#FEFEFE',
@@ -246,21 +246,21 @@ const Statistics = class {
     const insta = document.querySelector('#instagram');
     const facebook = document.querySelector('#facebook');
     const twitch = document.querySelector('#twitch');
-    const tiktok = document.querySelector('#tiktok');
+    // const tiktok = document.querySelector('#tiktok');
     const instaBtn = document.querySelector('#stat-insta-button');
     const facebookBtn = document.querySelector('#stat-facebook-button');
     const twitchBtn = document.querySelector('#stat-twitch-button');
-    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
 
     insta.style.display = 'none';
     facebook.style.display = 'block';
     twitch.style.display = 'none';
-    tiktok.style.display = 'none';
+    // tiktok.style.display = 'none';
 
     instaBtn.className = '';
     facebookBtn.className = 'pressed';
     twitchBtn.className = '';
-    tiktokBtn.className = '';
+    // tiktokBtn.className = '';
 
     const facebookData = {
       borderColor: '#FEFEFE',
@@ -325,21 +325,21 @@ const Statistics = class {
     const insta = document.querySelector('#instagram');
     const facebook = document.querySelector('#facebook');
     const twitch = document.querySelector('#twitch');
-    const tiktok = document.querySelector('#tiktok');
+    // const tiktok = document.querySelector('#tiktok');
     const instaBtn = document.querySelector('#stat-insta-button');
     const facebookBtn = document.querySelector('#stat-facebook-button');
     const twitchBtn = document.querySelector('#stat-twitch-button');
-    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
 
     insta.style.display = 'none';
     facebook.style.display = 'none';
     twitch.style.display = 'block';
-    tiktok.style.display = 'none';
+    // tiktok.style.display = 'none';
 
     instaBtn.className = '';
     facebookBtn.className = '';
     twitchBtn.className = 'pressed';
-    tiktokBtn.className = '';
+    // tiktokBtn.className = '';
 
     const twitchData = {
       borderColor: '#FEFEFE',
@@ -400,84 +400,84 @@ const Statistics = class {
     );
   };
 
-  renderTiktokCharts = () => {
-    const insta = document.querySelector('#instagram');
-    const facebook = document.querySelector('#facebook');
-    const twitch = document.querySelector('#twitch');
-    const tiktok = document.querySelector('#tiktok');
-    const instaBtn = document.querySelector('#stat-insta-button');
-    const facebookBtn = document.querySelector('#stat-facebook-button');
-    const twitchBtn = document.querySelector('#stat-twitch-button');
-    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+  // renderTiktokCharts = () => {
+  //   const insta = document.querySelector('#instagram');
+  //   const facebook = document.querySelector('#facebook');
+  //   const twitch = document.querySelector('#twitch');
+  //   const tiktok = document.querySelector('#tiktok');
+  //   const instaBtn = document.querySelector('#stat-insta-button');
+  //   const facebookBtn = document.querySelector('#stat-facebook-button');
+  //   const twitchBtn = document.querySelector('#stat-twitch-button');
+  //   const tiktokBtn = document.querySelector('#stat-tiktok-button');
 
-    insta.style.display = 'none';
-    facebook.style.display = 'none';
-    twitch.style.display = 'none';
-    tiktok.style.display = 'block';
+  //   insta.style.display = 'none';
+  //   facebook.style.display = 'none';
+  //   twitch.style.display = 'none';
+  //   tiktok.style.display = 'block';
 
-    instaBtn.className = '';
-    facebookBtn.className = '';
-    twitchBtn.className = '';
-    tiktokBtn.className = 'pressed';
+  //   instaBtn.className = '';
+  //   facebookBtn.className = '';
+  //   twitchBtn.className = '';
+  //   tiktokBtn.className = 'pressed';
 
-    const tiktokData = {
-      borderColor: '#FEFEFE',
-      datasets: [{
-        type: 'line',
-        label: 'Pic du vues',
-        data: this.tmpRandomTopViews,
-        backgroundColor: '#f9c4ae',
-        borderColor: '#fa5e1f'
-      }, {
-        type: 'line',
-        label: '% taux de conversion',
-        data: this.tmpRandomConversion,
-        backgroundColor: '#b78680',
-        borderColor: '#b81702'
-      }, {
-        type: 'bar',
-        label: 'Total Abonnés',
-        data: this.tmpRandomFollowers,
-        backgroundColor: '#ffb950'
-      }, {
-        type: 'bar',
-        label: 'Total Vues',
-        data: this.tmpRandomViews,
-        backgroundColor: [
-          '#ff931f'
-        ]
-      }, {
-        type: 'bar',
-        label: 'Achats',
-        data: this.tmpRandomSell,
-        backgroundColor: [
-          '#7a0103'
-        ]
-      }],
-      labels: this.result
-    };
+  //   const tiktokData = {
+  //     borderColor: '#FEFEFE',
+  //     datasets: [{
+  //       type: 'line',
+  //       label: 'Pic du vues',
+  //       data: this.tmpRandomTopViews,
+  //       backgroundColor: '#f9c4ae',
+  //       borderColor: '#fa5e1f'
+  //     }, {
+  //       type: 'line',
+  //       label: '% taux de conversion',
+  //       data: this.tmpRandomConversion,
+  //       backgroundColor: '#b78680',
+  //       borderColor: '#b81702'
+  //     }, {
+  //       type: 'bar',
+  //       label: 'Total Abonnés',
+  //       data: this.tmpRandomFollowers,
+  //       backgroundColor: '#ffb950'
+  //     }, {
+  //       type: 'bar',
+  //       label: 'Total Vues',
+  //       data: this.tmpRandomViews,
+  //       backgroundColor: [
+  //         '#ff931f'
+  //       ]
+  //     }, {
+  //       type: 'bar',
+  //       label: 'Achats',
+  //       data: this.tmpRandomSell,
+  //       backgroundColor: [
+  //         '#7a0103'
+  //       ]
+  //     }],
+  //     labels: this.result
+  //   };
 
-    const tiktokConfig = {
-      type: 'scatter',
-      data: tiktokData,
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    };
+  //   const tiktokConfig = {
+  //     type: 'scatter',
+  //     data: tiktokData,
+  //     options: {
+  //       scales: {
+  //         y: {
+  //           beginAtZero: true
+  //         }
+  //       }
+  //     }
+  //   };
 
-    const tiktokChart = new Chart(
-      tiktok,
-      tiktokConfig
-    );
+  //   const tiktokChart = new Chart(
+  //     tiktok,
+  //     tiktokConfig
+  //   );
 
-    return (
-      tiktokChart
-    );
-  };
+  //   return (
+  //     tiktokChart
+  //   );
+  // };
 
   renderSelectedLink = () => {
     const statistics = document.querySelector('#statistics-link');
@@ -492,7 +492,6 @@ const Statistics = class {
             <button type="button" id="stat-insta-button">Instagram</button>
             <button type="button" id="stat-facebook-button">Facebook</button>
             <button type="button" id="stat-twitch-button">Twitch</button>
-            <button type="button" id="stat-tiktok-button">Tiktok</button>
           </div>
           <div class="mixed-chart">
             <canvas id="instagram"></canvas>
@@ -502,9 +501,6 @@ const Statistics = class {
           </div>
           <div class="mixed-chart">
             <canvas id="twitch"></canvas>
-          </div>
-          <div class="mixed-chart">
-            <canvas id="tiktok"></canvas>
           </div>
         </div>
       </div>
@@ -519,7 +515,7 @@ const Statistics = class {
     const instaBtn = document.querySelector('#stat-insta-button');
     const facebookBtn = document.querySelector('#stat-facebook-button');
     const twitchBtn = document.querySelector('#stat-twitch-button');
-    const tiktokBtn = document.querySelector('#stat-tiktok-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
 
     instaBtn.addEventListener('click', () => {
       this.destroyChart();
@@ -533,10 +529,10 @@ const Statistics = class {
       this.destroyChart();
       this.renderTwitchCharts();
     });
-    tiktokBtn.addEventListener('click', () => {
-      this.destroyChart();
-      this.renderTiktokCharts();
-    });
+    // tiktokBtn.addEventListener('click', () => {
+    //   this.destroyChart();
+    //   this.renderTiktokCharts();
+    // });
   };
 };
 

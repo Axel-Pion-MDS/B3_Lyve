@@ -34,6 +34,12 @@ class Offer
     #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'offers')]
     private $modules;
 
+    #[ORM\Column(type: 'integer')]
+    private $nModules;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $expectedTime;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -162,5 +168,29 @@ class Offer
     public function beforeUpdate(): void
     {
         $this->updated_at = new \DateTime();
+    }
+
+    public function getNModules(): ?int
+    {
+        return $this->nModules;
+    }
+
+    public function setNModules(int $nModules): self
+    {
+        $this->nModules = $nModules;
+
+        return $this;
+    }
+
+    public function getExpectedTime(): ?string
+    {
+        return $this->expectedTime;
+    }
+
+    public function setExpectedTime(string $expectedTime): self
+    {
+        $this->expectedTime = $expectedTime;
+
+        return $this;
     }
 }

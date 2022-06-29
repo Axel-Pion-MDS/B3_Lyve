@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 
 #[Route('/user', name: 'user')]
 class UserController extends AbstractController
@@ -35,9 +37,15 @@ class UserController extends AbstractController
     public function list(): JsonResponse
     {
         try {
-            $users = $this->userRepository->findAll();
-            $normalizer = UserNormalizer::listNormalizer($users);
-            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer];
+            if ($this->getUser()?->getRoles() && in_array("ROLE_ADMIN", $this->getUser()?->getRoles(), true)) {
+                $users = $this->userRepository->findAll();
+                $normalizer = UserNormalizer::listNormalizer($users);
+            } else {
+                $this->status['result'] = 'error';
+                $this->status['msg'] = 'the user is not authenticated';
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer ?? []];
         } catch (Exception $e) {
             $this->status['result'] = "error";
             $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage())];
@@ -108,9 +116,9 @@ class UserController extends AbstractController
             $content['badges'] = $badges;
             $content['answers'] = $answers;
             $content['password'] = $hashPassword;
-            $role = (!empty($content['role'])) ? $this->findRole($content['role']) : $this->findRole(1);
-            if (!empty($content['offer'])) $offer = $this->findOffer($content['offer']);
-            $content['role'] = $role->getId();
+//            $role = (!empty($content['role'])) ? $this->findRole($content['role']) : $this->findRole(1);
+//            if (!empty($content['offer'])) $offer = $this->findOffer($content['offer']);
+//            $content['role'] = $role->getId();
             if (isset($offer)) $content['offer'] = $offer->getId();
 
             $request->request->add($content);
@@ -196,8 +204,8 @@ class UserController extends AbstractController
 
                 $content['badges'] = $badges;
                 $content['answers'] = $answers;
-                $content['role'] = $role->getId();
-                if (isset($offer)) $content['offer'] = $offer->getId();
+//                $content['role'] = $role->getId();
+//                if (isset($offer)) $content['offer'] = $offer->getId();
                 $content['password'] = $user->getPassword();
 
                 $request->request->add($content);

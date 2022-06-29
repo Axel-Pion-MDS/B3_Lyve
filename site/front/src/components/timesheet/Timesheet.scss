@@ -51,17 +51,17 @@ th[role=columnheader] {
 .fc-day-today[role="columnheader"] {
   height: 23px !important;
   border-radius: 8px;
-  background-color: #ADB5BD;
+  background-color: #F2AC4450;
 }
 
 .fc-day-mon[role=gridcell], .fc-day-wed[role=gridcell], .fc-day-fri[role=gridcell], .fc-day-sun[role=gridcell] {
-  background-color: #ADB5BD !important;
+  background-color: #F2AC4450 !important;
   margin-top: 20px !important;
 
 }
 
 .fc-day-tue[role=gridcell], .fc-day-thu[role=gridcell], .fc-day-sat[role=gridcell] {
-  background-color: #DEE2E6 !important;
+  background-color: #B0B0B010 !important;
 }
 
 .fc-scrollgrid-sync-inner {
