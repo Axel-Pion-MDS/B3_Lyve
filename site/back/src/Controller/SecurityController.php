@@ -30,7 +30,6 @@ class SecurityController extends AbstractController
                 $data = ['user' => $this->getUser()->getUserIdentifier(), 'roles' => $this->getUser()->getRoles()];
             }
 
-
             $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $data ?? []];
         } catch (Exception | NonUniqueResultException $e) {
             $this->status['result'] = "error";

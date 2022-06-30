@@ -7,7 +7,7 @@ const Login = class {
     this.el = document.querySelector('#app');
   }
 
-  postLogin = (email, password) => {
+  postLogin = (email, password, remember) => {
     axios.post('https://lyve.local/security/login', {
       host: 'lyve.local',
       headers: {
@@ -20,8 +20,14 @@ const Login = class {
       }
     })
       .then((res) => {
-        window.localStorage.setItem('user', res.data.data.user);
-        window.localStorage.setItem('roles', res.data.data.roles);
+        if (remember === true) {
+          window.localStorage.setItem('user', res.data.data.user);
+          window.localStorage.setItem('roles', res.data.data.roles);
+        } else {
+          window.sessionStorage.setItem('user', res.data.data.user);
+          window.sessionStorage.setItem('roles', res.data.data.roles);
+        }
+
         window.location.href = '/';
       })
       .catch((err) => { throw new Error(err); });
@@ -96,7 +102,8 @@ const Login = class {
       connexion.addEventListener('click', () => {
         const email = document.querySelector('#login-email').value;
         const password = document.querySelector('#login-password').value;
-        this.postLogin(email, password);
+        const remember = document.querySelector('#remember-me').checked;
+        this.postLogin(email, password, remember);
       });
     });
   };

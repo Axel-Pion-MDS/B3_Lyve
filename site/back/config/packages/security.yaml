@@ -24,6 +24,10 @@ security:
                 check_path: security_login
                 username_path: body.email
                 password_path: body.password
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                signature_properties: ['password', 'updatedAt']
             logout:
                 path: security_logout
 

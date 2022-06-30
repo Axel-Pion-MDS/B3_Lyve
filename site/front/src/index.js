@@ -61,7 +61,7 @@ const Routes = class Routing {
     leftNavbar.run();
     topNavbar.run();
 
-    if (localStorage.length > 0) {
+    if (localStorage.length > 0 || sessionStorage.length > 0) {
       switch (this.getPath()) {
         case '':
           homepage.run();
