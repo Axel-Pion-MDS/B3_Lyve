@@ -30,6 +30,9 @@ class Timesheet
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'timesheets')]
     private $user;
 
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'timesheets')]
+    private $status;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -108,6 +111,18 @@ class Timesheet
     public function removeUser(User $user): self
     {
         $this->user->removeElement($user);
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

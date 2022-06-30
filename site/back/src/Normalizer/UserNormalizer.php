@@ -60,4 +60,30 @@ class UserNormalizer {
 
         return $user;
     }
+
+    public static function timesheetNormalizer(object $data): array {
+
+        $timesheets = [];
+        if ($data->getTimesheets()) {
+            foreach ($data->getTimesheets() as $ts) {
+                $timesheets[] = [
+                    'id' => $ts->getId(),
+                    'title' => $ts->getTitle() . ' [' . $ts->getStatus()->getTitle() . ']',
+                    'startDate' => $ts->getStartDate()->format('Y-m-d\TH:i'),
+                    'endDate' => $ts->getEndDate()->format('Y-m-d\TH:i'),
+                    'comment' => $ts->getComment(),
+                ];
+            }
+        }
+
+        $user[] = [
+            'id' => $data->getId(),
+            'firstname' => $data->getFirstname(),
+            'lastname' => $data->getLastname(),
+            'email' => $data->getEmail(),
+            'timesheets' => $timesheets
+        ];
+
+        return $user;
+    }
 }

@@ -231,6 +231,30 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    #[Route('/timesheet', name: '_timesheet', methods: ['POST'])]
+    public function userTimesheet(Request $request): JsonResponse
+    {
+        try {
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $email = $content['body']['email'];
+            $user = $this->userRepository->findOneBy(['email' => $email]);
+
+            if ($user === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested timesheet not found.";
+            } else {
+                $normalizer = UserNormalizer::timesheetNormalizer($user);
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer ?? []];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
     public function findRole(int $data): Role
     {
         return $this->doctrine->getRepository(Role::class)->find($data);

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import './Timesheet.scss';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -20,6 +21,35 @@ const Timesheet = class {
     this.calendar = '';
   }
 
+  /**
+   *
+   */
+  getUserTimesheet = (email) => {
+    axios.post('https://lyve.local/user/timesheet', {
+      host: 'lyve.local',
+      headers: {
+        Accept: '*/*',
+        'content-type': 'application/json'
+      },
+      body: {
+        email
+      }
+    }).then((res) => {
+      if (res.data.data) {
+        res.data.data.forEach((item) => {
+          item.timesheets.forEach((value) => {
+            this.addEventOnCalendar(
+              value.title,
+              value.startDate,
+              value.endDate,
+              value.comment
+            );
+          });
+        });
+      }
+    }).catch((err) => { throw new Error(err); });
+  };
+
   verifyClickOnButtons = () => {
     this.waitForElm('#confirm-btn').then(() => {
       const confirmBtn = document.querySelector('#confirm-btn');
@@ -34,9 +64,19 @@ const Timesheet = class {
     });
   };
 
+  addEventOnCalendar = (title, startDate, endDate, comment) => {
+    this.calendar.addEvent({
+      title,
+      start: startDate,
+      end: endDate,
+      description: comment
+    });
+  };
+
   /**
    * Add an event to the timesheet
    *
+   * @param {string} title
    * @param {Object} calendar
    * @param {Date} startDate
    * @param {Date} startTime
@@ -44,21 +84,46 @@ const Timesheet = class {
    * @param {Date} endTime
    * @param {string} notes
    */
-  addEventOnCalendar = (calendar, startDate, startTime, endDate, endTime, notes = null) => {
+  addEventOnCalendarWithButton = (
+    title,
+    calendar,
+    start,
+    startTime,
+    end,
+    endTime,
+    notes = null
+  ) => {
     const messages = document.querySelector('#messages');
-    calendar.addEvent({
-      title: 'Rendez-vous',
-      start: `${startDate}T${startTime}`,
-      end: `${endDate}T${endTime}`,
-      description: notes
+
+    axios.post('https://lyve.local/timesheet/add', {
+      host: 'lyve.local',
+      header: {
+        Accept: '*/*',
+        'content-type': 'application/json'
+      },
+      body: {
+        title,
+        startDate: `${start} ${startTime}:00`,
+        endDate: `${end} ${endTime}:00`,
+        comment: notes
+      }
+    }).then((res) => {
+      if (res.data.msg === 'success') {
+        calendar.addEvent({
+          title,
+          start: `${start}T${startTime}`,
+          end: `${end}T${endTime}`,
+          description: notes
+        });
+
+        if (messages.innerHTML.trim() !== '') {
+          messages.className = 'show';
+          this.verifyClickOnButtons();
+        }
+
+        messages.innerHTML = this.renderConfirmMessage();
+      }
     });
-
-    if (messages.innerHTML.trim() !== '') {
-      messages.className = 'show';
-      this.verifyClickOnButtons();
-    }
-
-    messages.innerHTML = this.renderConfirmMessage();
   };
 
   cancelButton = () => {
@@ -96,6 +161,10 @@ const Timesheet = class {
     return `
       <h5>Demander un rendez-vous</h5>
       <div class="rdv-form-inputs">
+        <div class="rdv-form-title">
+          <label for="form-title">Titre</label>
+          <input type="text" id="form-title" name="form-title">
+        </div>
         <div class="rdv-form-start">
           <h6>Début</h6>
           <div class="inputs">
@@ -159,13 +228,22 @@ const Timesheet = class {
               const createBtn = document.querySelector('#rdv-form-button-create');
 
               createBtn.addEventListener('click', () => {
+                const title = document.querySelector('#form-title').value;
                 const startDate = document.querySelector('#form-start-date').value;
                 const startTime = document.querySelector('#form-start-time').value;
                 const endDate = document.querySelector('#form-end-date').value;
                 const endTime = document.querySelector('#form-end-time').value;
                 const notes = document.querySelector('#form-note-text').value;
 
-                this.addEventOnCalendar(calendar, startDate, startTime, endDate, endTime, notes);
+                this.addEventOnCalendarWithButton(
+                  title,
+                  calendar,
+                  startDate,
+                  startTime,
+                  endDate,
+                  endTime,
+                  notes
+                );
               });
             });
 
@@ -208,6 +286,7 @@ const Timesheet = class {
 
     calendar.setOption('locale', 'fr');
     calendar.updateSize();
+    this.calendar = calendar;
     return `<div>${calendar.render()}</div>`;
   };
 
@@ -253,9 +332,13 @@ const Timesheet = class {
   }
 
   run = () => {
+    const user = window.localStorage.length > 1 ? window.localStorage.getItem('user')
+      : window.sessionStorage.getItem('user');
+
     this.el.innerHTML = this.render();
     this.renderSelectedLink();
     this.renderCalendar();
+    this.getUserTimesheet(user);
     this.verifyClickOnButtons();
   };
 };
