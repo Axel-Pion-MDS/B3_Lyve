@@ -9,8 +9,8 @@ class UserNormalizer {
         foreach ($data as $user) {
             $list[] = [
                 'id' => $user->getId(),
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
+                'firstname' => ucfirst($user->getFirstname()),
+                'lastname' => ucfirst($user->getLastname()),
                 'email' => $user->getEmail(),
             ];
         }
@@ -43,8 +43,8 @@ class UserNormalizer {
 
         $user[] = [
             'id' => $data->getId(),
-            'firstname' => $data->getFirstname(),
-            'lastname' => $data->getLastname(),
+            'firstname' => ucfirst($data->getFirstname()),
+            'lastname' => ucfirst($data->getLastname()),
             'email' => $data->getEmail(),
             'birthdate' => $data->getBirthdate()->format('Y-m-d'),
             'number' => $data->getNumber(),
@@ -64,22 +64,24 @@ class UserNormalizer {
     public static function timesheetNormalizer(object $data): array {
 
         $timesheets = [];
-        if ($data->getTimesheets()) {
-            foreach ($data->getTimesheets() as $ts) {
+        if ($data->getSelfTimesheets()) {
+            foreach ($data->getSelfTimesheets() as $ts) {
                 $timesheets[] = [
                     'id' => $ts->getId(),
                     'title' => $ts->getTitle() . ' [' . $ts->getStatus()->getTitle() . ']',
                     'startDate' => $ts->getStartDate()->format('Y-m-d\TH:i'),
                     'endDate' => $ts->getEndDate()->format('Y-m-d\TH:i'),
                     'comment' => $ts->getComment(),
+                    'createdBy' => $ts->getCreatedBy(),
+                    'status' => $ts->getStatus(),
                 ];
             }
         }
 
         $user[] = [
             'id' => $data->getId(),
-            'firstname' => $data->getFirstname(),
-            'lastname' => $data->getLastname(),
+            'firstname' => ucfirst($data->getFirstname()),
+            'lastname' => ucfirst($data->getLastname()),
             'email' => $data->getEmail(),
             'timesheets' => $timesheets
         ];

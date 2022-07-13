@@ -72,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Timesheet::class, mappedBy: 'user')]
     private $timesheets;
 
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Timesheet::class)]
+    private $selfTimesheets;
+
     public function __construct()
     {
         $this->badges = new ArrayCollection();
@@ -79,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->message = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->timesheets = new ArrayCollection();
+        $this->selfTimesheets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -386,6 +390,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->timesheets->removeElement($timesheet)) {
             $timesheet->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Timesheet>
+     */
+    public function getSelfTimesheets(): Collection
+    {
+        return $this->selfTimesheets;
+    }
+
+    public function addSelfTimesheet(Timesheet $selfTimesheet): self
+    {
+        if (!$this->selfTimesheets->contains($selfTimesheet)) {
+            $this->selfTimesheets[] = $selfTimesheet;
+            $selfTimesheet->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSelfTimesheet(Timesheet $selfTimesheet): self
+    {
+        if ($this->selfTimesheets->removeElement($selfTimesheet)) {
+            // set the owning side to null (unless already changed)
+            if ($selfTimesheet->getCreatedBy() === $this) {
+                $selfTimesheet->setCreatedBy(null);
+            }
         }
 
         return $this;

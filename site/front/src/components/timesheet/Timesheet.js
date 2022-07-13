@@ -105,10 +105,11 @@ const Timesheet = class {
         title,
         startDate: `${start} ${startTime}:00`,
         endDate: `${end} ${endTime}:00`,
-        comment: notes
+        comment: notes,
+        createdBy: window.localStorage.length > 0 ? window.localStorage.getItem('user') : window.sessionStorage.getItem('user')
       }
     }).then((res) => {
-      if (res.data.msg === 'success') {
+      if (res.data.result === 'success') {
         calendar.addEvent({
           title,
           start: `${start}T${startTime}`,

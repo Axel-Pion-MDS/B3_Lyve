@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Status;
 use App\Entity\Timesheet;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -29,11 +30,23 @@ class TimesheetType extends AbstractType
                 'html5' => false,
             ])
             ->add('comment', TextType::class, ['invalid_message' => 'The comment value is invalid'])
+            ->add('createdBy', EntityType::class, [
+                'class' => User::class,
+                'multiple' => false,
+                'expanded' => true,
+                'invalid_message' => 'the createdBy value is invalid'
+            ])
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'multiple' => true,
                 'expanded' => true,
                 'invalid_message' => 'the user value is invalid'
+            ])
+            ->add('status', EntityType::class, [
+                'class' => Status::class,
+                'multiple' => false,
+                'expanded' => true,
+                'invalid_message' => 'the status value is invalid'
             ])
         ;
     }

@@ -33,6 +33,9 @@ class Timesheet
     #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'timesheets')]
     private $status;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'selfTimesheets')]
+    private $createdBy;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -123,6 +126,18 @@ class Timesheet
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

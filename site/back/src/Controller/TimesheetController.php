@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Status;
 use App\Entity\Timesheet;
 use App\Entity\User;
 use App\Form\TimesheetType;
@@ -92,6 +93,9 @@ class TimesheetController extends AbstractController
             $timesheet = new Timesheet();
             $form = $this->createForm(TimesheetType::class, $timesheet);
 
+            $user = $this->findUserWithEmail($content['body']['createdBy']);
+            $status = $this->doctrine->getRepository(Status::class)->find(1);
+
             $users = [];
             if (!empty($content['body']['users'])) {
                 foreach ($content['body']['users'] as $item) {
@@ -101,8 +105,9 @@ class TimesheetController extends AbstractController
                 $users[] = $this->findUserWithEmail("admin.lyve@gmail.com")->getId();
             }
 
+            $content['body']['createdBy'] = $user->getId();
             $content['body']['users'] = $users;
-            $content['body']['status'] = 1;
+            $content['body']['status'] = $status->getId();
 
             $request->request->add($content['body']);
             $form->submit($request->request->all(), true);

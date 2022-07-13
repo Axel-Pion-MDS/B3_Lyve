@@ -36,8 +36,10 @@ class UserController extends AbstractController
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
+        $env = $this->getParameter('kernel.environment');
+
         try {
-            if ($this->getUser()?->getRoles() && in_array("ROLE_ADMIN", $this->getUser()?->getRoles(), true)) {
+            if ($env === 'dev' || ($env === 'prod' && ($this->getUser()?->getRoles() && in_array("ROLE_ADMIN", $this->getUser()?->getRoles(), true)))) {
                 $users = $this->userRepository->findAll();
                 $normalizer = UserNormalizer::listNormalizer($users);
             } else {
@@ -54,12 +56,14 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
-    #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
+    #[Route('/show', name: '_show', methods: ['POST'])]
     public function show(Request $request): JsonResponse
     {
         try {
-            $id = $request->get('id');
-            $user = $this->userRepository->find($id);
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $email = $content['body']['email'];
+            $user = $this->findUserWithEmail($email);
 
             if ($user === null) {
                 $this->status['result'] = "error";
@@ -97,6 +101,8 @@ class UserController extends AbstractController
                     $user,
                     $random
                 );
+
+                // Send an email to user with this password
             }
 
             $badges = [];
@@ -176,7 +182,7 @@ class UserController extends AbstractController
         try {
             $em = $this->doctrine->getManager();
             $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-            $id = $content['id'];
+            $id = $content['body']['id'];
             $user = $this->userRepository->find($id);
 
             if ($user === null) {
@@ -185,28 +191,25 @@ class UserController extends AbstractController
             } else {
                 $form = $this->createForm(UserType::class, $user);
 
-                $role = (!empty($content['role'])) ? $this->findRole($content['role']) : $this->findRole(1);
-                if (!empty($content['offer'])) $offer = $this->findOffer($content['offer']);
-
                 $badges = [];
-                if (!empty($content['badges'])) {
-                    foreach ($content['badges'] as $item) {
+                if (!empty($content['body']['badges'])) {
+                    foreach ($content['body']['badges'] as $item) {
                         $badges[] = $this->findBadge($item)->getId();
                     }
                 }
 
                 $answers = [];
-                if (!empty($content['answers'])) {
-                    foreach ($content['answers'] as $item) {
+                if (!empty($content['body']['answers'])) {
+                    foreach ($content['body']['answers'] as $item) {
                         $answers[] = $this->findAnswer($item)->getId();
                     }
                 }
 
-                $content['badges'] = $badges;
-                $content['answers'] = $answers;
+                $content['body']['badges'] = $badges;
+                $content['body']['answers'] = $answers;
 //                $content['role'] = $role->getId();
 //                if (isset($offer)) $content['offer'] = $offer->getId();
-                $content['password'] = $user->getPassword();
+                $content['body']['password'] = $user->getPassword();
 
                 $request->request->add($content);
                 $form->submit($request->request->all(), true);
@@ -231,13 +234,170 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    #[Route('/editmail', name: '_editmail', methods: ['PATCH'])]
+    public function editEmail(Request $request): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $email = $content['body']['user'];
+            $user = $this->findUserWithEmail($email);
+
+            if ($user === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested user not found.";
+            } else {
+                $form = $this->createForm(UserType::class, $user);
+
+                $content['body']['firstname'] = $user->getFirstname();
+                $content['body']['lastname'] = $user->getLastname();
+                $content['body']['password'] = $user->getPassword();
+                $content['body']['birthdate'] = $user->getBirthdate()?->format('Y-m-d');
+                $content['body']['number'] = $user->getNumber();
+
+
+                $request->request->add($content['body']);
+                $form->submit($request->request->all(), true);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $em->persist($user);
+                    $em->flush();
+
+                    $this->status['msg'] = "Email edited.";
+                } else if ($form->isSubmitted() && !$form->isValid()) {
+                    $this->status['result'] = "error";
+                    $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
+                }
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    #[Route('/editnumber', name: '_editnumber', methods: ['PATCH'])]
+    public function editNumber(Request $request): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $email = $content['body']['user'];
+            $user = $this->findUserWithEmail($email);
+
+            if ($user === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested user not found.";
+            } else {
+                $form = $this->createForm(UserType::class, $user);
+
+                $content['body']['firstname'] = $user->getFirstname();
+                $content['body']['lastname'] = $user->getLastname();
+                $content['body']['email'] = $user->getEmail();
+                $content['body']['password'] = $user->getPassword();
+                $content['body']['birthdate'] = $user->getBirthdate()?->format('Y-m-d');
+
+
+                $request->request->add($content['body']);
+                $form->submit($request->request->all(), true);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $em->persist($user);
+                    $em->flush();
+
+                    $this->status['msg'] = "Number edited.";
+                } else if ($form->isSubmitted() && !$form->isValid()) {
+                    $this->status['result'] = "error";
+                    $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
+                }
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    #[Route('/editpassword', name: '_editpassword', methods: ['PATCH'])]
+    public function editPassword(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $email = $content['body']['user'];
+            $user = $this->findUserWithEmail($email);
+
+            if ($user === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested user not found.";
+            } else {
+                $form = $this->createForm(UserType::class, $user);
+
+                $content['body']['firstname'] = $user->getFirstname();
+                $content['body']['lastname'] = $user->getLastname();
+                $content['body']['email'] = $user->getEmail();
+                $content['body']['birthdate'] = $user->getBirthdate()?->format('Y-m-d');
+                $content['body']['number'] = $user->getNumber();
+
+                if (!$passwordHasher->isPasswordValid($user, $content['body']['actualPassword'])) {
+                    $this->status['result'] = "error";
+                    $this->status['msg'] = "Passwords do not match";
+                    $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+
+                    return new JsonResponse($response);
+                }
+
+                if ($content['body']['newPassword'] === $content['body']['repeatNewPassword']) {
+                    $hashPassword = $passwordHasher->hashPassword(
+                        $user,
+                        $content['body']['newPassword']
+                    );
+
+                    $content['body']['password'] = $hashPassword;
+                } else {
+                    $this->status['result'] = "error";
+                    $this->status['msg'] = "Passwords do not match";
+                    $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+
+                    return new JsonResponse($response);
+                }
+
+                $request->request->add($content['body']);
+                $form->submit($request->request->all(), true);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $em->persist($user);
+                    $em->flush();
+
+                    $this->status['msg'] = "Password edited.";
+                } else if ($form->isSubmitted() && !$form->isValid()) {
+                    $this->status['result'] = "error";
+                    $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
+                }
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
     #[Route('/timesheet', name: '_timesheet', methods: ['POST'])]
     public function userTimesheet(Request $request): JsonResponse
     {
         try {
             $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $email = $content['body']['email'];
-            $user = $this->userRepository->findOneBy(['email' => $email]);
+            $user = $this->findUserWithEmail($email);
 
             if ($user === null) {
                 $this->status['result'] = "error";
@@ -273,5 +433,14 @@ class UserController extends AbstractController
     public function findAnswer(int $data): Answer
     {
         return $this->doctrine->getRepository(Answer::class)->find($data);
+    }
+
+    /**
+     * @param string $email
+     * @return User
+     */
+    public function findUserWithEmail(string $email): User | null
+    {
+        return $this->doctrine->getRepository(User::class)->findOneBy(['email' => $email]);
     }
 }

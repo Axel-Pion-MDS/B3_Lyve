@@ -90,7 +90,7 @@
   text-align: left;
   width: 50%;
   font-weight: 300;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .profile-blocks .informations-box button {
@@ -107,7 +107,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
-
 }
 
 #profile-dialog-box div {
@@ -140,4 +139,21 @@
   position: relative;
   left: 50%;
   transform: translate(-50%);
+}
+
+#profile-dialog-box h2 {
+  width: 400px;
+}
+
+.title-cross {
+  display: flex;
+  flex-direction: row !important;
+  justify-content: space-between;
+  margin-top: 0px !important;
+}
+
+#exit-cross {
+  width: 12px;
+  height: 20px;
+  cursor: pointer;
 }

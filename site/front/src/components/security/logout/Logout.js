@@ -10,7 +10,8 @@ const Logout = class {
     }).catch((err) => { throw new Error(err); });
 
     window.localStorage.clear();
-    window.location.href = 'login';
+    window.sessionStorage.clear();
+    window.location.href = '';
   };
 
   run = () => {
