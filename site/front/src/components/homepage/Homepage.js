@@ -68,6 +68,9 @@ const Homepage = class {
     this.el = document.querySelector('#body');
   }
 
+  /**
+   * Destroy chart
+   */
   destroyChart = () => {
     switch (true) {
       case Chart.getChart('chart-insta') !== undefined:
@@ -86,6 +89,11 @@ const Homepage = class {
     }
   };
 
+  /**
+   * render a progress bar
+   *
+   * @param {int} percent
+   */
   renderProgressBar = (percent) => {
     const progressBar = document.querySelector('#progress-bar');
     const bar = new ProgressBar.Line(progressBar, {
@@ -123,6 +131,11 @@ const Homepage = class {
     bar.animate(percent); // Number from 0.0 to 1.0
   };
 
+  /**
+   * Render insta chart
+   *
+   * @returns {*}
+   */
   renderInstaCharts = () => {
     const insta = document.querySelector('#chart-insta');
     const facebook = document.querySelector('#chart-facebook');
@@ -189,6 +202,11 @@ const Homepage = class {
     );
   };
 
+  /**
+   * Render facebook chart
+   *
+   * @returns {*}
+   */
   renderFacebookCharts = () => {
     const insta = document.querySelector('#chart-insta');
     const facebook = document.querySelector('#chart-facebook');
@@ -255,6 +273,11 @@ const Homepage = class {
     );
   };
 
+  /**
+   * render twitch chart
+   *
+   * @returns {*}
+   */
   renderTwitchCharts = () => {
     const insta = document.querySelector('#chart-insta');
     const facebook = document.querySelector('#chart-facebook');
@@ -388,6 +411,11 @@ const Homepage = class {
   //   );
   // };
 
+  /**
+   * Render calendar
+   *
+   * @returns {*}
+   */
   renderCalendar = () => {
     const calendarEl = document.querySelector('#calendar');
     const today = new Date();
@@ -418,11 +446,19 @@ const Homepage = class {
     return `<div>${calendar.render()}</div>`;
   };
 
+  /**
+   * Render selected link on the left navbar
+   */
   renderSelectedLink = () => {
     const home = document.querySelector('#home-link');
     home.className = 'selected';
   };
 
+  /**
+   * Render the homepage
+   *
+   * @returns {*}
+   */
   render = () => (
     `
       <div class="homepage-left-right">
@@ -490,6 +526,9 @@ const Homepage = class {
     `
   );
 
+  /**
+   * Run the script
+   */
   run = () => {
     this.el.innerHTML = this.render();
     this.renderSelectedLink();

@@ -67,6 +67,11 @@ const Statistics = class {
     this.tmpRandomConversion = this.tmpConversionRandomizer();
   }
 
+  /**
+   * Get days in month
+   *
+   * @returns {array} listOfDays
+   */
   daysInMonth = () => {
     const days = moment().daysInMonth();
     const listOfDays = [];
@@ -80,6 +85,11 @@ const Statistics = class {
     return listOfDays;
   };
 
+  /**
+   * Randomize data for tmp view statistics
+   *
+   * @returns {array} randomNumbers
+   */
   tmpViewsRandomizer = () => {
     const days = moment().daysInMonth();
     const randomNumbers = [];
@@ -92,6 +102,11 @@ const Statistics = class {
     return randomNumbers;
   };
 
+  /**
+   * Randomize data for tmp follower statistics
+   *
+   * @returns {array} randomNumbers
+   */
   tmpFollowersRandomizer = () => {
     const days = moment().daysInMonth();
     const randomNumbers = [];
@@ -104,6 +119,11 @@ const Statistics = class {
     return randomNumbers;
   };
 
+  /**
+   * Randomize data for tmp top view statistics
+   *
+   * @returns {*} randomNumbers
+   */
   tmpTopViewsRandomizer = () => {
     const days = moment().daysInMonth();
     const randomNumbers = [];
@@ -116,6 +136,11 @@ const Statistics = class {
     return randomNumbers;
   };
 
+  /**
+   * Randomize data for tmp sell statistics
+   *
+   * @returns {*} randomNumbers
+   */
   tmpSellRandomizer = () => {
     const days = moment().daysInMonth();
     const randomNumbers = [];
@@ -128,6 +153,11 @@ const Statistics = class {
     return randomNumbers;
   };
 
+  /**
+   * Randomize data for conversion statistics
+   *
+   * @returns {*} randomNumbers
+   */
   tmpConversionRandomizer = () => {
     const days = moment().daysInMonth();
     const randomNumbers = [];
@@ -140,6 +170,9 @@ const Statistics = class {
     return randomNumbers;
   };
 
+  /**
+   * Destroy charts
+   */
   destroyChart = () => {
     switch (true) {
       case Chart.getChart('instagram') !== undefined:
@@ -242,6 +275,9 @@ const Statistics = class {
     );
   };
 
+  /**
+   * Render Facebook Charts
+   */
   renderFacebookCharts = () => {
     const insta = document.querySelector('#instagram');
     const facebook = document.querySelector('#facebook');
@@ -321,6 +357,10 @@ const Statistics = class {
     );
   };
 
+  /**
+   * render Twitch charts
+   * @returns {*}
+   */
   renderTwitchCharts = () => {
     const insta = document.querySelector('#instagram');
     const facebook = document.querySelector('#facebook');
@@ -479,11 +519,19 @@ const Statistics = class {
   //   );
   // };
 
+  /**
+   * Render the selected link on the navbar
+   */
   renderSelectedLink = () => {
     const statistics = document.querySelector('#statistics-link');
     statistics.className = 'selected';
   };
 
+  /**
+   * Render the statistics page
+   *
+   * @returns {*}
+   */
   render = () => (
     `
       <div id="statistics">
@@ -507,6 +555,9 @@ const Statistics = class {
     `
   );
 
+  /**
+   * run the script
+   */
   run = () => {
     this.el.innerHTML = this.render();
     this.renderSelectedLink();

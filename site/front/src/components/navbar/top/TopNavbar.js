@@ -7,6 +7,11 @@ const TopNavbar = class {
     this.el = document.querySelector('#app-menu');
   }
 
+  /**
+   * render Parameters
+   *
+   * @returns {*}
+   */
   renderParameters = () => (
     `
       <div id="dark-mode">
@@ -17,6 +22,11 @@ const TopNavbar = class {
     `
   );
 
+  /**
+   * Render profile
+   *
+   * @returns {*}
+   */
   renderProfile = () => (
     `
       <div class="profile-box">
@@ -38,6 +48,11 @@ const TopNavbar = class {
     `
   );
 
+  /**
+   * Render notification
+   *
+   * @returns {*}
+   */
   renderNotification = () => (
     `
       <div class="notification-box">
@@ -59,6 +74,10 @@ const TopNavbar = class {
     `
   );
 
+  /**
+   * Render top navbar
+   * @returns {*}
+   */
   render = () => (
     `
       <div id="menu">
@@ -92,6 +111,12 @@ const TopNavbar = class {
     `
   );
 
+  /**
+   * Wait for element to be created before listening to click
+   *
+   * @param {string} selector
+   * @returns {*}
+   */
   waitForElm(selector) {
     return new Promise((resolve) => {
       if (document.querySelector(selector)) {
@@ -113,6 +138,9 @@ const TopNavbar = class {
     });
   }
 
+  /**
+   * Run the script
+   */
   run = () => {
     this.el.innerHTML = this.render();
 

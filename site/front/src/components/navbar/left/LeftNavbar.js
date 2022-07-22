@@ -6,6 +6,11 @@ const LeftNavbar = class {
     this.el = document.querySelector('#navbar');
   }
 
+  /**
+   * render the left navbar
+   *
+   * @returns {*}
+   */
   render = () => (
     `
       <div id="navbar">
@@ -52,6 +57,9 @@ const LeftNavbar = class {
   `
   );
 
+  /**
+   * Run the script
+   */
   run = () => {
     this.el.innerHTML = this.render();
   };
