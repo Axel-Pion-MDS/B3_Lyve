@@ -28,6 +28,10 @@ class QuestionController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * List questions
+     * @return JsonResponse
+     */
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
@@ -43,6 +47,12 @@ class QuestionController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Show a question details
+     * x
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
     public function show(Request $request): JsonResponse
     {

@@ -28,6 +28,10 @@ class OfferController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * List Offers
+     * @return JsonResponse
+     */
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
@@ -43,6 +47,11 @@ class OfferController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Show an offer details
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
     public function show(Request $request): JsonResponse
     {
@@ -66,6 +75,11 @@ class OfferController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Add an offer
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/add', name: '_add', methods: ['POST'])]
     public function add(Request $request): JsonResponse
     {
@@ -107,6 +121,11 @@ class OfferController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit an offer
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/edit', name: '_edit', methods: ['PATCH'])]
     public function edit(Request $request): JsonResponse
     {
@@ -154,6 +173,11 @@ class OfferController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Delete an offer
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
@@ -181,6 +205,12 @@ class OfferController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Find a module from an integer
+     *
+     * @param int $data
+     * @return Module
+     */
     public function findModule(int $data): Module
     {
         return $this->doctrine->getRepository(Module::class)->find($data);

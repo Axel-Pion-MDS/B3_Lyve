@@ -33,6 +33,12 @@ class TimesheetNormalizer
         return $list;
     }
 
+    /**
+     * Normalize user data
+     *
+     * @param object $data
+     * @return array
+     */
     public static function showNormalizer(object $data): array
     {
         $user = [];

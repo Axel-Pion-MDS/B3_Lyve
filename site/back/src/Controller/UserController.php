@@ -33,13 +33,19 @@ class UserController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * List every users
+     * @return JsonResponse
+     */
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $env = $this->getParameter('kernel.environment');
 
         try {
-            if ($env === 'dev' || ($env === 'prod' && ($this->getUser()?->getRoles() && in_array("ROLE_ADMIN", $this->getUser()?->getRoles(), true)))) {
+            if ($env === 'dev' || ($env === 'prod' && ($this->getUser()?->getRoles() &&
+                        in_array("ROLE_ADMIN", $this->getUser()?->getRoles(), true)))
+            ) {
                 $users = $this->userRepository->findAll();
                 $normalizer = UserNormalizer::listNormalizer($users);
             } else {
@@ -47,15 +53,27 @@ class UserController extends AbstractController
                 $this->status['msg'] = 'the user is not authenticated';
             }
 
-            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer ?? []];
+            $response = [
+                'result' => $this->status['result'],
+                'msg' => $this->status['msg'],
+                'data' => $normalizer ?? []];
         } catch (Exception $e) {
             $this->status['result'] = "error";
-            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage())];
+            $response = [
+                'result' => $this->status['result'],
+                'msg' => sprintf('Exception thrown : "%s"', $e->getMessage())
+            ];
         }
 
         return new JsonResponse($response);
     }
 
+    /**
+     * Show a user details
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/show', name: '_show', methods: ['POST'])]
     public function show(Request $request): JsonResponse
     {
@@ -81,6 +99,13 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Add a new user
+     *
+     * @param Request $request
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return JsonResponse
+     */
     #[Route('/add', name: '_add', methods: ['POST'])]
     public function add(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
@@ -149,6 +174,12 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Delete a user
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
@@ -176,6 +207,12 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit a user
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/edit', name: '_edit', methods: ['PATCH'])]
     public function edit(Request $request): JsonResponse
     {
@@ -234,6 +271,12 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit a user's mail
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/editmail', name: '_editmail', methods: ['PATCH'])]
     public function editEmail(Request $request): JsonResponse
     {
@@ -279,6 +322,12 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit a user's number
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/editnumber', name: '_editnumber', methods: ['PATCH'])]
     public function editNumber(Request $request): JsonResponse
     {
@@ -324,6 +373,13 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit a user's password
+     *
+     * @param Request $request
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return JsonResponse
+     */
     #[Route('/editpassword', name: '_editpassword', methods: ['PATCH'])]
     public function editPassword(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
@@ -391,6 +447,12 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Get a user's timesheet
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/timesheet', name: '_timesheet', methods: ['POST'])]
     public function userTimesheet(Request $request): JsonResponse
     {
@@ -415,32 +477,57 @@ class UserController extends AbstractController
         return new JsonResponse($response);
     }
 
-    public function findRole(int $data): Role
-    {
-        return $this->doctrine->getRepository(Role::class)->find($data);
-    }
-
-    public function findOffer(int $data): Offer
-    {
-        return $this->doctrine->getRepository(Offer::class)->find($data);
-    }
-
-    public function findBadge(int $data): Badge
-    {
-        return $this->doctrine->getRepository(Badge::class)->find($data);
-    }
-
-    public function findAnswer(int $data): Answer
-    {
-        return $this->doctrine->getRepository(Answer::class)->find($data);
-    }
-
     /**
+     * Find a user from its email
+     *
      * @param string $email
-     * @return User
+     * @return User | null
      */
     public function findUserWithEmail(string $email): User | null
     {
         return $this->doctrine->getRepository(User::class)->findOneBy(['email' => $email]);
     }
+
+    /**
+     * Find role from integer
+     * @param int $data
+     * @return Role
+     */
+    public function findRole(int $data): Role
+    {
+        return $this->doctrine->getRepository(Role::class)->find($data);
+    }
+
+    /**
+     * Find offer from integer
+     *
+     * @param int $data
+     * @return Offer
+     */
+    public function findOffer(int $data): Offer
+    {
+        return $this->doctrine->getRepository(Offer::class)->find($data);
+    }
+
+    /**
+     * Find badge from integer
+     * @param int $data
+     * @return Badge
+     */
+    public function findBadge(int $data): Badge
+    {
+        return $this->doctrine->getRepository(Badge::class)->find($data);
+    }
+
+    /**
+     * Find answer from integer
+     *
+     * @param int $data
+     * @return Answer
+     */
+    public function findAnswer(int $data): Answer
+    {
+        return $this->doctrine->getRepository(Answer::class)->find($data);
+    }
+
 }

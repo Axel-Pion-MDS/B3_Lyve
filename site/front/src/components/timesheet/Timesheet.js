@@ -22,7 +22,9 @@ const Timesheet = class {
   }
 
   /**
+   * Get user's timesheet from its session stored email
    *
+   * @param {string} email
    */
   getUserTimesheet = (email) => {
     axios.post('https://lyve.local/user/timesheet', {
@@ -50,6 +52,9 @@ const Timesheet = class {
     }).catch((err) => { throw new Error(err); });
   };
 
+  /**
+   * Verify if a button as been clicked on
+   */
   verifyClickOnButtons = () => {
     this.waitForElm('#confirm-btn').then(() => {
       const confirmBtn = document.querySelector('#confirm-btn');
@@ -64,6 +69,14 @@ const Timesheet = class {
     });
   };
 
+  /**
+   * Add an event on the calendar
+   *
+   * @param {string} title
+   * @param {date} startDate
+   * @param {date} endDate
+   * @param {string} comment
+   */
   addEventOnCalendar = (title, startDate, endDate, comment) => {
     this.calendar.addEvent({
       title,
@@ -127,6 +140,9 @@ const Timesheet = class {
     });
   };
 
+  /**
+   * Hide div when clicking on cancel buttons
+   */
   cancelButton = () => {
     const formBackground = document.querySelector('#rdv-background');
     const form = document.querySelector('#rdv-form');
@@ -136,6 +152,11 @@ const Timesheet = class {
     messages.className = 'hide';
   };
 
+  /**
+   * Render confirmation div
+   *
+   * @returns string
+   */
   renderConfirmMessage = () => {
     const form = document.querySelector('#rdv-form');
     const messages = document.querySelector('#messages');
@@ -153,6 +174,10 @@ const Timesheet = class {
     `;
   };
 
+  /**
+   * Render form
+   * @returns string
+   */
   renderForm = () => {
     const formBackground = document.querySelector('#rdv-background');
     const form = document.querySelector('#rdv-form');
@@ -291,11 +316,18 @@ const Timesheet = class {
     return `<div>${calendar.render()}</div>`;
   };
 
+  /**
+   * Change className of the agenda in left navbar
+   */
   renderSelectedLink = () => {
     const timesheet = document.querySelector('#timesheet-link');
     timesheet.className = 'selected';
   };
 
+  /**
+   * First render
+   * @returns string
+   */
   render = () => (
     `
       <div id="timesheet">
@@ -311,6 +343,11 @@ const Timesheet = class {
     `
   );
 
+  /**
+   * Wait for an element to be created to listen on the onClick
+   * @param {string} selector
+   * @returns {*}
+   */
   waitForElm(selector) {
     return new Promise((resolve) => {
       if (document.querySelector(selector)) {
@@ -332,6 +369,9 @@ const Timesheet = class {
     });
   }
 
+  /**
+   * Run method
+   */
   run = () => {
     const user = window.localStorage.length > 1 ? window.localStorage.getItem('user')
       : window.sessionStorage.getItem('user');

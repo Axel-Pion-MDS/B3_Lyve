@@ -29,6 +29,11 @@ class BadgeController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * List badges
+     *
+     * @return JsonResponse
+     */
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
@@ -44,6 +49,12 @@ class BadgeController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Show a badge details
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
     public function show(Request $request): JsonResponse
     {
@@ -66,6 +77,12 @@ class BadgeController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Add badge
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/add', name: '_add', methods: ['POST'])]
     public function add(Request $request): JsonResponse
     {
@@ -115,6 +132,12 @@ class BadgeController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit badge
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/edit', name: '_edit', methods: ['PATCH'])]
     public function edit(Request $request): JsonResponse
     {
@@ -170,6 +193,12 @@ class BadgeController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Delete a badge
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
@@ -197,11 +226,23 @@ class BadgeController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Find a module from an integer
+     *
+     * @param int $data
+     * @return Module
+     */
     public function findModule(int $data): Module
     {
         return $this->doctrine->getRepository(Module::class)->find($data);
     }
 
+    /**
+     * Find a user from an integer
+     *
+     * @param int $data
+     * @return User
+     */
     public function findUser(int $data): User
     {
         return $this->doctrine->getRepository(User::class)->find($data);

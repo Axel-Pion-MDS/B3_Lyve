@@ -29,6 +29,11 @@ class ModuleController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * List modules
+     *
+     * @return JsonResponse
+     */
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
@@ -44,6 +49,12 @@ class ModuleController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Show a module details
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
     public function show(Request $request): JsonResponse
     {
@@ -67,6 +78,12 @@ class ModuleController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Add a module
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/add', name: '_add', methods: ['POST'])]
     public function add(Request $request): JsonResponse
     {
@@ -116,6 +133,12 @@ class ModuleController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit a module
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/edit', name: '_edit', methods: ['PATCH'])]
     public function edit(Request $request): JsonResponse
     {
@@ -171,6 +194,11 @@ class ModuleController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Delete a module
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
@@ -198,11 +226,22 @@ class ModuleController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Find an offer from an integer
+     * @param int $data
+     * @return Offer
+     */
     public function findOffer(int $data): Offer
     {
         return $this->doctrine->getRepository(Offer::class)->find($data);
     }
 
+    /**
+     * Find a badge from integer
+     *
+     * @param int $data
+     * @return Badge
+     */
     public function findBadge(int $data): Badge
     {
         return $this->doctrine->getRepository(Badge::class)->find($data);

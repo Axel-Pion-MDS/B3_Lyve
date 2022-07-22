@@ -28,6 +28,10 @@ class PartController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * List parts
+     * @return JsonResponse
+     */
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(): JsonResponse
     {
@@ -43,6 +47,12 @@ class PartController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Show a part details
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
     public function show(Request $request): JsonResponse
     {
@@ -65,6 +75,12 @@ class PartController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Add a part
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/add', name: '_add', methods: ['POST'])]
     public function add(Request $request): JsonResponse
     {
@@ -99,6 +115,12 @@ class PartController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Edit a part
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/edit', name: '_edit', methods: ['PATCH'])]
     public function edit(Request $request): JsonResponse
     {
@@ -139,6 +161,12 @@ class PartController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Delete a part
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
@@ -166,6 +194,11 @@ class PartController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**`
+     * Find a question from an integer
+     * @param int $data
+     * @return Question
+     */
     public function findQuestion(int $data): Question
     {
         return $this->doctrine->getRepository(Question::class)->find($data);
