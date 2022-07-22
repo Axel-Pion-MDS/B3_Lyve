@@ -19,6 +19,11 @@ class SecurityController extends AbstractController
 //    private UserAuthenticatorInterface $authenticatorManager;
     private array $status = ['result' => 'success', 'msg' => ''];
 
+    /**
+     * Verify the entity of the user to connect
+     * 
+     * @return JsonResponse
+     */
     #[Route('/login', name:'_login', methods:['POST'])]
     public function login(): JsonResponse
     {
@@ -39,6 +44,11 @@ class SecurityController extends AbstractController
         return new JsonResponse($response);
     }
 
+    /**
+     * Logout
+     *
+     * @return void
+     */
     #[Route('/logout', name:'_logout', methods: ['GET'])]
     public function logout(): void
     {
