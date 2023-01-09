@@ -1,0 +1,36 @@
+#recover-form form {
+  display: flex;
+  flex-direction: column;
+  width: 537px;
+  height: 374px;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+#recover-form form label {
+  text-align: left;
+  color: rgba(82, 76, 76, 0.72);
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#recover-form form input {
+  width: 537px;
+  height: 68px;
+  border: 1px solid rgba(82, 76, 76, 0.38);
+  border-radius: 8px;
+  padding: 0 53px;
+}
+
+#recover-form form button {
+  width: 370px;
+  height: 53px;
+  background: #F4AC44;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin: 20px auto;
+}

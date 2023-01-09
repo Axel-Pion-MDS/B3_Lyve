@@ -3,74 +3,204 @@
 namespace App\Controller;
 
 use App\Entity\Part;
+use App\Entity\Question;
 use App\Form\PartType;
+use App\Normalizer\PartNormalizer;
 use App\Repository\PartRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/part')]
+#[Route('/part', name: 'part')]
 class PartController extends AbstractController
 {
-    #[Route('/', name: 'app_part_index', methods: ['GET'])]
-    public function index(PartRepository $partRepository): Response
+    private PartRepository $partRepository;
+    private ManagerRegistry $doctrine;
+    private array $status = ['result' => 'success', 'msg' => ''];
+
+
+    public function __construct(PartRepository $partRepository, ManagerRegistry $doctrine)
     {
-        return $this->render('part/index.html.twig', [
-            'parts' => $partRepository->findAll(),
-        ]);
+        $this->partRepository = $partRepository;
+        $this->doctrine = $doctrine;
     }
 
-    #[Route('/new', name: 'app_part_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, PartRepository $partRepository): Response
+    /**
+     * List parts
+     * @return JsonResponse
+     */
+    #[Route('/list', name: '_list', methods: ['GET'])]
+    public function list(): JsonResponse
     {
-        $part = new Part();
-        $form = $this->createForm(PartType::class, $part);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $partRepository->add($part);
-            return $this->redirectToRoute('app_part_index', [], Response::HTTP_SEE_OTHER);
+        try {
+            $part = $this->partRepository->findAll();
+            $normalizer = PartNormalizer::listNormalizer($part);
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage())];
         }
 
-        return $this->renderForm('part/new.html.twig', [
-            'part' => $part,
-            'form' => $form,
-        ]);
+        return new JsonResponse($response);
     }
 
-    #[Route('/{id}', name: 'app_part_show', methods: ['GET'])]
-    public function show(Part $part): Response
+    /**
+     * Show a part details
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
+    public function show(Request $request): JsonResponse
     {
-        return $this->render('part/show.html.twig', [
-            'part' => $part,
-        ]);
-    }
+        try {
+            $id = $request->get('id');
+            $part = $this->partRepository->find($id);
+            if ($part === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested part not found.";
+            } else {
+                $normalizer = PartNormalizer::showNormalizer($part);
+            }
 
-    #[Route('/{id}/edit', name: 'app_part_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Part $part, PartRepository $partRepository): Response
-    {
-        $form = $this->createForm(PartType::class, $part);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $partRepository->add($part);
-            return $this->redirectToRoute('app_part_index', [], Response::HTTP_SEE_OTHER);
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer ?? []];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
         }
 
-        return $this->renderForm('part/edit.html.twig', [
-            'part' => $part,
-            'form' => $form,
-        ]);
+        return new JsonResponse($response);
     }
 
-    #[Route('/{id}', name: 'app_part_delete', methods: ['POST'])]
-    public function delete(Request $request, Part $part, PartRepository $partRepository): Response
+    /**
+     * Add a part
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/add', name: '_add', methods: ['POST'])]
+    public function add(Request $request): JsonResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$part->getId(), $request->request->get('_token'))) {
-            $partRepository->remove($part);
+        try {
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+            $part = new Part();
+            $form = $this->createForm(PartType::class, $part);
+
+            $content['question'] = isset($content['question']) ? $this->findQuestion($content['question'])->getId() : [];
+
+            $request->request->add($content);
+            $form->submit($request->request->all(), true);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->persist($part);
+                $em->flush();
+
+                $this->status['msg'] = "Part added.";
+            } else if ($form->isSubmitted() && !$form->isValid()) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'partId' => $part->getId()];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
         }
 
-        return $this->redirectToRoute('app_part_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse($response);
+    }
+
+    /**
+     * Edit a part
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/edit', name: '_edit', methods: ['PATCH'])]
+    public function edit(Request $request): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $id = $content['id'];
+            $part = $this->partRepository->find($id);
+
+            if ($part === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested part not found.";
+            } else {
+                $form = $this->createForm(PartType::class, $part);
+
+                $content['question'] = isset($content['question']) ? $this->findQuestion($content['question'])->getId() : [];
+
+                $request->request->add($content);
+                $form->submit($request->request->all(), true);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $em->persist($part);
+                    $em->flush();
+
+                    $this->status['msg'] = "Part edited.";
+                } else if ($form->isSubmitted() && !$form->isValid()) {
+                    $this->status['result'] = "error";
+                    $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
+                }
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * Delete a part
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
+    public function delete(Request $request): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $id = $request->get('id');
+            $part = $this->partRepository->find($id);
+
+            if ($part === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested part not found.";
+            } else {
+                $em->remove($part);
+                $em->flush();
+
+                $this->status['msg'] = "Part deleted.";
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**`
+     * Find a question from an integer
+     * @param int $data
+     * @return Question
+     */
+    public function findQuestion(int $data): Question
+    {
+        return $this->doctrine->getRepository(Question::class)->find($data);
     }
 }

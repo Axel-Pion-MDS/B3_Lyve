@@ -1,0 +1,51 @@
+.mixed-chart {
+  display: flex;
+  flex-direction: column;
+  width: 84%;
+}
+
+#instagram,
+#instagram-viewers-stats,
+#facebook,
+#facebook-viewers-stats,
+#twitch,
+#twitch-viewers-stats,
+#tiktok,
+#tiktok-viewers-stats {
+  width: 100px;
+}
+
+#statistics-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 84%;
+}
+
+#stat-insta-button,
+#stat-facebook-button,
+#stat-twitch-button,
+#stat-tiktok-button {
+  background: none;
+  border: 1px solid black;
+  color: black;
+  width: 83px;
+  height: 30px;
+  border-radius: 3px;
+  margin: 0 10px;
+}
+
+#stat-insta-button:hover,
+#stat-facebook-button:hover,
+#stat-twitch-button:hover,
+#stat-tiktok-button:hover {
+  border: none;
+  background: #F2AC44;
+  color: white;
+}
+
+#statistics-buttons .pressed {
+  background: #F2AC44;
+  color: white;
+  border: none;
+}

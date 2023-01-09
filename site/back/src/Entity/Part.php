@@ -2,19 +2,13 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PartRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
-    paginationEnabled: false,
-)]
+#[ORM\HasLifecycleCallbacks]
 class Part
 {
     #[ORM\Id]
@@ -31,11 +25,14 @@ class Part
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updated_at;
+
+    #[ORM\ManyToOne(targetEntity: Chapter::class, inversedBy: 'parts')]
+    private $chapter;
 
     public function __construct()
     {
@@ -101,27 +98,56 @@ class Part
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt($updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    public function getChapter(): ?Chapter
+    {
+        return $this->chapter;
+    }
+
+    public function setChapter(?Chapter $chapter): self
+    {
+        $this->chapter = $chapter;
+
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
     }
 }

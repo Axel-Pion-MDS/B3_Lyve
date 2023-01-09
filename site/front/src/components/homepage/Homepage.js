@@ -30,6 +30,11 @@ import {
   Tooltip,
   SubTitle
 } from 'chart.js';
+import ProgressBar from 'progressbar.js';
+import img1 from '../../../public/img/cc7cc34a22ed5621635d443d0a87a1cb.png';
+import img2 from '../../../public/img/1dace212e092ea819120fbea6b8c2417.png';
+import img4 from '../../../public/img/e83c5c6372b33278248e0355c67e6eaa.png';
+import img3 from '../../../public/img/66bb01e815194f1329512143ef3cc9c6.png';
 
 Chart.register(
   ArcElement,
@@ -63,192 +68,125 @@ const Homepage = class {
     this.el = document.querySelector('#body');
   }
 
-  renderCharts = () => {
+  /**
+   * Destroy chart
+   */
+  destroyChart = () => {
+    switch (true) {
+      case Chart.getChart('chart-insta') !== undefined:
+        Chart.getChart('chart-insta').destroy();
+        break;
+      case Chart.getChart('chart-facebook') !== undefined:
+        Chart.getChart('chart-facebook').destroy();
+        break;
+      case Chart.getChart('chart-twitch') !== undefined:
+        Chart.getChart('chart-twitch').destroy();
+        break;
+      // case Chart.getChart('chart-tiktok') !== undefined:
+      //   Chart.getChart('chart-tiktok').destroy();
+      //   break;
+      default:
+    }
+  };
+
+  /**
+   * render a progress bar
+   *
+   * @param {int} percent
+   */
+  renderProgressBar = (percent) => {
+    const progressBar = document.querySelector('#progress-bar');
+    const bar = new ProgressBar.Line(progressBar, {
+      strokeWidth: 4,
+      easing: 'easeInOut',
+      duration: 1400,
+      color: '#D11800',
+      trailColor: '#FFF',
+      trailWidth: 1,
+      svgStyle: {
+        width: '310px',
+        height: '22px',
+        border: '1px solid #D11800',
+        borderRadius: '10px'
+      },
+      text: {
+        style: {
+          // Text color.
+          // Default: same as stroke color (options.color)
+          color: '#999',
+          position: 'relative',
+          left: '330px',
+          top: '-25px',
+          padding: 0,
+          margin: 0,
+          transform: null
+        },
+        autoStyleContainer: false
+      },
+      step: (state, progress) => {
+        progress.setText(`${Math.round(progress.value() * 100)} %`);
+      }
+    });
+
+    bar.animate(percent); // Number from 0.0 to 1.0
+  };
+
+  /**
+   * Render insta chart
+   *
+   * @returns {*}
+   */
+  renderInstaCharts = () => {
     const insta = document.querySelector('#chart-insta');
     const facebook = document.querySelector('#chart-facebook');
     const twitch = document.querySelector('#chart-twitch');
-    const tiktok = document.querySelector('#chart-tiktok');
-    const c1824 = document.querySelector('#chart-18-24');
-    const c2534 = document.querySelector('#chart-25-34');
-    const c3544 = document.querySelector('#chart-35-44');
-    const c4554 = document.querySelector('#chart-45-54');
+    // const tiktok = document.querySelector('#chart-tiktok');
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
 
-    const socialLabels = [
-      'Vues',
-      'Abonnés'
-    ];
+    insta.style.display = 'block';
+    facebook.style.display = 'none';
+    twitch.style.display = 'none';
+    // tiktok.style.display = 'none';
+
+    instaBtn.className = 'pressed';
+    facebookBtn.className = '';
+    twitchBtn.className = '';
+    // tiktokBtn.className = '';
 
     const instaData = {
-      labels: socialLabels,
+      labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
       datasets: [{
-        label: 'Instagram',
+        data: [250, 700, 436, 10.7, 159],
+        fill: true,
         backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [60, 40]
-      }]
-    };
-
-    const facebookData = {
-      labels: socialLabels,
-      datasets: [{
-        label: 'Facebook',
-        backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [200, 76]
-      }]
-    };
-
-    const twitchData = {
-      labels: socialLabels,
-      datasets: [{
-        label: 'Twitch',
-        backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [163, 92]
-      }]
-    };
-
-    const tiktokData = {
-      labels: socialLabels,
-      datasets: [{
-        label: 'Instagram',
-        backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [4930, 291]
-      }]
-    };
-
-    const c1824Data = {
-      labels: socialLabels,
-      datasets: [{
-        label: '18 - 24 ans',
-        backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [2304, 1320]
-      }]
-    };
-
-    const c2534Data = {
-      labels: socialLabels,
-      datasets: [{
-        label: '25 - 34 ans',
-        backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [849, 312]
-      }]
-    };
-
-    const c3544Data = {
-      labels: socialLabels,
-      datasets: [{
-        label: '35 - 44 ans',
-        backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [292, 134]
-      }]
-    };
-
-    const c4554Data = {
-      labels: socialLabels,
-      datasets: [{
-        label: '45 - 54 ans',
-        backgroundColor: [
-          '#D11800',
-          '#F2AC44'
-        ],
-        borderColor: '#FEFEFE',
-        data: [102, 34]
+          '#ffb950',
+          '#ff931f',
+          '#fa5e1f',
+          '#b81702',
+          '#7a0103'
+        ]
       }]
     };
 
     const instaConfig = {
       type: 'doughnut',
       data: instaData,
-      options: {}
-    };
-
-    const facebookConfig = {
-      type: 'doughnut',
-      data: facebookData,
-      options: {}
-    };
-
-    const twitchConfig = {
-      type: 'doughnut',
-      data: twitchData,
-      options: {}
-    };
-
-    const tiktokConfig = {
-      type: 'doughnut',
-      data: tiktokData,
-      options: {}
-    };
-
-    const c1824Config = {
-      type: 'bar',
-      data: c1824Data,
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 3
           }
-        }
-      }
-    };
-
-    const c2534Config = {
-      type: 'bar',
-      data: c2534Data,
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    };
-
-    const c3544Config = {
-      type: 'bar',
-      data: c3544Data,
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    };
-
-    const c4554Config = {
-      type: 'bar',
-      data: c4554Data,
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        },
+        plugins: {
+          legend: true,
+          title: {
+            text: 'Juin 2022',
+            display: true
           }
         }
       }
@@ -258,59 +196,249 @@ const Homepage = class {
       insta,
       instaConfig
     );
+
+    return (
+      instaChart
+    );
+  };
+
+  /**
+   * Render facebook chart
+   *
+   * @returns {*}
+   */
+  renderFacebookCharts = () => {
+    const insta = document.querySelector('#chart-insta');
+    const facebook = document.querySelector('#chart-facebook');
+    const twitch = document.querySelector('#chart-twitch');
+    // const tiktok = document.querySelector('#chart-tiktok');
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    insta.style.display = 'none';
+    facebook.style.display = 'block';
+    twitch.style.display = 'none';
+    // tiktok.style.display = 'none';
+
+    instaBtn.className = '';
+    facebookBtn.className = 'pressed';
+    twitchBtn.className = '';
+    // tiktokBtn.className = '';
+
+    const facebookData = {
+      labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
+      datasets: [{
+        data: [250, 700, 436, 10.7, 159],
+        fill: true,
+        backgroundColor: [
+          '#ffb950',
+          '#ff931f',
+          '#fa5e1f',
+          '#b81702',
+          '#7a0103'
+        ]
+      }]
+    };
+
+    const facebookConfig = {
+      type: 'doughnut',
+      data: facebookData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 3
+          }
+        },
+        plugins: {
+          legend: true,
+          title: {
+            text: 'Juin 2022',
+            display: true
+          }
+        }
+      }
+    };
+
     const facebookChart = new Chart(
       facebook,
       facebookConfig
     );
+
+    return (
+      facebookChart
+    );
+  };
+
+  /**
+   * render twitch chart
+   *
+   * @returns {*}
+   */
+  renderTwitchCharts = () => {
+    const insta = document.querySelector('#chart-insta');
+    const facebook = document.querySelector('#chart-facebook');
+    const twitch = document.querySelector('#chart-twitch');
+    // const tiktok = document.querySelector('#chart-tiktok');
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    insta.style.display = 'none';
+    facebook.style.display = 'none';
+    twitch.style.display = 'block';
+    // tiktok.style.display = 'none';
+
+    instaBtn.className = '';
+    facebookBtn.className = '';
+    twitchBtn.className = 'pressed';
+    // tiktokBtn.className = '';
+
+    const twitchData = {
+      labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
+      datasets: [{
+        data: [250, 700, 436, 10.7, 159],
+        fill: true,
+        backgroundColor: [
+          '#ffb950',
+          '#ff931f',
+          '#fa5e1f',
+          '#b81702',
+          '#7a0103'
+        ]
+      }]
+    };
+
+    const twitchConfig = {
+      type: 'doughnut',
+      data: twitchData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 3
+          }
+        },
+        plugins: {
+          legend: true,
+          title: {
+            text: 'Juin 2022',
+            display: true
+          }
+        }
+      }
+    };
+
     const twitchChart = new Chart(
       twitch,
       twitchConfig
     );
-    const tiktokChart = new Chart(
-      tiktok,
-      tiktokConfig
-    );
-    const c1824Chart = new Chart(
-      c1824,
-      c1824Config
-    );
-    const c2534Chart = new Chart(
-      c2534,
-      c2534Config
-    );
-    const c3544Chart = new Chart(
-      c3544,
-      c3544Config
-    );
-    const c4554Chart = new Chart(
-      c4554,
-      c4554Config
-    );
 
     return (
-      instaChart,
-      facebookChart,
-      twitchChart,
-      tiktokChart,
-      c1824Chart,
-      c2534Chart,
-      c3544Chart,
-      c4554Chart
+      twitchChart
     );
   };
 
+  // renderTiktokCharts = () => {
+  //   const insta = document.querySelector('#chart-insta');
+  //   const facebook = document.querySelector('#chart-facebook');
+  //   const twitch = document.querySelector('#chart-twitch');
+  //   const tiktok = document.querySelector('#chart-tiktok');
+  //   const instaBtn = document.querySelector('#stat-insta-button');
+  //   const facebookBtn = document.querySelector('#stat-facebook-button');
+  //   const twitchBtn = document.querySelector('#stat-twitch-button');
+  //   const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+  //   insta.style.display = 'none';
+  //   facebook.style.display = 'none';
+  //   twitch.style.display = 'none';
+  //   tiktok.style.display = 'block';
+
+  //   instaBtn.className = '';
+  //   facebookBtn.className = '';
+  //   twitchBtn.className = '';
+  //   tiktokBtn.className = 'pressed';
+
+  //   const tiktokData = {
+  //     labels: ['Total abonnés', 'Total vues', 'Pic de vues', '% Taux de conversion', 'Achats'],
+  //     datasets: [{
+  //       data: [250, 700, 436, 10.7, 159],
+  //       fill: true,
+  //       backgroundColor: [
+  //         '#ffb950',
+  //         '#ff931f',
+  //         '#fa5e1f',
+  //         '#b81702',
+  //         '#7a0103'
+  //       ]
+  //     }]
+  //   };
+
+  //   const tiktokConfig = {
+  //     type: 'doughnut',
+  //     data: tiktokData,
+  //     options: {
+  //       responsive: true,
+  //       maintainAspectRatio: false,
+  //       elements: {
+  //         line: {
+  //           borderWidth: 3
+  //         }
+  //       },
+  //       plugins: {
+  //         legend: true,
+  //         maintainAspectRatio: false,
+  //         title: {
+  //           text: 'Juin 2022',
+  //           display: true
+  //         }
+  //       }
+  //     }
+  //   };
+
+  //   const tiktokChart = new Chart(
+  //     tiktok,
+  //     tiktokConfig
+  //   );
+
+  //   return (
+  //     tiktokChart
+  //   );
+  // };
+
+  /**
+   * Render calendar
+   *
+   * @returns {*}
+   */
   renderCalendar = () => {
     const calendarEl = document.querySelector('#calendar');
+    const today = new Date();
+    const eventStart = today.setHours(12, 0, 0);
+    const eventEnd = today.setHours(12, 30, 0);
     const calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
-      initialView: 'timeGridDay',
+      initialView: 'listWeek',
       headerToolbar: {
         left: 'prev',
         center: 'title',
         right: 'next'
       },
       height: 300,
-      contentHeight: 300
+      events: [
+        {
+          id: '1',
+          title: 'EventTest',
+          start: eventStart,
+          end: eventEnd,
+          description: 'Petit test'
+        }
+      ]
     });
 
     calendar.setOption('locale', 'fr');
@@ -318,6 +446,19 @@ const Homepage = class {
     return `<div>${calendar.render()}</div>`;
   };
 
+  /**
+   * Render selected link on the left navbar
+   */
+  renderSelectedLink = () => {
+    const home = document.querySelector('#home-link');
+    home.className = 'selected';
+  };
+
+  /**
+   * Render the homepage
+   *
+   * @returns {*}
+   */
   render = () => (
     `
       <div class="homepage-left-right">
@@ -328,64 +469,23 @@ const Homepage = class {
               <div id="calendar">
               </div>
             </div>
-            <div class="timesheet-meetings">
-              <div id="meetings">
-              <h4>Prochaines dates importantes</h4>
-                <div class="meeting-list">
-                  <div class="meeting">
-                    <h5>12 juin 2022</h5>
-                    <p>Sephora - 17h</p>
-                  </div>
-                  <div class="meeting">
-                    <h5>13 juin 2022</h5>
-                    <p>Sephora - 17h</p>
-                  </div>
-                  <div class="meeting">
-                    <h5>14 juin 2022</h5>
-                    <p>Sephora - 17h</p>
-                  </div>
-                  <div class="meeting">
-                    <h5>15 juin 2022</h5>
-                    <p>Sephora - 17h</p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
           <div class="stats">
             <div class="charts">
               <h4>Aperçu vue d'ensemble des stats</h4>
-              <div class="circle-charts">
-                <div class="circle-chart">
-                  <h5>Instagram</h5>
-                  <canvas id="chart-insta"></canvas>
-                </div>
-                <div class="circle-chart">
-                  <h5>Facebook</h5>
-                  <canvas id="chart-facebook"></canvas>
-                </div>
-                <div class="circle-chart">
-                  <h5>Twitch</h5>
-                  <canvas id="chart-twitch"></canvas>
-                </div>
-                <div class="circle-chart">
-                  <h5>Tiktok</h5>
-                  <canvas id="chart-tiktok"></canvas>
-                </div>
+              <div id="home-statistics-buttons">
+                <button type="button" id="stat-insta-button">Instagram</button>
+                <button type="button" id="stat-facebook-button">Facebook</button>
+                <button type="button" id="stat-twitch-button">Twitch</button>
               </div>
-              <div class="bar-charts">
-                <div class="bar-chart">
-                  <canvas id="chart-18-24"></canvas>
-                </div>
-                <div class="bar-chart">
-                  <canvas id="chart-25-34"></canvas>
-                </div>
-                <div class="bar-chart">
-                  <canvas id="chart-35-44"></canvas>
-                </div>
-                <div class="bar-chart">
-                  <canvas id="chart-45-54"></canvas>
-                </div>
+              <div class="home-mixed-chart">
+                <canvas id="chart-insta"></canvas>
+              </div>
+              <div class="home-mixed-chart">
+                <canvas id="chart-facebook"></canvas>
+              </div>
+              <div class="home-mixed-chart">
+                <canvas id="chart-twitch"></canvas>
               </div>
             </div>
           </div>
@@ -393,19 +493,70 @@ const Homepage = class {
         <div class="badges-courses">
           <div class="badge-list">
             <h4>Badges acquis</h4>
+            <div class="badges">
+              <h6>1</h6>
+              <img src="${img1}" />
+              <p>Les 5 clefs pour réussir en marketing</p>
+            </div>
+            <div class="badges">
+              <h6>2</h6>
+              <img src="${img2}" />
+              <p>Les faux-pas à éviter</p>
+            </div>
+            <div class="badges">
+              <h6>3</h6>
+              <img src="${img3}" />
+              <p>Comment augmenter son nombre de followers</p>
+            </div>
+            <div class="badges">
+              <h6>4</h6>
+              <img src="${img4}" />
+              <p>Avoir plus de visibilité</p>
+            </div>
           </div>
           <div class="course-list">
             <h4>Aperçu formation actuelle</h4>
+            <div class=home-course">
+              <p>Fidéliser les clients</p>
+              <div id="progress-bar"></div>
+            </div>
           </div>
         </div>
       </div>
     `
   );
 
+  /**
+   * Run the script
+   */
   run = () => {
     this.el.innerHTML = this.render();
+    this.renderSelectedLink();
     this.renderCalendar();
-    this.renderCharts();
+    this.renderInstaCharts();
+    this.renderProgressBar(0.25);
+
+    const instaBtn = document.querySelector('#stat-insta-button');
+    const facebookBtn = document.querySelector('#stat-facebook-button');
+    const twitchBtn = document.querySelector('#stat-twitch-button');
+    // const tiktokBtn = document.querySelector('#stat-tiktok-button');
+
+    instaBtn.addEventListener('click', () => {
+      this.destroyChart();
+      this.renderInstaCharts();
+    });
+    facebookBtn.addEventListener('click', () => {
+      this.destroyChart();
+      this.renderFacebookCharts();
+    });
+    twitchBtn.addEventListener('click', () => {
+      this.destroyChart();
+      this.renderTwitchCharts();
+    });
+    // tiktokBtn.addEventListener('click', () => {
+    //   this.destroyChart();
+    //   this.renderTiktokCharts();
+    // });
   };
 };
 

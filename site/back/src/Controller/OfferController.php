@@ -2,75 +2,217 @@
 
 namespace App\Controller;
 
+use App\Entity\Module;
 use App\Entity\Offer;
 use App\Form\OfferType;
+use App\Normalizer\OfferNormalizer;
 use App\Repository\OfferRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/offer')]
+#[Route('/offer', name: 'offer')]
 class OfferController extends AbstractController
 {
-    #[Route('/', name: 'app_offer_index', methods: ['GET'])]
-    public function index(OfferRepository $offerRepository): Response
+    private OfferRepository $offerRepository;
+    private ManagerRegistry $doctrine;
+    private array $status = ['result' => 'success', 'msg' => ''];
+
+
+    public function __construct(OfferRepository $offerRepository, ManagerRegistry $doctrine)
     {
-        return $this->render('offer/index.html.twig', [
-            'offers' => $offerRepository->findAll(),
-        ]);
+        $this->offerRepository = $offerRepository;
+        $this->doctrine = $doctrine;
     }
 
-    #[Route('/new', name: 'app_offer_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, OfferRepository $offerRepository): Response
+    /**
+     * List Offers
+     * @return JsonResponse
+     */
+    #[Route('/list', name: '_list', methods: ['GET'])]
+    public function list(): JsonResponse
     {
-        $offer = new Offer();
-        $form = $this->createForm(OfferType::class, $offer);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $offerRepository->add($offer);
-            return $this->redirectToRoute('app_offer_index', [], Response::HTTP_SEE_OTHER);
+        try {
+            $offer = $this->offerRepository->findAll();
+            $normalizer = OfferNormalizer::listNormalizer($offer);
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage())];
         }
 
-        return $this->renderForm('offer/new.html.twig', [
-            'offer' => $offer,
-            'form' => $form,
-        ]);
+        return new JsonResponse($response);
     }
 
-    #[Route('/{id}', name: 'app_offer_show', methods: ['GET'])]
-    public function show(Offer $offer): Response
+    /**
+     * Show an offer details
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/show', name: '_show', requirements: ["id" => "^[1-9]\d*$"], methods: ['GET'])]
+    public function show(Request $request): JsonResponse
     {
-        return $this->render('offer/show.html.twig', [
-            'offer' => $offer,
-        ]);
-    }
+        try {
+            $id = $request->get('id');
+            $offer = $this->offerRepository->find($id);
 
-    #[Route('/{id}/edit', name: 'app_offer_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Offer $offer, OfferRepository $offerRepository): Response
-    {
-        $form = $this->createForm(OfferType::class, $offer);
-        $form->handleRequest($request);
+            if ($offer === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested offer not found.";
+            } else {
+                $normalizer = OfferNormalizer::showNormalizer($offer);
+            }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $offerRepository->add($offer);
-            return $this->redirectToRoute('app_offer_index', [], Response::HTTP_SEE_OTHER);
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'data' => $normalizer ?? []];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
         }
 
-        return $this->renderForm('offer/edit.html.twig', [
-            'offer' => $offer,
-            'form' => $form,
-        ]);
+        return new JsonResponse($response);
     }
 
-    #[Route('/{id}', name: 'app_offer_delete', methods: ['POST'])]
-    public function delete(Request $request, Offer $offer, OfferRepository $offerRepository): Response
+    /**
+     * Add an offer
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/add', name: '_add', methods: ['POST'])]
+    public function add(Request $request): JsonResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$offer->getId(), $request->request->get('_token'))) {
-            $offerRepository->remove($offer);
+        try {
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+            $offer = new Offer();
+            $form = $this->createForm(OfferType::class, $offer);
+
+            $modules = [];
+            if (!empty($content['modules'])) {
+                foreach ($content['modules'] as $module) {
+                    $modules[] = $this->findModule($module)->getId();
+                }
+            }
+
+            $content['modules'] = $modules;
+
+            $request->request->add($content);
+            $form->submit($request->request->all(), true);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->persist($offer);
+                $em->flush();
+
+                $this->status['msg'] = "Offer added.";
+            } else if ($form->isSubmitted() && !$form->isValid()) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg'], 'offerId' => $offer->getId()];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
         }
 
-        return $this->redirectToRoute('app_offer_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse($response);
+    }
+
+    /**
+     * Edit an offer
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/edit', name: '_edit', methods: ['PATCH'])]
+    public function edit(Request $request): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $id = $content['id'];
+            $offer = $this->offerRepository->find($id);
+
+            if ($offer === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested offer not found.";
+            } else {
+                $form = $this->createForm(OfferType::class, $offer);
+
+                $modules = [];
+                if (!empty($content['modules'])) {
+                    foreach ($content['modules'] as $module) {
+                        $modules[] = $this->findModule($module)->getId();
+                    }
+                }
+
+                $content['modules'] = $modules;
+
+                $request->request->add($content);
+                $form->submit($request->request->all(), true);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $em->persist($offer);
+                    $em->flush();
+
+                    $this->status['msg'] = "Offer edited.";
+                } else if ($form->isSubmitted() && !$form->isValid()) {
+                    $this->status['result'] = "error";
+                    $this->status['msg'] = sprintf('Error in form: "%s"', $form->getErrors(true)->current()->getMessage());
+                }
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * Delete an offer
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/delete', name: '_delete', requirements: ["id" => "^[1-9]\d*$"], methods: ['DELETE'])]
+    public function delete(Request $request): JsonResponse
+    {
+        try {
+            $em = $this->doctrine->getManager();
+            $id = $request->get('id');
+            $offer = $this->offerRepository->find($id);
+
+            if ($offer === null) {
+                $this->status['result'] = "error";
+                $this->status['msg'] = "Requested role not found.";
+            } else {
+                $em->remove($offer);
+                $em->flush();
+
+                $this->status['msg'] = "Offer deleted.";
+            }
+
+            $response = ['result' => $this->status['result'], 'msg' => $this->status['msg']];
+        } catch (Exception $e) {
+            $this->status['result'] = "error";
+            $response = ['result' => $this->status['result'], 'msg' => sprintf('Exception thrown : "%s"', $e->getMessage()), 'data' => []];
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * Find a module from an integer
+     *
+     * @param int $data
+     * @return Module
+     */
+    public function findModule(int $data): Module
+    {
+        return $this->doctrine->getRepository(Module::class)->find($data);
     }
 }

@@ -17,6 +17,12 @@ import Timesheet from './components/timesheet/Timesheet.js';
 import Statistics from './components/statistics/Statistics.js';
 import Courses from './components/courses/Courses.js';
 import Profile from './components/profile/Profile.js';
+import Login from './components/security/login/Login.js';
+import Recover from './components/security/recover/Recover.js';
+import Error403 from './components/error/Error403.js';
+import Error500 from './components/error/Error500.js';
+import RGPD from './components/security/rgpd/RGPD.js';
+import Logout from './components/security/logout/Logout.js';
 
 const Routes = class Routing {
   getPath = () => {
@@ -45,58 +51,83 @@ const Routes = class Routing {
     const statistics = new Statistics();
     const courses = new Courses();
     const profile = new Profile();
+    const login = new Login();
+    const recover = new Recover();
+    const error403 = new Error403();
+    const error500 = new Error500();
+    const rgpd = new RGPD();
+    const logout = new Logout();
 
     leftNavbar.run();
     topNavbar.run();
 
-    switch (this.getPath()) {
-      case '':
-        homepage.run();
-        break;
-      case 'answer':
-        answer.run();
-        break;
-      case 'badge':
-        badge.run();
-        break;
-      case 'chapter':
-        chapter.run();
-        break;
-      case 'module':
-        module.run();
-        break;
-      case 'offer':
-        offer.run();
-        break;
-      case 'part':
-        part.run();
-        break;
-      case 'question':
-        question.run();
-        break;
-      case 'role':
-        role.run();
-        break;
-      case 'user':
-        user.run();
-        break;
-      case 'user-answer':
-        userAnswer.run();
-        break;
-      case 'timesheet':
-        timesheet.run();
-        break;
-      case 'statistics':
-        statistics.run();
-        break;
-      case 'courses':
-        courses.run();
-        break;
-      case 'profile':
-        profile.run();
-        break;
-      default:
-        error404.run();
+    if (localStorage.length > 0 || sessionStorage.length > 0) {
+      switch (this.getPath()) {
+        case '':
+          homepage.run();
+          break;
+        case 'answer':
+          answer.run();
+          break;
+        case 'badge':
+          badge.run();
+          break;
+        case 'chapter':
+          chapter.run();
+          break;
+        case 'module':
+          module.run();
+          break;
+        case 'offer':
+          offer.run();
+          break;
+        case 'part':
+          part.run();
+          break;
+        case 'question':
+          question.run();
+          break;
+        case 'role':
+          role.run();
+          break;
+        case 'user':
+          user.run();
+          break;
+        case 'user-answer':
+          userAnswer.run();
+          break;
+        case 'timesheet':
+          timesheet.run();
+          break;
+        case 'statistics':
+          statistics.run();
+          break;
+        case 'courses':
+          courses.run();
+          break;
+        case 'profile':
+          profile.run();
+          break;
+        case 'logout':
+          logout.run();
+          break;
+        case 'recover':
+          recover.run();
+          break;
+        case 'forbidden':
+          error403.run();
+          break;
+        case 'notworking':
+          error500.run();
+          break;
+        case 'rgpd':
+          rgpd.run();
+          break;
+        default:
+          error404.run();
+      }
+    } else {
+      login.run();
     }
   };
 };

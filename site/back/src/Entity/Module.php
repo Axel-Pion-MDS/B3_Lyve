@@ -2,19 +2,13 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ModuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
-    paginationEnabled: false,
-)]
+#[ORM\HasLifecycleCallbacks]
 class Module
 {
     #[ORM\Id]
@@ -25,10 +19,7 @@ class Module
     #[ORM\Column(type: 'string', length: 100)]
     private $title;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'module')]
-    private $users;
-
-    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Badge::class)]
+    #[ORM\ManyToMany(targetEntity: Badge::class, mappedBy: 'modules')]
     private $badges;
 
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Chapter::class)]
@@ -37,17 +28,21 @@ class Module
     #[ORM\Column(type: 'text')]
     private $content;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updated_at;
+
+    #[ORM\ManyToMany(targetEntity: Offer::class, mappedBy: 'modules')]
+    private $offers;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->badges = new ArrayCollection();
         $this->chapter = new ArrayCollection();
+        $this->offers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -68,33 +63,6 @@ class Module
     }
 
     /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addModule($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeModule($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Badge>
      */
     public function getBadges(): Collection
@@ -106,7 +74,7 @@ class Module
     {
         if (!$this->badges->contains($badge)) {
             $this->badges[] = $badge;
-            $badge->setModule($this);
+            $badge->addModule($this);
         }
 
         return $this;
@@ -116,8 +84,8 @@ class Module
     {
         if ($this->badges->removeElement($badge)) {
             // set the owning side to null (unless already changed)
-            if ($badge->getModule() === $this) {
-                $badge->setModule(null);
+            if ($badge->getModules() === $this) {
+                $badge->addModule(null);
             }
         }
 
@@ -166,27 +134,71 @@ class Module
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt($updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): self
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers[] = $offer;
+            $offer->addModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): self
+    {
+        if ($this->offers->removeElement($offer)) {
+            $offer->removeModule($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
     }
 }

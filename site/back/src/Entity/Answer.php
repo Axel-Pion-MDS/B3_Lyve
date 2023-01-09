@@ -9,12 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
-    paginationEnabled: false,
-)]
+#[ORM\HasLifecycleCallbacks]
 class Answer
 {
     #[ORM\Id]
@@ -31,18 +26,18 @@ class Answer
     #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answer')]
     private $question;
 
-    #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'answers')]
-    private $user_answer;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'answers')]
+    private $users;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updated_at;
 
     public function __construct()
     {
-        $this->user_answer = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,50 +82,70 @@ class Answer
     }
 
     /**
-     * @return Collection<int, UserAnswer>
+     * @return Collection<int, User>
      */
-    public function getUserAnswer(): Collection
+    public function getUsers(): Collection
     {
-        return $this->user_answer;
+        return $this->users;
     }
 
-    public function addUserAnswer(UserAnswer $userAnswer): self
+    public function addUser(User $user): self
     {
-        if (!$this->user_answer->contains($userAnswer)) {
-            $this->user_answer[] = $userAnswer;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addAnswer($this);
         }
 
         return $this;
     }
 
-    public function removeUserAnswer(UserAnswer $userAnswer): self
+    public function removeUser(User $user): self
     {
-        $this->user_answer->removeElement($userAnswer);
+        if ($this->users->removeElement($user)) {
+            $user->removeAnswer($this);
+        }
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt($updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
+    }
+
+    public function __toString(): string
+    {
+        return $this->answer;
     }
 }

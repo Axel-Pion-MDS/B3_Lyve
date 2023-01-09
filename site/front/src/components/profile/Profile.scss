@@ -1,0 +1,159 @@
+#profile {
+  width: 84%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#profile h2 {
+  font-weight: 400;
+  font-size: 30px;
+}
+
+#profile button {
+  border: none;
+  background: none;
+  color: #F2AC44;
+}
+
+.picture-name {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.picture-name img {
+  margin: 0 auto;
+  width: 150px;
+  height: 160px;
+  border-radius: 20px 5px 20px 5px;
+}
+
+.profile-blocks {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.information-title, .offer-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.information-title h3, .offer-title h3 {
+  padding-left: 30px;
+  font-weight: 400;
+  font-size: 34px;
+  margin-bottom: -6px;
+}
+
+.profile-blocks .informations, .profile-blocks .offer {
+  border: 1px solid black;
+  border-radius: 20px 5px 20px 5px;
+  width: 368px;
+  height: 270px;
+  padding: 20px;
+  margin: 30px;
+  box-shadow: 3px 2px 8px rgba(0, 0, 0, .25);
+}
+
+.profile-blocks .informations {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-blocks .informations-box div, .profile-blocks .offer-box div {
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  margin-top: 10px;
+}
+
+.profile-blocks .informations-box div[class=email],
+.profile-blocks .informations-box div[class=phone] {
+  margin-bottom: -20px;
+}
+
+.profile-blocks .informations-box div[class=password] {
+  margin-bottom: -10px;
+}
+
+.profile-blocks .informations-box div h6, .profile-blocks .offer-box div h6 {
+  text-align: left;
+  width: 50%;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.profile-blocks .informations-box div p, .profile-blocks .offer-box div p {
+  text-align: left;
+  width: 50%;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.profile-blocks .informations-box button {
+  margin: 0 0 20px -5px;
+}
+
+#profile-dialog-box {
+  z-index: 1000;
+  width: 600px;
+  background: white;
+  border-radius: 8px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+}
+
+#profile-dialog-box div {
+  display: flex;
+  flex-direction: column;
+  margin: 30px 0;
+  position: relative;
+}
+
+#profile-dialog-box div input {
+  border-radius: 8px;
+  width: 426px;
+  height: 68px;
+  border: 1px solid rgba(82, 76, 76, 0.38);
+  margin: auto;
+}
+
+#profile-dialog-box div label {
+  color: rgba(82, 76, 76, 0.72);
+  font-size: 20px;
+  margin-left: 68px;
+}
+
+#profile-dialog-box button[class=submit] {
+  height: 53px;
+  width: 370px;
+  background: #F2AC44;
+  color: white;
+  border-radius: 8px;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+#profile-dialog-box h2 {
+  width: 400px;
+}
+
+.title-cross {
+  display: flex;
+  flex-direction: row !important;
+  justify-content: space-between;
+  margin-top: 0px !important;
+}
+
+#exit-cross {
+  width: 12px;
+  height: 20px;
+  cursor: pointer;
+}

@@ -1,11 +1,16 @@
 import './LeftNavbar.scss';
-import logo from '../../../public/images/Logo-Lyve.svg';
+import logo from '../../../../public/img/Logo-Lyve.svg';
 
 const LeftNavbar = class {
   constructor() {
     this.el = document.querySelector('#navbar');
   }
 
+  /**
+   * render the left navbar
+   *
+   * @returns {*}
+   */
   render = () => (
     `
       <div id="navbar">
@@ -20,27 +25,27 @@ const LeftNavbar = class {
         <div id="navbar-links">
           <ul>
             <li>
-              <i class="fa fa-house"></i>
-              <a href="/">
-                Accueil
+              <a href="/" id="home-link">
+                <i class="fa fa-house"></i>
+                <p>Accueil</p>
               </a>
             </li>
             <li>
-              <i class="fa fa-calendar"></i>
-              <a href="timesheet">
-                Agenda
+              <a href="timesheet" id="timesheet-link">
+                <i class="fa fa-calendar"></i>
+                <p>Agenda</p>
               </a>
             </li>
             <li>
-              <i class="fa fa-chart-simple"></i>
-              <a href="statistics">
-                Statistiques
+              <a href="courses" id="courses-link">
+                <i class="fa fa-graduation-cap"></i>
+                <p>Formations</p>
               </a>
             </li>
             <li>
-              <i class="fa fa-graduation-cap"></i>
-              <a href="courses">
-                Formations
+              <a href="statistics" id="statistics-link">
+                <i class="fa fa-chart-simple"></i>
+                <p>Statistiques</p>
               </a>
             </li>
           </ul>
@@ -52,7 +57,12 @@ const LeftNavbar = class {
   `
   );
 
-  run = () => { this.el.innerHTML = this.render(); };
+  /**
+   * Run the script
+   */
+  run = () => {
+    this.el.innerHTML = this.render();
+  };
 };
 
 export default LeftNavbar;

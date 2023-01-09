@@ -2,19 +2,13 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OfferRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
-    paginationEnabled: false,
-)]
+#[ORM\HasLifecycleCallbacks]
 class Offer
 {
     #[ORM\Id]
@@ -31,15 +25,25 @@ class Offer
     #[ORM\OneToMany(mappedBy: 'offer', targetEntity: User::class)]
     private $users;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updated_at;
+
+    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'offers')]
+    private $modules;
+
+    #[ORM\Column(type: 'integer')]
+    private $nModules;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $expectedTime;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->modules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,26 +105,91 @@ class Offer
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt($updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getModules(): Collection
+    {
+        return $this->modules;
+    }
+
+    public function addModule(Module $module): self
+    {
+        if (!$this->modules->contains($module)) {
+            $this->modules[] = $module;
+        }
+
+        return $this;
+    }
+
+    public function removeModule(Module $module): self
+    {
+        $this->modules->removeElement($module);
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
+    }
+
+    public function getNModules(): ?int
+    {
+        return $this->nModules;
+    }
+
+    public function setNModules(int $nModules): self
+    {
+        $this->nModules = $nModules;
+
+        return $this;
+    }
+
+    public function getExpectedTime(): ?string
+    {
+        return $this->expectedTime;
+    }
+
+    public function setExpectedTime(string $expectedTime): self
+    {
+        $this->expectedTime = $expectedTime;
 
         return $this;
     }

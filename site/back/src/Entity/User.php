@@ -8,19 +8,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Monolog\DateTimeImmutable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['lastname' => 'DESC', 'firstname' => 'ASC'],
-    paginationEnabled: false,
-)]
-class User
+#[ORM\HasLifecycleCallbacks]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ApiProperty(identifier: false)]
     #[ORM\Column(type: 'integer')]
     private $id;
 
@@ -31,45 +28,61 @@ class User
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 100)]
-    #[ApiProperty(identifier: true)]
     private $email;
 
     #[ORM\Column(type: 'date')]
     private $birthdate;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: '0')]
+    #[ORM\Column(type: 'string', length: 12)]
     private $number;
 
-    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
-    private $role;
+//    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
+//    private $role;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     #[ORM\ManyToOne(targetEntity: Offer::class, inversedBy: 'users')]
     private $offer;
 
     #[ORM\ManyToMany(targetEntity: Badge::class, inversedBy: 'users')]
-    private $badge;
+    private $badges;
 
-    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'users')]
-    private $module;
+    #[ORM\ManyToMany(targetEntity: Answer::class, inversedBy: 'users')]
+    private $answers;
 
-    #[ORM\ManyToMany(targetEntity: UserAnswer::class, inversedBy: 'users')]
-    private $user_answer;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class)]
-    private $message;
-
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable:true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable:true)]
     private $updated_at;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $password;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isFirstConnection;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isPasswordChanged;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $picture;
+
+    #[ORM\ManyToMany(targetEntity: Timesheet::class, mappedBy: 'user')]
+    private $timesheets;
+
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Timesheet::class)]
+    private $selfTimesheets;
 
     public function __construct()
     {
-        $this->badge = new ArrayCollection();
+        $this->badges = new ArrayCollection();
         $this->module = new ArrayCollection();
-        $this->user_answer = new ArrayCollection();
         $this->message = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+        $this->timesheets = new ArrayCollection();
+        $this->selfTimesheets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,17 +150,57 @@ class User
         return $this;
     }
 
-    public function getRole(): ?Role
+    public function getRoles(): array
     {
-        return $this->role;
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setRole(?Role $role): self
+    public function setRoles(array $roles): User
     {
-        $this->role = $role;
+        $this->roles = $roles;
+
+        // allows for chaining
+        return $this;
+    }
+
+    public function addRole(string $role): User
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
 
         return $this;
     }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
+    }
+
+    public function removeRole($role): User
+    {
+        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+            unset($this->roles[$key]);
+            $this->roles = array_values($this->roles);
+        }
+
+        return $this;
+    }
+
+//    public function getRole(): ?Role
+//    {
+//        return $this->role;
+//    }
+//
+//    public function setRole(?Role $role): self
+//    {
+//        $this->role = $role;
+//
+//        return $this;
+//    }
 
     public function getOffer(): ?Offer
     {
@@ -164,123 +217,69 @@ class User
     /**
      * @return Collection<int, Badge>
      */
-    public function getBadge(): ?Collection
+    public function getBadges(): ?Collection
     {
-        return $this->badge;
+        return $this->badges;
     }
 
-    public function addBadge(?Badge $badge): self
+    public function addBadges(?Badge $badges): self
     {
-        if (!$this->badge->contains($badge)) {
-            $this->badge[] = $badge;
+        if (!$this->badges->contains($badges)) {
+            $this->badges[] = $badges;
         }
 
         return $this;
     }
 
-    public function removeBadge(Badge $badge): self
+    public function removeBadges(Badge $badges): self
     {
-        $this->badge->removeElement($badge);
+        $this->badges->removeElement($badges);
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Module>
+     * @return Collection<int, Answer>
      */
-    public function getModule():? Collection
+    public function getAnswers(): Collection
     {
-        return $this->module;
+        return $this->answers;
     }
 
-    public function addModule(?Module $module): self
+    public function addAnswer(Answer $answer): self
     {
-        if (!$this->module->contains($module)) {
-            $this->module[] = $module;
+        if (!$this->answers->contains($answer)) {
+            $this->answers[] = $answer;
         }
 
         return $this;
     }
 
-    public function removeModule(Module $module): self
+    public function removeAnswer(Answer $answer): self
     {
-        $this->module->removeElement($module);
+        $this->answers->removeElement($answer);
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserAnswer>
-     */
-    public function getUserAnswer(): Collection
-    {
-        return $this->user_answer;
-    }
-
-    public function addUserAnswer(UserAnswer $userAnswer): self
-    {
-        if (!$this->user_answer->contains($userAnswer)) {
-            $this->user_answer[] = $userAnswer;
-        }
-
-        return $this;
-    }
-
-    public function removeUserAnswer(UserAnswer $userAnswer): self
-    {
-        $this->user_answer->removeElement($userAnswer);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessage(): Collection
-    {
-        return $this->message;
-    }
-
-    public function addMessage(Message $message): self
-    {
-        if (!$this->message->contains($message)) {
-            $this->message[] = $message;
-            $message->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): self
-    {
-        if ($this->message->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getUser() === $this) {
-                $message->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt($updated_at): self
     {
         $this->updated_at = $updated_at;
 
@@ -290,6 +289,138 @@ class User
     public function setId(int $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function __toString(): string
+    {
+        return $this->email;
+    }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
+    }
+
+    public function getIsFirstConnection(): ?bool
+    {
+        return $this->isFirstConnection;
+    }
+
+    public function setIsFirstConnection(bool $isFirstConnection): self
+    {
+        $this->isFirstConnection = $isFirstConnection;
+
+        return $this;
+    }
+
+    public function getIsPasswordChanged(): ?bool
+    {
+        return $this->isPasswordChanged;
+    }
+
+    public function setIsPasswordChanged(bool $isPasswordChanged): self
+    {
+        $this->isPasswordChanged = $isPasswordChanged;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Timesheet>
+     */
+    public function getTimesheets(): Collection
+    {
+        return $this->timesheets;
+    }
+
+    public function addTimesheet(Timesheet $timesheet): self
+    {
+        if (!$this->timesheets->contains($timesheet)) {
+            $this->timesheets[] = $timesheet;
+            $timesheet->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimesheet(Timesheet $timesheet): self
+    {
+        if ($this->timesheets->removeElement($timesheet)) {
+            $timesheet->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Timesheet>
+     */
+    public function getSelfTimesheets(): Collection
+    {
+        return $this->selfTimesheets;
+    }
+
+    public function addSelfTimesheet(Timesheet $selfTimesheet): self
+    {
+        if (!$this->selfTimesheets->contains($selfTimesheet)) {
+            $this->selfTimesheets[] = $selfTimesheet;
+            $selfTimesheet->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSelfTimesheet(Timesheet $selfTimesheet): self
+    {
+        if ($this->selfTimesheets->removeElement($selfTimesheet)) {
+            // set the owning side to null (unless already changed)
+            if ($selfTimesheet->getCreatedBy() === $this) {
+                $selfTimesheet->setCreatedBy(null);
+            }
+        }
 
         return $this;
     }

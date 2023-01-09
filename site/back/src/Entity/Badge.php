@@ -9,12 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BadgeRepository::class)]
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get', 'put', 'patch', 'delete'],
-    order: ['updated_at' => 'DESC', 'created_at' => 'ASC'],
-    paginationEnabled: false,
-)]
+#[ORM\HasLifecycleCallbacks]
 class Badge
 {
     #[ORM\Id]
@@ -28,21 +23,26 @@ class Badge
     #[ORM\Column(type: 'string', length: 255)]
     private $picture;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'badge')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'badges')]
     private $users;
 
-    #[ORM\ManyToOne(targetEntity: Module::class, inversedBy: 'badges')]
-    private $module;
+    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'badges')]
+    private $modules;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updated_at;
+
+    #[ORM\ManyToMany(targetEntity: Offer::class, mappedBy: 'badges')]
+    private $offers;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->modules = new ArrayCollection();
+        $this->offers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,7 +86,7 @@ class Badge
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->addBadge($this);
+            $user->addBadges($this);
         }
 
         return $this;
@@ -95,42 +95,54 @@ class Badge
     public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
-            $user->removeBadge($this);
+            $user->removeBadges($this);
         }
 
         return $this;
     }
 
-    public function getModule(): ?Module
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getModules(): Collection
     {
-        return $this->module;
+        return $this->modules;
     }
 
-    public function setModule(?Module $module): self
+    public function addModule(Module $module): self
     {
-        $this->module = $module;
+        if (!$this->modules->contains($module)) {
+            $this->modules[] = $module;
+        }
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function removeModule(Module $module): self
+    {
+        $this->modules->removeElement($module);
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeImmutable
+    public function getUpdateAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdateAt(\DateTimeImmutable $updated_at): self
+    public function setUpdateAt($updated_at): self
     {
         $this->updated_at = $updated_at;
 
@@ -140,5 +152,44 @@ class Badge
     public function __toString(): string
     {
         return $this->title;
+    }
+
+    #[ORM\PrePersist]
+    public function beforePersist(): void
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function beforeUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): self
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers[] = $offer;
+            $offer->addBadge($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): self
+    {
+        if ($this->offers->removeElement($offer)) {
+            $offer->removeBadge($this);
+        }
+
+        return $this;
     }
 }
